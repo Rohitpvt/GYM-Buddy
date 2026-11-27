@@ -1,4 +1,4 @@
-// opengym.ch has two templates. The home page (index.html) is the landing page. Every other page
+// gymbuddy.ch has two templates. The home page (index.html) is the landing page. Every other page
 // (docs, API, about, privacy, brand) is a reference page: the site's 1120 px column, a sticky
 // contents column on the left built from the page's own h2/h3, one reading column, and the same
 // phone drawer (.side) built from the same list. All pages share one header and one footer.
@@ -9,15 +9,15 @@
 // Styles: website/ref.css. Behaviour (scrollspy, collapsing chapters): website/site.js.
 
 export const FOOTER = `<footer><div class="wrap foot">
-  <span class="c">openGym · AGPL-3.0 · © 2026 <a href="https://duarte-santos.ch" rel="noopener">Duarte Santos</a></span>
+  <span class="c">GYM Buddy · AGPL-3.0 · © 2026 <a href="https://duarte-santos.ch" rel="noopener">Duarte Santos</a></span>
   <div class="links">
     <a href="/docs">Docs</a>
     <a href="/api">API</a>
     <a href="/about">About</a>
     <a href="/brand">Brand</a>
     <a href="/privacy">Privacy</a>
-    <a href="https://github.com/DuarteSantos8/openGym" rel="noopener">GitHub</a>
-    <a href="https://gitlab.com/DuarteSantos8/opengym" rel="noopener">GitLab mirror</a>
+    <a href="https://github.com/DuarteSantos8/GYM Buddy" rel="noopener">GitHub</a>
+    <a href="https://gitlab.com/DuarteSantos8/gymbuddy" rel="noopener">GitLab mirror</a>
     <a href="https://discord.gg/e62jY6fwVb" rel="noopener">Discord</a>
     <a href="/#download">Download</a>
   </div>

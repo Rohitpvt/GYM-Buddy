@@ -1,15 +1,15 @@
-// What a scanned QR code is to openGym (Plan > Scan a QR code, components/ScanCode.jsx). Pure:
+// What a scanned QR code is to GYM Buddy (Plan > Scan a QR code, components/ScanCode.jsx). Pure:
 // the text in, which handler it goes to out.
-//   { kind: 'routine-link', payload }  a friend's routine, https://opengym.ch/r#... (lib/routine-link.js)
+//   { kind: 'routine-link', payload }  a friend's routine, https://gymbuddy.ch/r#... (lib/routine-link.js)
 //   { kind: 'library', link }          a library routine's page, or another library page (lib/library-link.js)
-//   { kind: 'tag', url }               an NFC sticker link, opengym.ch/nfc?... (lib/nfc-tags.js)
+//   { kind: 'tag', url }               an NFC sticker link, gymbuddy.ch/nfc?... (lib/nfc-tags.js)
 //   { kind: 'unknown', text }          anything else, shown back as it was read
 import { routinePayloadFromUrl } from './routine-link.js'
 import { libraryLinkFromUrl } from './library-link.js'
 import { parseTagUrl } from './nfc-tags.js'
 
-// A QR is often printed without the scheme ("opengym.ch/r#..."): read those as https.
-const withScheme = s => (/^(www\.)?opengym\.ch\//i.test(s) ? 'https://' + s : s)
+// A QR is often printed without the scheme ("gymbuddy.ch/r#..."): read those as https.
+const withScheme = s => (/^(www\.)?gymbuddy\.ch\//i.test(s) ? 'https://' + s : s)
 
 export function routeScannedText(raw, { indexAddress = null } = {}) {
   const text = typeof raw === 'string' ? raw.trim() : ''

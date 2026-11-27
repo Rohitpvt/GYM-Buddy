@@ -123,7 +123,7 @@ final class WorkoutManager: NSObject, ObservableObject, HKWorkoutSessionDelegate
     private func tag() {
         guard let b = builder, let wid = workoutId, tagged != wid else { return }
         tagged = wid
-        b.addMetadata([HKMetadataKeySyncIdentifier: "opengym-w-\(wid)", HKMetadataKeySyncVersion: 1]) { _, _ in }
+        b.addMetadata([HKMetadataKeySyncIdentifier: "gymbuddy-w-\(wid)", HKMetadataKeySyncVersion: 1]) { _, _ in }
     }
 
     /// The phone's names for a workout's type (lib/health-connect.js SESSION_TYPES, #799).
@@ -228,7 +228,7 @@ final class WorkoutManager: NSObject, ObservableObject, HKWorkoutSessionDelegate
                     // The workout it measured, ended on the phone meanwhile: saved under that
                     // workout's id, as when the watch app had been running (one copy in Apple
                     // Health; a workout discarded there is taken out again by `healthGone`).
-                    b.addMetadata([HKMetadataKeySyncIdentifier: "opengym-w-\(wid)", HKMetadataKeySyncVersion: 1]) { _, _ in
+                    b.addMetadata([HKMetadataKeySyncIdentifier: "gymbuddy-w-\(wid)", HKMetadataKeySyncVersion: 1]) { _, _ in
                         s.end()
                         b.endCollection(withEnd: HealthWriteCore.liveEnd(at: nil, start: b.startDate, now: Date())) { _, _ in b.finishWorkout { _, _ in } }
                     }
@@ -258,7 +258,7 @@ final class WorkoutManager: NSObject, ObservableObject, HKWorkoutSessionDelegate
     }
 
     /// Takes out of Apple Health the workouts this app saved under these sync ids (workouts deleted
-    /// in openGym), with the calories saved along with them. Heart-rate readings are the watch's
+    /// in gymBuddy), with the calories saved along with them. Heart-rate readings are the watch's
     /// sensors' own and stay, as with Apple's Workout app. `done` gets the ids that are settled:
     /// removed, or with no copy of this app's to remove. Nothing settled when Health could not be
     /// read or the delete was refused: the next snapshot tries again.

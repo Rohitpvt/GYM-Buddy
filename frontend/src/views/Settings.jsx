@@ -251,7 +251,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
   const [selfUpdate, setSelfUpdate] = useState(false)   // the sideloaded APK, which updates itself
   const [play, setPlay] = useState(false)   // the Google Play build: no donation links (Play payments policy)
   const [fdroid, setFdroid] = useState(false)   // the F-Droid build: F-Droid updates it, no Wear OS link
-  // openGym Offline (lib/build-caps.js): no INTERNET, so nothing that needs a network is offered.
+  // GYM Buddy Offline (lib/build-caps.js): no INTERNET, so nothing that needs a network is offered.
   const offline = useOfflineBuild()
   const [gymReminder, setGymReminder] = useState(true)   // false in a Play build without background location
   const [checking, setChecking] = useState(false)
@@ -370,7 +370,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
   // and the copy it exports is the one that has not reached the server.
   const doExport = async () => {
     const json = JSON.stringify(useStore.getState().S, null, 2)
-    const name = 'opengym-backup-' + todayISO() + '.json'
+    const name = 'gymbuddy-backup-' + todayISO() + '.json'
     // WKWebView can't download blob URLs — the native build hands the file to the share sheet.
     if (MOBILE) {
       try { await shareExport(json, name); toast(t('Backup exported')) } catch (e) { /* share sheet dismissed */ }
@@ -390,7 +390,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
     let out
     try { out = await exportBackupZip(st.S, { fetchOne: signedIn ? fetchToStore : null }) }
     catch { toast(t('Something went wrong')); return }
-    const name = 'opengym-backup-' + todayISO() + '.zip'
+    const name = 'gymbuddy-backup-' + todayISO() + '.zip'
     if (out.missing) toast(tn('{0} file could not be included', '{0} files could not be included', out.missing))
     if (MOBILE) {
       try { await shareExportBlob(out.blob, name); if (!out.missing) toast(t('Backup exported')) } catch (e) { /* share sheet dismissed */ }
@@ -727,11 +727,11 @@ export default function Settings({ page = null, find = null, via = null, entryKe
               onChange={v => update(s => { s.keepAwake = v })} />
           </Row>
         )}
-        {/* Android (#821): openGym alone stays upright or sideways, the phone's auto-rotate untouched.
+        {/* Android (#821): GYM Buddy alone stays upright or sideways, the phone's auto-rotate untouched.
             This device's choice, never synced. */}
         {MOBILE && android && (
           <Row icon="phoneScreen" iconTint="var(--indigo)" title={t('Screen orientation')}
-            subtitle={t('Only for openGym. Your phone’s auto-rotate stays as it is.')}>
+            subtitle={t('Only for GYM Buddy. Your phone’s auto-rotate stays as it is.')}>
             <Segmented className="seg-inline"
               options={[{ value: 'auto', label: t('Follow phone') }, { value: 'portrait', label: t('Portrait') }, { value: 'landscape', label: t('Landscape') }]}
               value={orient} onChange={v => { setOrient(v); setOrientation(v) }} />
@@ -870,7 +870,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
         {/* The buzz at the end of a rest or a hold and on a set tick, on its own switch like the
             sound (Discord, asierlama). iOS has no navigator.vibrate: the row stays, greyed out,
             and says so, instead of an iPhone user looking for a setting that is not there. */}
-        <Section footer={!canVibrate && iPhone ? t('iPhone doesn’t let openGym vibrate. A sound or a flash does the job.') : null}>
+        <Section footer={!canVibrate && iPhone ? t('iPhone doesn’t let GYM Buddy vibrate. A sound or a flash does the job.') : null}>
           <Row icon="vibrate" iconTint="var(--indigo)" title={t('Vibrate')} className={canVibrate ? '' : 'dis'}
             subtitle={canVibrate ? null : iPhone ? t('Not on iPhone') : t('Not supported in this browser.')}>
             <Switch checked={canVibrate && S.vibrate !== false} disabled={!canVibrate} onChange={v => update(s => { s.vibrate = v })} />
@@ -1087,12 +1087,12 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <AccentSwatches S={S} update={update} />
         </div>
         {/* The little pictures in the app (the streak flame, medals, freezes, the advent calendar):
-            openGym's own icons by default, which follow the accent and the theme, or the phone's
+            GYM Buddy's own icons by default, which follow the accent and the theme, or the phone's
             emoji for those who like them (components/Glyph.jsx). Synced like the theme. */}
         <Row icon="sparkles" iconTint="var(--orange)" title={t('Icons')} subtitle={t('The flame, the medals and friends.')}>
           <Segmented className="seg-inline"
-            options={[{ value: 'opengym', label: 'openGym' }, { value: 'emoji', label: t('Emoji') }]}
-            value={S.icons === 'emoji' ? 'emoji' : 'opengym'}
+            options={[{ value: 'gymbuddy', label: 'GYM Buddy' }, { value: 'emoji', label: t('Emoji') }]}
+            value={S.icons === 'emoji' ? 'emoji' : 'gymbuddy'}
             onChange={v => update(s => { if (v === 'emoji') s.icons = 'emoji'; else delete s.icons })} />
         </Row>
         {/* Your own streak flame and freeze, over either choice above (components/StreakIconPicker.jsx). */}
@@ -1279,24 +1279,24 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           release is newer (checksum verified, see onUpdateRowClick). On the web the app updates
           with its server, so the row points at the APK for the phone instead. iOS and the Google
           Play build are updated by their store. */}
-      <Section footer={MOBILE ? (selfUpdate ? t('Releases are checked on GitHub. The download is verified against its checksum before the installer opens.') : offline ? t('openGym Offline never checks for updates, it can’t. New versions come from wherever you got this one.') : fdroid ? t('F-Droid installs the updates for this build.') : null) : t('The web app updates together with your server. The Android app installs its own updates from here.')}>
+      <Section footer={MOBILE ? (selfUpdate ? t('Releases are checked on GitHub. The download is verified against its checksum before the installer opens.') : offline ? t('GYM Buddy Offline never checks for updates, it can’t. New versions come from wherever you got this one.') : fdroid ? t('F-Droid installs the updates for this build.') : null) : t('The web app updates together with your server. The Android app installs its own updates from here.')}>
         {/* The sideloaded APK comes in three kinds that differ only in the animations built in
             (lib/apk-variant.js): which one this is, so nobody has to guess from the file size. */}
         <Row icon="info" iconTint="var(--grey)" title={t('Version')} value={'v' + __APP_VERSION__}
-          subtitle={MOBILE && selfUpdate ? t('{0} APK, animations at {1} px', VARIANT_NAMES[APK_VARIANT], BUILTIN_PX) : offline ? t('openGym Offline, no internet permission') : undefined} />
+          subtitle={MOBILE && selfUpdate ? t('{0} APK, animations at {1} px', VARIANT_NAMES[APK_VARIANT], BUILTIN_PX) : offline ? t('GYM Buddy Offline, no internet permission') : undefined} />
         {MOBILE
           ? selfUpdate && <Row icon="download" iconTint="var(--green)"
-              title={updateInfo?.hasUpdate ? t('Update to openGym v{0}', updateInfo.latestVersion) : t('Check for updates')}
+              title={updateInfo?.hasUpdate ? t('Update to GYM Buddy v{0}', updateInfo.latestVersion) : t('Check for updates')}
               subtitle={checking ? t('Checking…') : t('You have v{0}', __APP_VERSION__)}
               accessory="chevron"
               onClick={() => (updateInfo?.hasUpdate ? onUpdateRowClick() : checkNow())} />
           : <Row icon="download" iconTint="var(--green)" title={t('Get the Android app')}
-              subtitle={t('Download the APK from opengym.ch')} accessory="chevron"
-              onClick={() => window.open('https://opengym.ch/#download', '_blank', 'noopener')} />}
+              subtitle={t('Download the APK from gymbuddy.ch')} accessory="chevron"
+              onClick={() => window.open('https://gymbuddy.ch/#download', '_blank', 'noopener')} />}
       </Section>
       {/* The F-Droid build has no Wear OS link (it would need Google Play services, which F-Droid
           leaves out): said here rather than having a watch that silently never connects. */}
-      {fdroid && <Section footer={t('Wear OS watches talk to the phone through Google Play services, which F-Droid apps leave out. The APK from opengym.ch and the Google Play app have the watch link.')}>
+      {fdroid && <Section footer={t('Wear OS watches talk to the phone through Google Play services, which F-Droid apps leave out. The APK from gymbuddy.ch and the Google Play app have the watch link.')}>
         <Row icon="watch" iconTint="var(--grey)" title={t('Wear OS watch')} value={t('Not in this build')} />
       </Section>}
       {/* What this copy of the app sent where since it started (lib/net-log.js), phone app only. */}
@@ -1321,16 +1321,16 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           shows only its rating link: Play's payments policy wants Play billing for anything paid
           inside an app, donations to a project that isn't a registered charity included, so the
           coffee links stay on the APK, the iPhone and the web (docs/APP_STORES.md). */}
-      <Section title={t('Support openGym')} footer={play ? undefined : t('openGym is free: no ads, no subscriptions, no tracking. A coffee keeps it that way.')}>
-        {MOBILE && ios && <Row icon="star" iconTint="var(--orange)" title={t('Rate openGym on the App Store')} accessory="chevron"
+      <Section title={t('Support GYM Buddy')} footer={play ? undefined : t('GYM Buddy is free: no ads, no subscriptions, no tracking. A coffee keeps it that way.')}>
+        {MOBILE && ios && <Row icon="star" iconTint="var(--orange)" title={t('Rate GYM Buddy on the App Store')} accessory="chevron"
           onClick={() => window.open('https://apps.apple.com/app/id6822275400?action=write-review', '_blank', 'noopener')} />}
-        {play && <Row icon="star" iconTint="var(--orange)" title={t('Rate openGym on Google Play')} accessory="chevron"
-          onClick={() => window.open('https://play.google.com/store/apps/details?id=ch.duartesantos.opengym', '_blank', 'noopener')} />}
+        {play && <Row icon="star" iconTint="var(--orange)" title={t('Rate GYM Buddy on Google Play')} accessory="chevron"
+          onClick={() => window.open('https://play.google.com/store/apps/details?id=ch.duartesantos.gymbuddy', '_blank', 'noopener')} />}
         {!play && <>
           <Row icon="heart" iconTint="var(--pink)" title={t('Buy me a coffee')} subtitle="Buy Me a Coffee" accessory="chevron"
             onClick={() => window.open('https://buymeacoffee.com/duartesantos', '_blank', 'noopener')} />
           <Row icon="heart" iconTint="var(--blue)" title="Ko-fi" accessory="chevron"
-            onClick={() => window.open('https://ko-fi.com/opengym', '_blank', 'noopener')} />
+            onClick={() => window.open('https://ko-fi.com/gymbuddy', '_blank', 'noopener')} />
           <Row icon="heart" iconTint="var(--purple)" title="GitHub Sponsors" accessory="chevron"
             onClick={() => window.open('https://github.com/sponsors/DuarteSantos8', '_blank', 'noopener')} />
         </>}
@@ -1341,18 +1341,18 @@ export default function Settings({ page = null, find = null, via = null, entryKe
       {!MOBILE && !standalone() && <Section title={t('Tip')}>
         <Row icon="share" iconTint="var(--blue)"
           title={IS_ANDROID ? t('In Chrome: ⋮ menu → Add to Home screen') : APPLE_UA ? t('In Safari: Share → Add to Home Screen') : t('In Chrome or Edge: the install icon in the address bar')}
-          subtitle={t('to install openGym as a full-screen app.') + ' ' + (user ? t('Your data syncs with your profile. Sign in anywhere and it’s there.') : t('Guest data stays on this device, so export a backup now and then!'))} />
+          subtitle={t('to install GYM Buddy as a full-screen app.') + ' ' + (user ? t('Your data syncs with your profile. Sign in anywhere and it’s there.') : t('Guest data stays on this device, so export a backup now and then!'))} />
       </Section>}
       {/* The version, where the support template tells people to look for it. On the phone
           build there is no address bar and no about box, so without this there is no way to tell
           which build you are running, or whether an update actually installed. */}
       <div className="dim small sp-version">
-        openGym v{__APP_VERSION__} · {t('free & open source (AGPL v3)')}<br />
-        <a href="https://github.com/DuarteSantos8/openGym" target="_blank" rel="noopener"><span>{t('Source code')}</span></a><br />
+        GYM Buddy v{__APP_VERSION__} · {t('free & open source (AGPL v3)')}<br />
+        <a href="https://github.com/DuarteSantos8/GYM Buddy" target="_blank" rel="noopener"><span>{t('Source code')}</span></a><br />
         {/* Attribution the media licence asks for word for word (agreement §8c), so it is not translated.
             The spans keep each link's words above its neighbours' 44 px tap targets (index.css). */}
         Exercise media © Aliaksandr Makatserchyk, <a href="https://gymvisual.com/" target="_blank" rel="noopener"><span>Gym visual</span></a>, gymvisual.com.
-        Media licensed for use in openGym only; see <a href="https://github.com/DuarteSantos8/openGym/blob/main/NOTICE.md" target="_blank" rel="noopener"><span>NOTICE.md</span></a>
+        Media licensed for use in GYM Buddy only; see <a href="https://github.com/DuarteSantos8/GYM Buddy/blob/main/NOTICE.md" target="_blank" rel="noopener"><span>NOTICE.md</span></a>
       </div>
     </>,
 
@@ -1377,18 +1377,18 @@ export default function Settings({ page = null, find = null, via = null, entryKe
       {/* account (demo and mobile builds have nothing to sign in to) */}
       {/* A local-only phone has no account to hand another device a code for (#551). */}
       {!(MOBILE && user) && <Section title={MOBILE ? t('Your data') : DEMO ? t('Demo') : t('Account')}
-        footer={MOBILE ? (offline ? t('This is openGym Offline: Android doesn’t even let it on the internet. Want sync? The normal openGym app can do that, next to this one.') : t('Signing in on your computer too needs your own server. Connect this phone to it, and Add another device then gives the computer a code.')) : null}>
+        footer={MOBILE ? (offline ? t('This is GYM Buddy Offline: Android doesn’t even let it on the internet. Want sync? The normal GYM Buddy app can do that, next to this one.') : t('Signing in on your computer too needs your own server. Connect this phone to it, and Add another device then gives the computer a code.')) : null}>
         {MOBILE ? <>
           <Row icon="lock" iconTint="var(--acc)" title={t('All data stays on this phone')} subtitle={t('No account, no cloud. Back it up anytime in Data & backup.')} />
-          {/* openGym Offline cannot reach a server at all (lib/build-caps.js). */}
-          {!offline && <Row icon="cloud" iconTint="var(--indigo)" title={t('Connect to my server')} subtitle={t('Sync this device to your own self-hosted openGym instead.')} accessory="chevron"
+          {/* GYM Buddy Offline cannot reach a server at all (lib/build-caps.js). */}
+          {!offline && <Row icon="cloud" iconTint="var(--indigo)" title={t('Connect to my server')} subtitle={t('Sync this device to your own self-hosted GYM Buddy instead.')} accessory="chevron"
             onClick={connectServer} />}
           <KeptChangesRows />
         </> : DEMO ? <>
           <Row icon="info" iconTint="var(--acc)" title={t('You’re in the demo')} subtitle={t('Example data, stored only in this browser. Go wild and change anything you like.')} />
           <Row icon="reset" iconTint="var(--blue)" title={t('Reset demo data')} accessory="chevron"
             onClick={() => confirmSheet({ title: t('Reset demo data?'), message: t('Puts the example plan, workouts and weigh-ins back the way they started.'), confirmText: t('Reset'), onConfirm: () => { resetDemo(); nav('/home'); toast(t('Demo data reset')) } })} />
-          <Row icon="rocket" iconTint="var(--indigo)" title={t('Self-host openGym')} subtitle={t('Passkey sign-in, sync across your devices, your own data.')} accessory="chevron"
+          <Row icon="rocket" iconTint="var(--indigo)" title={t('Self-host GYM Buddy')} subtitle={t('Passkey sign-in, sync across your devices, your own data.')} accessory="chevron"
             onClick={() => window.open(REPO, '_blank', 'noopener')} />
         </> : user ? <>
           {community && <Row icon="globe" iconTint="var(--blue)" title={t('Community')} subtitle={t('What people on this server shared')} accessory="chevron" onClick={() => nav('/community')} />}
@@ -1398,7 +1398,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <PasskeysRow state={passkeys.st} changed={credsChanged} />
           <OidcRow state={passkeys.st} changed={credsChanged} />
           <DeviceLinkRow state={passkeys.st} />
-          <Row icon="qr" iconTint="var(--blue)" title={t('Pair the mobile app')} subtitle={t('Connect the openGym app on your phone to this account.')} accessory="chevron"
+          <Row icon="qr" iconTint="var(--blue)" title={t('Pair the mobile app')} subtitle={t('Connect the GYM Buddy app on your phone to this account.')} accessory="chevron"
             onClick={() => useUI.getState().openSheet(close => <PairSheet close={close} />)} />
           {pwOn && <PasswordRow version={credsV} />}
           <Row icon="signOut" iconTint="var(--red)" title={t('Sign out')} danger onClick={signOutHere} />
@@ -1512,13 +1512,13 @@ function SettingsRoot({ ctx, preview, open, user, sync, home, go, entryKey }) {
               same row, in the same place, straight to that card; nobody else has anything to set. */}
           {g.title === 'Connections' && adminCoach && <Row icon={PAGES.coach.icon} iconTint={PAGES.coach.tint} title={t(PAGES.coach.title)}
             value={t('Admin')} accessory="chevron" onClick={() => nav('/admin', { state: { section: 'coach' } })} className="sp-root-row" />}
-          {/* Claude, ChatGPT or Gemini on the plan people already pay for, with openGym as their
+          {/* Claude, ChatGPT or Gemini on the plan people already pay for, with GYM Buddy as their
               connector (views/Assistants.jsx). Everywhere but the offline build and the demo. */}
           {g.title === 'Connections' && !DEMO && !ctx.offline && <Row icon="chat" iconTint="var(--acc)" title={t('Use your subscription')}
             accessory="chevron" onClick={() => nav('/assistants')} className="sp-root-row" />}
         </Section>
       ))}
-      <div className="dim small sp-version">openGym v{__APP_VERSION__}</div>
+      <div className="dim small sp-version">GYM Buddy v{__APP_VERSION__}</div>
     </>}
   </div>
 }
@@ -1725,14 +1725,14 @@ function MobileReminderCard({ S, update, toast }) {
   )
 }
 
-// Your year in openGym (lib/wrapped.js): one notification on Dec 1, on unless switched off here.
+// Your year in GYM Buddy (lib/wrapped.js): one notification on Dec 1, on unless switched off here.
 // The phone plans it itself; a server sends it as a web push. Off takes back a planned one.
 function WrappedNotifyRow({ S, update }) {
   // Part of the Motivation module (Settings → Modules): with it off there is nothing to notify.
   if (!isOn(S, 'motivation')) return null
   const on = S.wrappedNotify !== false
-  return <Row icon="sparkles" iconTint="var(--acc)" title={t('Your year in openGym')} subtitle={t('One notification on 1 December when your year is ready.')}>
-    <Switch checked={on} onChange={() => update(s => { s.wrappedNotify = !on })} aria-label={t('Your year in openGym')} />
+  return <Row icon="sparkles" iconTint="var(--acc)" title={t('Your year in GYM Buddy')} subtitle={t('One notification on 1 December when your year is ready.')}>
+    <Switch checked={on} onChange={() => update(s => { s.wrappedNotify = !on })} aria-label={t('Your year in GYM Buddy')} />
   </Row>
 }
 
@@ -1806,7 +1806,7 @@ function PushCard({ S, update, toast }) {
           nudgeNote(S)
         : null}
     >
-      <Row icon="bell" iconTint="var(--red)" title={t('Push notifications')} subtitle={t('Rest-timer alerts, even if openGym is closed.')}>
+      <Row icon="bell" iconTint="var(--red)" title={t('Push notifications')} subtitle={t('Rest-timer alerts, even if GYM Buddy is closed.')}>
         <Switch checked={on} disabled={busy} onChange={toggle} />
       </Row>
       {on && (
@@ -2126,24 +2126,24 @@ const HEALTH_COPY = {
     footer: t('Workouts and weigh-ins go to Health Connect when you finish or change them.'),
     on: t('Writing to Health Connect'), denied: t('Health Connect permission not granted'), failed: t('Could not write to Health Connect'),
     removeFailed: t('Could not remove it from Health Connect'), stop: t('Stop writing to Health Connect?'),
-    stopSub: t('What openGym already wrote can stay in Health Connect as your data, or be removed from it.'),
+    stopSub: t('What GYM Buddy already wrote can stay in Health Connect as your data, or be removed from it.'),
   }),
   ios: () => ({
     section: t('Apple Health'), write: t('Write to Apple Health'), open: t('Open Apple Health'),
     footer: t('Workouts and weigh-ins go to Apple Health when you finish or change them.'),
     on: t('Writing to Apple Health'), denied: t('Apple Health permission not granted'), failed: t('Could not write to Apple Health'),
     removeFailed: t('Could not remove it from Apple Health'), stop: t('Stop writing to Apple Health?'),
-    stopSub: t('What openGym already wrote can stay in Apple Health as your data, or be removed from it.'),
+    stopSub: t('What GYM Buddy already wrote can stay in Apple Health as your data, or be removed from it.'),
   }),
 }
 
 // Settings → Integrations → Apple Health / Health Connect. On a phone without the store, a line
 // that says so instead of an empty page.
 function HealthPage({ S, toast, android }) {
-  if (!MOBILE) return <Section><Row icon="info" iconTint="var(--grey)" title={t('This lives in the openGym phone app.')} /></Section>
+  if (!MOBILE) return <Section><Row icon="info" iconTint="var(--grey)" title={t('This lives in the GYM Buddy phone app.')} /></Section>
   return <>
     <HealthConnectCard S={S} toast={toast} android={android} page />
-    <p className="sect-f">{t('Your watch or scale writes here too? Garmin, COROS, Fitbit, Withings, Oura and friends reach openGym this way.')}</p>
+    <p className="sect-f">{t('Your watch or scale writes here too? Garmin, COROS, Fitbit, Withings, Oura and friends reach GYM Buddy this way.')}</p>
   </>
 }
 
@@ -2177,7 +2177,7 @@ function HealthConnectCard({ S, toast, android, page = false }) {
   const ios = st?.platform === 'ios'
   if (!st || !h) return null
   if (st.status === 'unsupported' || (!android && !ios)) {
-    return page ? <Section><Row icon="info" iconTint="var(--grey)" title={t('Not on this phone')} subtitle={t('This phone has no health store openGym can use.')} /></Section> : null
+    return page ? <Section><Row icon="info" iconTint="var(--grey)" title={t('Not on this phone')} subtitle={t('This phone has no health store GYM Buddy can use.')} /></Section> : null
   }
   const c = HEALTH_COPY[ios ? 'ios' : 'android']()
 
@@ -2235,7 +2235,7 @@ function HealthConnectCard({ S, toast, android, page = false }) {
 
   return (
     <Section title={c.section}
-      footer={[h.on && c.footer, h.on && ios && airpods && t('AirPods Pro 3 or Powerbeats Pro 2 in? Your iPhone measures the heart rate for every set, unless your Apple Watch is already on it.'), reading && (h.readWeight && h.wHistory ? t('openGym reads only while it is open: heart rate for workouts of the last day, weigh-ins of the last year. Older workouts stay as they are.') : t('openGym reads only while it is open: heart rate for workouts of the last day, weigh-ins of the last 30 days. Older workouts stay as they are.'))].filter(Boolean).join(' ') || null}>
+      footer={[h.on && c.footer, h.on && ios && airpods && t('AirPods Pro 3 or Powerbeats Pro 2 in? Your iPhone measures the heart rate for every set, unless your Apple Watch is already on it.'), reading && (h.readWeight && h.wHistory ? t('GYM Buddy reads only while it is open: heart rate for workouts of the last day, weigh-ins of the last year. Older workouts stay as they are.') : t('GYM Buddy reads only while it is open: heart rate for workouts of the last day, weigh-ins of the last 30 days. Older workouts stay as they are.'))].filter(Boolean).join(' ') || null}>
       <Row icon="heart" iconTint="var(--red)" title={c.write}
         subtitle={t('Finished workouts and weigh-ins, from this phone only.')}>
         <Switch checked={!!h.on} disabled={busy} onChange={v => (v ? turnOn() : askOff())} />
@@ -2261,13 +2261,13 @@ function HealthConnectCard({ S, toast, android, page = false }) {
         <Switch checked={!!h.readVitals} disabled={busy} onChange={v => (v
           ? confirmSheet({ title: t('Read your vitals?'),
             message: ios
-              ? t('openGym asks Apple Health for your sleep, resting heart rate, heart rate variability and steps. Allow the ones you like. They stay on this phone, in openGym’s own file, and never go to a server.')
-              : t('openGym asks Health Connect for your sleep, resting heart rate, heart rate variability and steps. Allow the ones you like. They stay on this phone, in openGym’s own file, and never go to a server.'),
+              ? t('GYM Buddy asks Apple Health for your sleep, resting heart rate, heart rate variability and steps. Allow the ones you like. They stay on this phone, in GYM Buddy’s own file, and never go to a server.')
+              : t('GYM Buddy asks Health Connect for your sleep, resting heart rate, heart rate variability and steps. Allow the ones you like. They stay on this phone, in GYM Buddy’s own file, and never go to a server.'),
             confirmText: t('Continue'), onConfirm: () => toggleRead('vitals')(true) })
           : toggleRead('vitals')(false))} />
       </Row>
       {/* Sport (v1.4.5, gm-hooks, lib/activities.js): runs, rides and matches other apps saved,
-          as activities in the calendar and the recovery map. openGym's own workouts stay out. */}
+          as activities in the calendar and the recovery map. GYM Buddy's own workouts stay out. */}
       <Row icon="figureRun" iconTint="var(--blue)" title={t('Runs, rides and matches from other apps')}
         subtitle={t('Strava, your watch, Runna and friends: their sessions show in your calendar and tire the right muscles. No sets, no volume.')}>
         <Switch checked={!!h.readSport} disabled={busy} onChange={toggleRead('sport')} />

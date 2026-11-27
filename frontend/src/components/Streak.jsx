@@ -28,7 +28,7 @@ import { useUI } from '../store/useUI.js'
 export function StreakFlame ({ className = '', style, lit = true, plain = false }) {
   const id = 'fl' + useId().replace(/[^a-zA-Z0-9]/g, '')
   // Settings → Icons → Streak flame (lib/streak-icons.js): your own icon or emoji, in the same
-  // 1em box, tinted by index.css from its own colour. It wins over the openGym/Emoji switch.
+  // 1em box, tinted by index.css from its own colour. It wins over the GYM Buddy/Emoji switch.
   // `plain` is the default flame whatever was picked (the picker's own "default" cell).
   const own = iconChoice({ flameIcon: useStore(s => s.S?.flameIcon) }, 'flame')
   if (own && !plain) return <OwnSymbol own={own} cls={'flame flame-own' + (lit ? ' lit' : ' out') + (className ? ' ' + className : '')} style={style} />
@@ -95,7 +95,7 @@ export function Burst () {
   </span>
 }
 
-/** A chosen flame or freeze: an openGym icon in its own colour, or the emoji itself. */
+/** A chosen flame or freeze: an GYM Buddy icon in its own colour, or the emoji itself. */
 function OwnSymbol ({ own, cls, style }) {
   return <span className={cls + ' own-' + own.k} style={style} aria-hidden="true">
     {own.k === 'icon' ? <Icon name={own.v} /> : <span className="own-e">{own.v}</span>}

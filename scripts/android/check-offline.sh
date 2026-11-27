@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checks openGym Offline (flavour "offline", app/build.gradle) really cannot reach the network:
+# Checks GYM Buddy Offline (flavour "offline", app/build.gradle) really cannot reach the network:
 #   1. its runtime classpath has no network SDK (OkHttp, Retrofit, Cronet, Volley, Ktor) and
 #      nothing from Google Play services, Firebase, ML Kit, Play Core or Garmin's Connect IQ SDK;
 #   2. the APK, if built, asks for neither INTERNET nor ACCESS_NETWORK_STATE nor the installer
@@ -54,8 +54,8 @@ if [ -n "$apk" ] && [ -f "$apk" ]; then
   if grep -qE 'com\.garmin\.android\.connectiq' <<<"$manifest"; then
     echo "$apk: the manifest names Garmin's Connect IQ SDK"; fail=1
   fi
-  if ! grep -q 'ch.duartesantos.opengym.offline' <<<"$manifest"; then
-    echo "$apk: not the openGym Offline package (ch.duartesantos.opengym.offline)"; fail=1
+  if ! grep -q 'ch.duartesantos.gymbuddy.offline' <<<"$manifest"; then
+    echo "$apk: not the GYM Buddy Offline package (ch.duartesantos.gymbuddy.offline)"; fail=1
   fi
   [ "$fail" = 0 ] && echo "$apk: no INTERNET, no network state, no installer, no Play services, no Garmin"
 elif [ -n "${CHECK_OFFLINE_SKIP_GRADLE:-}" ]; then

@@ -8,8 +8,8 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 
 **Apple Watch, redesigned and in step with the phone**
 - Watch redesign: idea and first versions by @cubetes (#832 to #966), and so is most of the last round (#1066, #1068, #1069, #1076, #1100, #1107, #1108, #1187, thanks @cubetes).
-- The watch wears openGym's look: the app's greys, its rounded type and its accent colour (your own, if you picked one on the phone). On watchOS 26 every button is Liquid Glass. The start screen says Today beside the clock, tells you how big the routine is (exercises and sets) and has one big Start, with the other routines as rows under it.
-- The watch speaks all 26 of openGym's languages: Czech, Danish, Persian, Indonesian, Lithuanian, Swedish and Vietnamese are new.
+- The watch wears GYM Buddy's look: the app's greys, its rounded type and its accent colour (your own, if you picked one on the phone). On watchOS 26 every button is Liquid Glass. The start screen says Today beside the clock, tells you how big the routine is (exercises and sets) and has one big Start, with the other routines as rows under it.
+- The watch speaks all 26 of GYM Buddy's languages: Czech, Danish, Persian, Indonesian, Lithuanian, Swedish and Vietnamese are new.
 - One session screen instead of a stack of pages: the set in the middle, the rest on the same page after it, and a swipe right for the Overview with every exercise, its sets and supersets grouped. Tap a row to jump there. Finish is a one-second hold at the bottom of the Overview, so a workout never ends on a stray tap, and the Overview comes up by itself after the last set.
 - The set page reads like Apple's Workout: which set it is on a pill beside the clock, the exercise big under it (warm-up, left or right beside it), the numbers in boxes with their names on top, last time, and one wide Done. The Digital Crown turns the outlined number one step per click, in the exercise's own steps, and never flips exercises again; tap the other box to hand it the crown, tap an outlined box again for a keypad when you need 62.25 kg.
 - Fix a set you already logged: ‹ goes back to it with what you logged, change a number and Save. › goes forward, past the set up next too.
@@ -29,42 +29,42 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 
 **Wear OS, the same watch on every Wear OS wrist**
 - Wear OS gets the watch redesign, idea and first versions by @cubetes, and so is most of the last round (#1024, #1027, #1029, #1030, #1031, #1033, #1165, #1168 to #1172, #1174, #1175, #1180 to #1184, #1188, #1189, thanks @cubetes). Pixel Watch, Galaxy Watch and every other Wear OS watch now look and work like the Apple Watch: one design on every wrist.
-- openGym's look on Wear OS: the app's dark greys and your accent colour from the phone. Start says Today beside the clock, shows the routine's exercises and sets, one wide Start and the build number at the bottom.
-- The Wear OS watch speaks all 26 of openGym's languages: Czech, Danish, Persian, Indonesian, Lithuanian and Vietnamese are new there.
+- GYM Buddy's look on Wear OS: the app's dark greys and your accent colour from the phone. Start says Today beside the clock, shows the routine's exercises and sets, one wide Start and the build number at the bottom.
+- The Wear OS watch speaks all 26 of GYM Buddy's languages: Czech, Danish, Persian, Indonesian, Lithuanian and Vietnamese are new there.
 - One session screen: swipe between the Overview, the set, Metrics and music controls. The rest and holds run on the set page, Finish is a one-second hold, and the Overview shows up by itself after your last set.
 - The set page: weight and reps in big boxes in Apple Workout's style (#1175), and the exercise's animation beside them like on the Apple Watch, held still with Remove animations and left out in Always On (#1170; where the phone app has the standard animations). The crown (or the rotating bezel) turns the outlined number, tap it again for a keypad, and ‹ › take you back to a logged set to fix it, with your heart rate for the set kept.
 - The rest like the Apple Watch's (#1174, #1184): a big countdown whose last three seconds turn orange, a +15 s pill that adds up your taps (#1181), Up next with the next set's weight and reps (#911), and the effort chips while you rest (RIR or RPE, whichever the phone logs). −15 s, Skip and +15 s wait a second after Done, a hold's bar goes orange for the last five seconds, the superset partner is named, and finishing mid-hold keeps the seconds you held.
-- Metrics: time, heart rate with its max and min, sets, volume and calories, on Metrics and on the summary (#1171, #1180). Under it Heart rate, Effort, Zones and Muscles pages like on the Apple Watch (#1172, #1188, #1189). Zones works from the birth year you gave openGym on the phone and says how to add one when it is missing. Calories need the physical activity permission, which the watch asks for once.
+- Metrics: time, heart rate with its max and min, sets, volume and calories, on Metrics and on the summary (#1171, #1180). Under it Heart rate, Effort, Zones and Muscles pages like on the Apple Watch (#1172, #1188, #1189). Zones works from the birth year you gave GYM Buddy on the phone and says how to add one when it is missing. Calories need the physical activity permission, which the watch asks for once.
 - Buzzes you can feel: Wear OS 3 watches vibrate at all now, and logging a set there no longer stops the app (found by @cubetes in #1168). The watch buzzes where the Apple Watch does, and "rest's over" comes once more after 5 seconds unless you touch the watch first.
 - Readable on every watch: no text under 12 sp (#1183), every screen fits a 40/41 mm watch at the largest text size (buttons shrink their word or show just the icon, the set page measures what fits), the clock line at the top stays on its curve instead of running into the exercise name, and "Still training?" says its whole sentence. The first sync after installing opens the start screen at the top, and the page dots follow a page you jumped to from the Overview. TalkBack can change the numbers with More and Less, and Always On shifts its pixels so the screen does not burn in (#1169).
 - A long-text complication for the wide slots on a watch face (#1182), next to the Tile and the small complication, all with the sync count.
 - The weigh-in before a watch start, "All done?" after 20 quiet minutes (it asks, it never ends a workout on its own), a summary with the time big, and a Now playing remote for music on the watch, with one tap to the system's Media Controls for music on your phone.
 - It follows the phone: Skip, +15 s or a pause on the phone moves the watch's rest too, and a set ticked on the phone moves the watch along, to the next set, the superset partner or the exercise you ticked it on (#1165, thanks @cubetes; #1149). The effort chips then rate that set. Moving, adding or removing an exercise on the phone leaves the watch on the one you are doing, and a weight changed on the phone for your next set shows on the watch, unless you already turned the crown.
 - Wear OS catches up with the Apple Watch, thanks @cubetes (#1030, #1031, #1033): a set you tick on the phone gets the watch's heart rate, each rest's heart rate lands on the set before it, a run or yoga session is recorded as one instead of strength training, and a workout left open on the charger rests the heart-rate sensor after 3 quiet hours instead of draining the battery.
-- Samsung Health or another app already recording a workout? openGym leaves it running and only reads your heart rate.
+- Samsung Health or another app already recording a workout? GYM Buddy leaves it running and only reads your heart rate.
 - Sync you can see: an orange arrow with a count beside the clock while sets wait for the phone, "Waiting to sync 3" or "All synced" in words, and the count on the Tile and the complications. "Waiting to sync" clears as soon as the phone has stored a set, app open or not, and "All synced" waits until the phone has actually answered once.
 - The watch keeps itself awake through a rest so its buzz is not late with the screen off, "Phone out of reach" follows the phone within half a minute, and a phone reachable over Wi-Fi counts as in reach.
 - Fixing a weight on the phone half an hour after your last set counts as the workout going on, so the watch no longer asks "All done?" a minute later. And when the phone sees you walk out of the gym, "Looks like you left the gym" shows up on the watch too, and the phone no longer overrules a watch that ended the workout for that reason.
 - Calm motion: screens fade, ‹ › slide the set in from the side you went, and a 3-2-1 ring ends on Go!. Remove animations means short fades only, and in Always On the watch draws outlines and nothing moves.
-- New on Android: Settings → Watches → Wear OS watch. It says whether a watch is connected, whether openGym is on it, whether it is in reach and when it last checked in, and what to do next in each case. Until now Android had no watch page at all.
+- New on Android: Settings → Watches → Wear OS watch. It says whether a watch is connected, whether GYM Buddy is on it, whether it is in reach and when it last checked in, and what to do next in each case. Until now Android had no watch page at all.
 - Fixed: a snapshot from the phone could undo a ±15 s or bring back a rest you skipped on the watch; the summary's heart rate ran into the round edge ("164 max" cut off); the rest screen's "Next: …" line was in English in every language; and the app crashed when a workout ended while it was still starting.
 
 **Garmin, talking to the phone at last**
-- The phone apps now talk to the openGym Garmin watch app (Connect IQ): your workout shows on the wrist, sets, starts, finishes and discards logged there land on the phone, and the Garmin can start today's routine by itself. On Android it goes through Garmin Connect; on the iPhone you pick your watch once. The watch side needs openGym 1.4.5 on your phone.
-- Get it from the Connect IQ Store: Settings → Watches → Garmin → Get openGym for Garmin opens its store page. The same page lists which Garmins the phone knows, whether openGym is on them, and the watch switches (send workouts, open on the watch when a workout starts). A watch out of reach is asked to come closer instead of being offered the app, and Look again works after a Garmin Connect that was too old or got stuck.
+- The phone apps now talk to the GYM Buddy Garmin watch app (Connect IQ): your workout shows on the wrist, sets, starts, finishes and discards logged there land on the phone, and the Garmin can start today's routine by itself. On Android it goes through Garmin Connect; on the iPhone you pick your watch once. The watch side needs GYM Buddy 1.4.5 on your phone.
+- Get it from the Connect IQ Store: Settings → Watches → Garmin → Get GYM Buddy for Garmin opens its store page. The same page lists which Garmins the phone knows, whether GYM Buddy is on them, and the watch switches (send workouts, open on the watch when a workout starts). A watch out of reach is asked to come closer instead of being offered the app, and Look again works after a Garmin Connect that was too old or got stuck.
 - Garmin gets the watch redesign, idea and first versions by @cubetes. Forerunner, fēnix, Venu, vívoactive, Instinct and the rest now look and work like the Apple Watch and Wear OS, fitted to what each Garmin can do.
-- openGym's look on Garmin: black, your accent colour from the phone, numbers in boxes. Start says Today, shows the routine's exercises and sets and one Start. Black-and-white screens (Instinct) get outlines, and the number you are changing turns white on black.
+- GYM Buddy's look on Garmin: black, your accent colour from the phone, numbers in boxes. Start says Today, shows the routine's exercises and sets and one Start. Black-and-white screens (Instinct) get outlines, and the number you are changing turns white on black.
 - One session screen: the Overview, the set and Metrics side by side. Swipe on touch watches, or pick them from the menu on watches with buttons. The rest and holds run on the set page, and the Overview shows up by itself after your last set. Touch and hold its Finish to end the workout, or confirm from the menu.
 - The set page like Apple Workout: UP and DOWN (or a swipe) change the outlined number, BACK switches weight and reps like before. Previous set in the menu (or ‹ beside Done) opens a logged set to fix it, and your heart rate for it stays.
 - Rest and holds: RIR or RPE while you rest (chips on touch watches, in the menu on the others), −15 s, Skip and +15 s that wait a second after Done, a hold with its own 3-2-1 and a bar that goes orange for the last five seconds, the superset partner by name, and finishing mid-hold keeps the seconds you held.
 - It follows the phone: Skip, +15 s or a pause on the phone shows on the wrist ("Paused", with the time standing still), and the watch's own +15, −15 and Skip move the phone's rest. On the bigger Garmins a set ticked on the phone moves the watch along too; the smallest ones (Forerunner 55 and 245, Venu Sq, fēnix 6, enduro, Instinct) don't have the memory for that.
 - Metrics (time, heart rate, sets, volume, calories), a summary with the time big, and "Still training?" after 20 quiet minutes or as soon as the phone saw you leave the gym. Keep going tells the phone too. Music stays with Garmin's own controls.
 - Sync you can see: an orange arrow with a count beside the clock while sets wait for the phone, and "Waiting to sync 3" or "All synced" on the Overview and the summary. It counts sets, not messages.
-- The Garmin keeps every event until the phone confirms it applied it, like the other watches, so a set logged while openGym on the phone was closed is not lost. A whole workout logged with the phone away drains in one go without the watch jumping back, an event sent again long after the phone applied it is confirmed again, so a watch that was away for a whole workout lets go of all of it, and the link no longer stops for good: it comes back after Garmin Connect was updated or restarted, and keeps quiet while the phone does.
-- A watch that never heard from the phone says where to go: Settings, then Garmin, in openGym on your phone. Android runs nothing of Garmin's until you open that page once, and never without Garmin Connect installed (the page says so). On the iPhone it says when Garmin Connect is missing.
+- The Garmin keeps every event until the phone confirms it applied it, like the other watches, so a set logged while GYM Buddy on the phone was closed is not lost. A whole workout logged with the phone away drains in one go without the watch jumping back, an event sent again long after the phone applied it is confirmed again, so a watch that was away for a whole workout lets go of all of it, and the link no longer stops for good: it comes back after Garmin Connect was updated or restarted, and keeps quiet while the phone does.
+- A watch that never heard from the phone says where to go: Settings, then Garmin, in GYM Buddy on your phone. Android runs nothing of Garmin's until you open that page once, and never without Garmin Connect installed (the page says so). On the iPhone it says when Garmin Connect is missing.
 - Small watches, big workouts: on the Instinct 2 family (96 KB for an app) the watch keeps the first 16 sets of today's routine (the rest arrives from the phone) and holds 6 sets for the phone at a time; the others wait their turn and go out as soon as there is room. The 128 KB watches hold new sets back the same way once memory runs low, so a long workout with the phone at home no longer runs them out of memory. To fit at all, those smallest watches leave out Metrics, the effort chips, "Still training?" and the hold timer (Done logs a hold's seconds on the set).
 - A 3-2-1 that ends on Go! before a workout started on the watch. It drains smoothly on AMOLED screens and steps once a second on the others, which stay still otherwise.
-- The Garmin speaks 22 of openGym's languages now: Czech, Danish, Indonesian, Lithuanian and Vietnamese are new. (Connect IQ has no Hindi, Bengali or Persian, and only one Portuguese.)
+- The Garmin speaks 22 of GYM Buddy's languages now: Czech, Danish, Indonesian, Lithuanian and Vietnamese are new. (Connect IQ has no Hindi, Bengali or Persian, and only one Portuguese.)
 - The Garmin app ran in Garmin's simulator on ten watches, Forerunner 55 to fēnix 8: every screen sizes its big numbers to the watch, so nothing overlaps on the small ones, and nothing hides under the Instinct's little round window anymore.
 - Fixed: on the Venu Sq 2 the top button did nothing. It starts, logs a set and skips the rest like START on the other watches.
 - Fixed: on the Forerunner 55 and the Instinct 2 the summary's title and long exercise names were cut off. They wrap onto a second line and get a smaller font before anything is cut. "Not synced yet" reads whole on the Instinct too.
@@ -111,15 +111,15 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Ask the Coach to do things, not just answer: "make me 3 full-body routines with only bodyweight and a pull-up bar", "a quick workout for today", "swap the leg press", "put Legs on Thursday", "remember my left knee is sensitive". Every change shows up as a preview you say yes to, and plan changes can be undone.
 - The Coach reads more of what you track: strength trends, body measurements and, only if you switch it on, sleep, heart rate, steps and how you feel. Coach menu → What the Coach sees lists all of it, with a switch for each.
 - Web research, if you want it: the Coach can look things up with your provider's own search and links the pages it read. Off until the admin and you both switch it on.
-- A routines library the Coach can pick from: the starter plans now, community routines from opengym.ch later.
-- Claude and ChatGPT can use your openGym as a connector: add the address from Settings → Integrations → API tokens as a custom connector and sign in with openGym. You pick what it may see and change, and you can revoke it any time.
+- A routines library the Coach can pick from: the starter plans now, community routines from gymbuddy.ch later.
+- Claude and ChatGPT can use your GYM Buddy as a connector: add the address from Settings → Integrations → API tokens as a custom connector and sign in with GYM Buddy. You pick what it may see and change, and you can revoke it any time.
 - Fixed: long-thinking models died as "could not reach" on mobile data (#1035). Answers stream now, and a dropped connection says so.
 
 **Use the AI you already pay for**
-- Settings → Use your subscription: add openGym to Claude, ChatGPT or Gemini as a connector and let the assistant you already pay for read your training and write routines. No API key, no second bill. Three steps per app, a Copy button and a QR code for the address, a link straight to the right settings page, and a status that turns green with "Connected via Claude" once it has used openGym. Disconnect any of them there too.
+- Settings → Use your subscription: add GYM Buddy to Claude, ChatGPT or Gemini as a connector and let the assistant you already pay for read your training and write routines. No API key, no second bill. Three steps per app, a Copy button and a QR code for the address, a link straight to the right settings page, and a status that turns green with "Connected via Claude" once it has used GYM Buddy. Disconnect any of them there too.
 - Gemini works where Google has custom apps (some plans and countries for now), and the screen says so instead of pretending.
 - No server, just the phone? The screen says honestly why a connector cannot reach it and shows what works instead: OpenRouter, an API key or a model on your network.
-- Got Claude Max, Ultra or Team? Your plan includes monthly API credits, and the Anthropic card in the Coach setup links straight to the key page. Gemini's free key is a one-minute job now: open AI Studio, copy, paste, and openGym tests it by itself.
+- Got Claude Max, Ultra or Team? Your plan includes monthly API credits, and the Anthropic card in the Coach setup links straight to the key page. Gemini's free key is a one-minute job now: open AI Studio, copy, paste, and GYM Buddy tests it by itself.
 - The connector sign-in got sturdier: refresh tokens so Claude and ChatGPT stay connected, Claude's and ChatGPT's own client identity (no registration needed), the checks ChatGPT asks for, and it works under a subpath (BASE_PATH) too. Assistants can search the exercise library by name, muscle or equipment, so a routine they write uses exactly the exercise you meant.
 - Admins: the Claude Code setup token stays, with a plain warning that Anthropic only allows it in Claude Code. For your own instance there is a preview to run the Coach on your ChatGPT plan (COACH_CHATGPT_PLAN=on, Sign in with ChatGPT).
 
@@ -145,7 +145,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - The streak in a trainer's list counts with the member's own phone's rules, freeze history included, so it is never a week off what the member sees.
 
 **Sign in with your identity provider (OIDC)**
-- Self-hosting with Authentik, Authelia, Keycloak, voidAuth or Pocket ID? openGym signs people in through it now, next to passkeys: set OIDC_ISSUER and OIDC_CLIENT_ID and the sign-in screen gets a "Sign in with ..." button (#130, idea and first version by @melduarmir (#391), testing by @austinwilcox).
+- Self-hosting with Authentik, Authelia, Keycloak, voidAuth or Pocket ID? GYM Buddy signs people in through it now, next to passkeys: set OIDC_ISSUER and OIDC_CLIENT_ID and the sign-in screen gets a "Sign in with ..." button (#130, idea and first version by @melduarmir (#391), testing by @austinwilcox).
 - The phone app signs in the same way from "Connect to my server", in the system browser, and comes straight back to the app. No pairing code needed.
 - Accounts make themselves: being in the right group at your provider is the invite (OIDC_ALLOWED_GROUPS), and leaving it ends that profile's sessions. FIRST_USER_ADMIN works for the first provider sign-in too.
 - Groups can hand out roles (OIDC_ROLE_MAP): admin, trainer, gym lead and member per studio. A role you gave by hand stays put.
@@ -167,7 +167,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Fixed: on a photo share card the logo sits on its own dark badge, and nothing runs over it any more. A card that is too full shortens the list or shrinks the map instead.
 - Fixed: "Next time: 0 kg, lighter" under every lift on the finish screen with pyramid sets or progression off. It now shows the set you will open with, or nothing.
 - Fixed: Apple Watch workouts could land in Apple Health with 0 kcal. The watch asks for the calorie permission an older version never asked for, and a watch workout without any energy gets the phone's estimate.
-- Share card colours: pick the background (openGym dark, black, white, your accent, any colour or see-through), the text and the highlights. The logo stays the logo.
+- Share card colours: pick the background (GYM Buddy dark, black, white, your accent, any colour or see-through), the text and the highlights. The logo stays the logo.
 - "On the card" says what fits: the muscle map and the exercise list share the room now, and when something still does not fit on that size, its chip is marked and the sheet tells you.
 - Colour tags for sets: give any set one of six colours, each with its own shape and name. They show by the set number and in History, and go into the CSV export.
 - Bands in the Focus view and on per-side sets too, and a band can have a level or strength ("Heavy", "Level 3") beside or instead of its colour.
@@ -208,10 +208,10 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Your own clips: record a friend shouting "you can do it" (or pick a file), up to three per moment, played instead of the line. They sync to your own devices and are never shared to the community library.
 
 **Sister apps: openNutrition, runs and matches**
-- Link openNutrition, read-only: Settings → Integrations → Sister apps → openNutrition, its address and the code it shows (or a token with summary access). openGym never changes anything there, and the link stays on this device.
+- Link openNutrition, read-only: Settings → Integrations → Sister apps → openNutrition, its address and the code it shows (or a token with summary access). GYM Buddy never changes anything there, and the link stays on this device.
 - With it linked: calories, protein and protein meals a day in the performance report (a Nutrition section) and a Fuel card in Your month, each with its own switch on the openNutrition sheet.
 - Your fasting window on Home, under today's session: "Fasting until 12:00" or "Eating window open until 20:00", when openNutrition sends it.
-- Runs, rides and matches from other apps: Strava, your watch, Runna and friends save them to Apple Health or Health Connect, and openGym now reads them as activities (Settings → Integrations → Apple Health / Health Connect → Runs, rides and matches from other apps). No sets, no volume, no records.
+- Runs, rides and matches from other apps: Strava, your watch, Runna and friends save them to Apple Health or Health Connect, and GYM Buddy now reads them as activities (Settings → Integrations → Apple Health / Health Connect → Runs, rides and matches from other apps). No sets, no volume, no records.
 - Activities show in History, as a blue dot in the calendar and on a day's sheet, where you can also log one by hand (a padel match, a climbing night).
 - They tire the muscles they used: 90 minutes of football leaves your legs recovering in the muscle map and the Home hint, a yoga class barely registers.
 - Sport counts for the streak, if you want it to: Settings → Look & Home → Sport counts for the streak. Off by default, like recovery.
@@ -219,10 +219,10 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Fixed: the trainer's nutrition card read openNutrition's days as all empty (it looked for kcal and carbs where openNutrition says energy and carbohydrate), and an unlogged macro read as zero.
 - Fixed: the Apple Health / Health Connect card said Off while only body composition or vitals were being read, and Disconnect on it left those two reads running.
 
-**openGym Offline, network log, reminder sounds**
-- openGym Offline: a second Android app without the internet permission, so Android itself makes sure it never talks to anyone. Everything that works on the phone alone, 180 px animations, no sync, Coach, YouTube, update check, webhooks, Strava, WebDAV, calendar feed, API tokens, community library or gym search. Its own name and package, so it sits next to the normal app.
+**GYM Buddy Offline, network log, reminder sounds**
+- GYM Buddy Offline: a second Android app without the internet permission, so Android itself makes sure it never talks to anyone. Everything that works on the phone alone, 180 px animations, no sync, Coach, YouTube, update check, webhooks, Strava, WebDAV, calendar feed, API tokens, community library or gym search. Its own name and package, so it sits next to the normal app.
 - Network log in the phone app (Settings → About & updates → Network log): every request this session, by host, with the time. A phone on its own shows 0.
-- A sound for each reminder (Android, Settings → Reminders → Sounds): workout days and the nudge, the check-in and the gym reminder can each ring with the phone's default, any phone sound, one of openGym's tones, your own sound or nothing.
+- A sound for each reminder (Android, Settings → Reminders → Sounds): workout days and the nudge, the check-in and the gym reminder can each ring with the phone's default, any phone sound, one of GYM Buddy's tones, your own sound or nothing.
 - Less motion (Settings → Look & Home) turns every slide, bounce and snowflake off on this device.
 - Themed app icon on Android 13 and up (#311), and the widget picker shows a preview with numbers instead of the app icon.
 
@@ -232,7 +232,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - On a rough day the check-in offers to go lighter: 10% off the open sets (rounded to your plates) or one set fewer per exercise. Today only, never picked for you, and the session sits out of progression so your next targets stay put.
 - Stats → Overview → Daily form: what your check-ins and your sleep say about how the workouts went (estimated strength, volume, reps in reserve), only once there is enough to compare, with the number of workouts on each side and a plain word on how sure it is.
 - Vitals from Health Connect and Apple Health: last night's sleep, resting heart rate, HRV and steps next to your usual, on the Daily form card. Settings → Integrations → Health Connect (or Apple Health) → Sleep, resting heart rate, HRV and steps. Read on the phone only, never synced. The check-in fills its sleep from it.
-- Your month in openGym: the year's stories for one month (workouts, hours, volume, weeks with a workout, records, exercise of the month on the muscle map, what was new, one line to go out on), every card shareable. Stats → More → Your month, or Play your month on the recap card on the 1st.
+- Your month in GYM Buddy: the year's stories for one month (workouts, hours, volume, weeks with a workout, records, exercise of the month on the muscle map, what was new, one line to go out on), every card shareable. Stats → More → Your month, or Play your month on the recap card on the 1st.
 
 **Build a session, skill ladders, deload weeks and streak levels**
 - Build a session from the muscle map: tap muscles or groups, pick 20, 40 or 60 minutes, and get a session that fits the active gym (bench, dumbbells, machines, your own kit), leaves out muscles still recovering and puts what you already do and your favourites first, each with a line on why. Swap one, shuffle, start it or save it as a routine (Exercises → By muscle → Build a session).
@@ -278,7 +278,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 
 **API tokens and MCP over HTTPS**
 - API tokens: in Settings → Integrations, make a key for one program (an AI assistant, a planner, a script). Pick per category what it may see and what it may change, and when it ends. It never gets more than you have, only your own profile, it is shown once and stored only as a hash, and revoking it stops it on the next request. Every look and change shows in your sharing log (#480, idea by @rkj; #566, idea by @kurktchiev).
-- MCP over HTTPS: an optional container serves openGym's MCP tools at https://your-server/mcp, so assistants on the web, a phone or another machine can use them with a token. Turn it on with `COMPOSE_PROFILES=mcp` and `MCP=on` (docs/MCP_REMOTE.md; #781, idea by @czepter; #314, idea by @mzspicoli).
+- MCP over HTTPS: an optional container serves GYM Buddy's MCP tools at https://your-server/mcp, so assistants on the web, a phone or another machine can use them with a token. Turn it on with `COMPOSE_PROFILES=mcp` and `MCP=on` (docs/MCP_REMOTE.md; #781, idea by @czepter; #314, idea by @mzspicoli).
 - The MCP server can read through your server instead of the data folder, so it runs anywhere and never sees other profiles (#880, idea by @krapnixvitu).
 - New MCP tools: create_routine, update_routine and delete_routine. Edits keep every setting you did not mention, and a confirmed change or a delete lands on exactly the version you saw or not at all (#960, idea by @sajlx; #310, idea by @ameer-khan-ashraf).
 - log_workout logs cardio: minutes, speed or distance, incline, in mph or km/h (#942, idea by @matthewjablack).
@@ -310,7 +310,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Session targets: a coach or planner can set the exact rows for one routine on one day (warm-ups, load, reps and rest per row) through the synced profile. The workout opens at them, your routine and its progression stay untouched, and a target that does not fit is refused with a reason instead of half applied. Format in docs/dev/SESSION_TARGETS.md (#972, idea by @soshiforehead-spec).
 
 **New**
-- Android: Settings → Workout → Screen orientation keeps openGym upright (or sideways) while the rest of your phone rotates as it likes (#821, thanks @snike79 for the idea).
+- Android: Settings → Workout → Screen orientation keeps GYM Buddy upright (or sideways) while the rest of your phone rotates as it likes (#821, thanks @snike79 for the idea).
 - A machine's weight stack and your dumbbells take a whole list at once: type one per line or paste "5, 11.3, 18.1". The quick fill stays around after the first block, so a stack with a finer run on top is two fills (#926, thanks @johannes1984 for the idea).
 - Plates: add the sizes your gym really has (3 and 4 kg, 0.25 kg micro plates, anything on a quarter step) and take them out again, per gym. Plate loading and the "X kg short" hint only reach for what is on your list (#886, thanks @rt-oliveira for the idea, idea and first version also by @temperatio in #542).
 - An exercise can go by one of its other names everywhere: give it "Pec deck" under Other names, pick it under Shown as, and the workout, routines, history and stats say Pec deck. Exports and the API keep the catalogue title (#903, thanks @lodepav for the idea).
@@ -335,9 +335,9 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Cardio: how hard it felt is now a little chip right under the row (and on the Focus card): "Rate it", then "RPE 7" in its effort colour. It used to hide in the set menu where nobody found it (thanks thehypetrainhobo for saying so). Switch Effort off in Modules and the chip goes too.
 
 **One green, the real logo, routine links**
-- New installs start in openGym green, the same green as the logo, and "openGym green" leads the colour picker. Already picked a colour, or kept the old default? Nothing changes for you, on the watches, widgets and the Live Activity either. The old one is still there as Classic green.
-- The openGym logo is the real one everywhere: the web app, iPhone, Apple Watch, Android, Wear OS, Garmin, Zepp and the share cards.
-- Routine links like on Spotify: a routine page from opengym.ch/routines (tapped, or its QR scanned with the camera) opens openGym, ready to import with the author's name on it. Plan → Scan a QR code reads routine and sticker codes right in the app.
+- New installs start in GYM Buddy green, the same green as the logo, and "GYM Buddy green" leads the colour picker. Already picked a colour, or kept the old default? Nothing changes for you, on the watches, widgets and the Live Activity either. The old one is still there as Classic green.
+- The GYM Buddy logo is the real one everywhere: the web app, iPhone, Apple Watch, Android, Wear OS, Garmin, Zepp and the share cards.
+- Routine links like on Spotify: a routine page from gymbuddy.ch/routines (tapped, or its QR scanned with the camera) opens GYM Buddy, ready to import with the author's name on it. Plan → Scan a QR code reads routine and sticker codes right in the app.
 
 **Share your workout, your way**
 - The share card is new: Classic now fills the whole picture instead of sitting in a rounded box on black, Photo puts the numbers on a photo of yours, Lifts lists your best set of each exercise, and Sticker is a see-through PNG to lay over a picture you already have in Instagram (thanks Sharan for the idea, and w3ndo, ayeeebroham and seals187 for asking).
@@ -365,7 +365,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - A planned day that went by without a workout gets a hollow dot (Missed plan) instead of looking like a day still to come. Tap it and it says what that meant for the week, which still counts if you trained another day. A trained day that was moved keeps a little orange ring.
 - Pick how forgiving your streak is: No freezes (miss a week, start over), Gentle (one freeze, so two missed weeks in a row end it) or Generous (up to two, the rule so far). New profiles choose on Home, with Gentle ready; everyone else keeps Generous until they change it in Settings → Look & Home → Streak freezes. A new rule counts from the week you save it, the weeks already counted stay as they were, and the calendar says from when. The watches, widgets and recaps show the same number.
 - On top of the calendar: what the number counts (weeks in a row with at least one workout), your freezes and how the next one is earned, and the first time, four short lines on how it all works. Stats → Week streak says it too, with How streaks work one tap away.
-- Settings → Look & Home → Icons: pick your own streak flame and freeze, from openGym's icons or any emoji. The colors around it (the flame's glow and bar, the frozen week, the freeze chips) follow its color in light and dark mode, and Reset to default is right there. Syncs like the rest of your settings; the watches and widgets keep their own flame.
+- Settings → Look & Home → Icons: pick your own streak flame and freeze, from GYM Buddy's icons or any emoji. The colors around it (the flame's glow and bar, the frozen week, the freeze chips) follow its color in light and dark mode, and Reset to default is right there. Syncs like the rest of your settings; the watches and widgets keep their own flame.
 
 **Android and Health**
 - Android: the workout you are doing lives in one notification now. It shows the exercise, the set and its target, the time since you started and how far along you are, with Log set and Next exercise right there. Log set works with the app closed and starts the rest, the rest counts down in that same notification with the next set on top, and finishing or discarding the workout takes it away. On Android 16 it is a Live Update, the little chip by the clock (#760, idea and first version by @Andrew-A-A (#874)).
@@ -397,8 +397,8 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Brazilian Portuguese reads Brazilian now: no more Portugal's words and forms, and real Brazilian gym words (thanks @lukol01 in #1067).
 - The APK's updater falls back to GitHub's API link when the download link on github.com fails, so an update no longer gets stuck there (thanks @lodepav in #1084).
 - The week and month recap picture keeps a long volume inside its tile (#1195), Your year pauses its glow while the Share sheet is open, so the phone has less to draw while it makes the picture (#1196, for #1103), and the tests pass in any timezone and in any order (#1197). Thanks @cubetes.
-- Rather not run a server? ElfHosted sponsors openGym and runs it for you, built from our tagged releases with no changes and a 7-day trial (README and docs/SELF_HOSTING.md). Your own server stays the first-class way.
-- opengym.ch/brand has the brand kit: the logo, icons, colours, banners and the brand guide to download.
+- Rather not run a server? ElfHosted sponsors GYM Buddy and runs it for you, built from our tagged releases with no changes and a 7-day trial (README and docs/SELF_HOSTING.md). Your own server stays the first-class way.
+- gymbuddy.ch/brand has the brand kit: the logo, icons, colours, banners and the brand guide to download.
 
 **Fixes from your reports**
 - Cardio on a 320 px phone: a row with the incline pushed its tick off the card. Below 360 px the incline now takes a typed number without the − and +, and the tick is back.
@@ -422,18 +422,18 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 - Workout: swapping an exercise while you rest keeps the countdown and its Skip on screen, instead of making them vanish until the next set.
 - Workout: a drop set ticked done greys out its drops (and a rest-pause set its bursts) along with it.
 - Week streak: when a freeze covers a missed week, the streak card on Stats now says which week it was, so a streak running across a gap you can see no longer looks like a counting error.
-- Zepp OS watch: the page is there on a phone without a server too, says why the watch needs one and connects you, the pairing code and the server address each get a copy button, and the page says plainly that openGym is not in the Zepp App Store yet, with the install guide.
+- Zepp OS watch: the page is there on a phone without a server too, says why the watch needs one and connects you, the pairing code and the server address each get a copy button, and the page says plainly that GYM Buddy is not in the Zepp App Store yet, with the install guide.
 - AI Coach: a question in the chat sees your weigh-ins of the last four weeks, the ones from Apple Health or Health Connect included, instead of answering that it does not know your weight.
-- Apple Health and Health Connect: workouts logged on the phone now come with their active calories, an estimate from what you did, how long and your body weight (a sane 75 kg until you weigh in). If a watch measured the workout on the iPhone (any watch that saves to Apple Health), its calories go on instead. If you turned Health on before, openGym asks once for the calories permission (#724, D#917, thanks @justteshi and @mips6904; measured energy idea and first version by @davoloko in #434).
+- Apple Health and Health Connect: workouts logged on the phone now come with their active calories, an estimate from what you did, how long and your body weight (a sane 75 kg until you weigh in). If a watch measured the workout on the iPhone (any watch that saves to Apple Health), its calories go on instead. If you turned Health on before, GYM Buddy asks once for the calories permission (#724, D#917, thanks @justteshi and @mips6904; measured energy idea and first version by @davoloko in #434).
 - "Your last session" keeps the warm-ups you marked, also with progression off (#993, #1001, thanks @ilirhushi).
 - Windows: the bundle size script and the coach tests find their files again (#999, #998, #1000, thanks @lintuo and @fromcodetogold).
 - Android: the tab bar no longer slides under the navigation bar after a page load (#997, thanks @FrancescoDeSimone).
-- Android: "Rest's over" no longer rings a minute early with the phone locked, and the countdown card stays until the real end. Some phones hand the alarm over early; openGym now books it again for the right time (#995, thanks @ukizet).
+- Android: "Rest's over" no longer rings a minute early with the phone locked, and the countdown card stays until the real end. Some phones hand the alarm over early; GYM Buddy now books it again for the right time (#995, thanks @ukizet).
 - Android: Create PDF no longer closes the app on phones without a print service. It says what is missing instead (#991, thanks @dagov42 for tracking it down).
 - Plates: the first plate line of a lift names the bar it counts with ("5 per side on a 20 kg bar"), and a weight under the bar says so instead of "Bar only". Logging without the bar? Set your bar under Equipment (thanks vitoralves9629 on Discord).
 - Home: the recovery card put away with its × comes back when you switch Recovery tips on again, and the × now says it is only for today, with Undo (thanks dnys8445 on Discord).
 - AI Coach: a self-hosted endpoint without /v1 that is briefly busy is tried again instead of failing as "not found" (#520, thanks @Bortlesboat).
-- AI Coach: a slow reasoning model behind a CDN (DeepSeek and friends) no longer fails at the 60 second mark. When an answer is cut off mid-wait, openGym asks again as a stream and keeps doing so for that endpoint (#546, idea and first version by @jijichen).
+- AI Coach: a slow reasoning model behind a CDN (DeepSeek and friends) no longer fails at the 60 second mark. When an answer is cut off mid-wait, GYM Buddy asks again as a stream and keeps doing so for that endpoint (#546, idea and first version by @jijichen).
 - AI Coach: the time of a chat message follows the app's language, not the browser's (#515, thanks @casungo).
 - Stats: an exercise kept out of progression is kept out of the statistics too, while a deload's workouts still count (#813, thanks @lodepav).
 - iPhone and Android: the tab bar names are 11 px, the smallest size Apple's guidelines allow (#710, thanks @olestrr).
@@ -494,7 +494,7 @@ tag. Write it for the people using the app: what changed for them, short, no em 
 
 ## v1.4.4 (2026-11-03)
 
-**Modules: as much app as you want.** Settings → Modules switches whole parts of openGym on and
+**Modules: as much app as you want.** Settings → Modules switches whole parts of GYM Buddy on and
 off: Effort, Plates and warm-ups, Strength levels, Form videos, Watch, Gym check-in, Body, Health,
 Motivation, the AI Coach, Integrations and Seasonal themes. Pick Just training, Training and body or
 Everything, or flip them one by one. A module that's off is gone from Home, Stats, Settings and the
@@ -502,12 +502,12 @@ search, and stops its notifications; health sync, the watch, webhooks and Coach 
 it's back. Nothing is ever deleted, and everything stays on after the update. New profiles get the
 choice on their first screen. The idea came from seals187 and Shadowbyte on Discord.
 
-**Integrations, all in one place.** Settings → Integrations is a short list of what openGym can
+**Integrations, all in one place.** Settings → Integrations is a short list of what GYM Buddy can
 talk to, each with whether it's on and the one thing to do next: Apple Health or Health Connect
 (their switches moved here from Data & backup, which still has a way in), the Hevy and file imports,
 the CSV export, the Coach and the MCP server. Nothing new talks to anything until you switch it on,
 and a card only shows where it can do something. Garmin, COROS, Polar, Fitbit, Samsung Health, Oura,
-Withings and Renpho get an honest "works with": they reach openGym through Apple Health or Health
+Withings and Renpho get an honest "works with": they reach GYM Buddy through Apple Health or Health
 Connect, no fake Connect button.
 
 **Webhooks** (self-hosted, `INTEGRATIONS=webhook`). Tell Home Assistant, n8n, ntfy or Node-RED when
@@ -521,10 +521,10 @@ F-Droid from the source: the gym card scanner uses the camera in the app instead
 updates come from F-Droid, and Wear OS watches (they need Google Play services) are left out,
 which the app says in Settings → About. Everything else is the same app.
 
-**openGym on Amazfit watches** (Zepp OS 3 and later: Balance, GTR 4, GTS 4, Active, T-Rex, Cheetah,
+**GYM Buddy on Amazfit watches** (Zepp OS 3 and later: Balance, GTR 4, GTS 4, Active, T-Rex, Cheetah,
 Bip 5 and friends). Same deal as Wear OS: start a routine on the wrist, turn the crown (or tap + and
 -) for weight and reps, Done, a rest ring that buzzes, heart rate on every set, a summary, and a
-shortcut card with your streak. It talks to openGym through your own server, so pair it in
+shortcut card with your streak. It talks to GYM Buddy through your own server, so pair it in
 Settings → Zepp OS watch and type the code into the Zepp app. Works with the web app too.
 
 **A fresh coat of paint.** The whole app got a proper look-and-feel pass, the kind where nobody
@@ -547,7 +547,7 @@ the weekly sets and strength cards line up like every other Stats card, Merge in
 the end of an exercise's sheet (Delete still last), and narrow phones no longer squash the
 muscle names in the ranges sheet.
 
-**openGym on Garmin, almost.** A Connect IQ app for Garmin watches is built and waiting for its
+**GYM Buddy on Garmin, almost.** A Connect IQ app for Garmin watches is built and waiting for its
 store listing: Forerunner, fēnix, epix, Venu, vívoactive, Instinct and friends, round or square,
 colour or the sunlight-proof black and white. The same deal as the other watches: today's routine
 with one press, big numbers you nudge with the buttons or a swipe, Done, a rest that buzzes, heart
@@ -617,12 +617,12 @@ picture (story or square, dark or light) or save that stretch as the performance
 off gets no card, nobody needs a recap of the sofa. The × puts it away, and Settings → Look & Home →
 Week and month recap switches it off.
 
-**openGym on your Wear OS watch, as a beta** (thanks @vampireJSV for the idea and the first take in #673).
+**GYM Buddy on your Wear OS watch, as a beta** (thanks @vampireJSV for the idea and the first take in #673).
 Galaxy Watch, Pixel Watch, TicWatch, OnePlus and friends now get what the Apple Watch has: the
 workout follows you to the wrist, big numbers you turn with the crown, Done, a rest ring that buzzes
 you back to the bar, heart rate on every set, a summary at the end, and a Tile with your streak and
 today's plan. Start today's routine right from the watch. Your phone stays in charge, the watch just
-saves you the walk to the bench where you left it. It's a beta: it shows up as "openGym Beta" on
+saves you the walk to the bench where you left it. It's a beta: it shows up as "GYM Buddy Beta" on
 the watch and hasn't met many real wrists yet, so tell us on Discord or GitHub what breaks.
 
 **Warm-ups that build themselves** (#156, thanks @giulioleuci). Settings → Workout → Automatic
@@ -673,7 +673,7 @@ gym at the top with a switcher, the Plates, Dumbbells and Your bars pages say wh
 for and can copy another gym's list. During a workout the gym sits small next to the clock: tap it
 to switch, and the sets you have not done yet move onto that gym's plates and dumbbells. Saved
 workouts remember where they were done. On the phone, a gym reminder place can say "Equipment
-here": arrive, tap a check-in sticker or start a workout there and openGym switches by itself, with
+here": arrive, tap a check-in sticker or start a workout there and GYM Buddy switches by itself, with
 a little "Using Home gym equipment" so you know (only with location already allowed, it never asks).
 Nothing changes when you update: every profile starts with the lists you have today.
 
@@ -720,14 +720,14 @@ something still recovering, it suggests going a bit lighter or swapping the sess
 it, and a rest day only ever hears that the timing is good. One hint at a time, × hides it for the
 day, and Settings → Look & Home → Recovery tips turns it off.
 
-**Your year in openGym.** From 1 December to the end of January, Home has a card: your year is ready.
+**Your year in GYM Buddy.** From 1 December to the end of January, Home has a card: your year is ready.
 Tap it and your year plays as full-screen stories, tap or swipe through: how many workouts, the hours,
 the tonnes you moved (in blue whales, pianos or house cats, whatever fits), your longest streak, your
 signature move and the muscle it built, your records and the biggest one, your favourite day and time,
 your best month, your body weight if you logged it (one tap leaves it out for good, and it never
 judges), a training personality from your habits (Early bird, Leg-day loyalist, Night owl and friends)
 and a summary. Every card shares as a picture, 9:16 for Stories or 1:1, dark or light, with a small
-openGym logo. It is all worked out on your phone from your own data and nothing is sent anywhere.
+GYM Buddy logo. It is all worked out on your phone from your own data and nothing is sent anywhere.
 Stats → Your year plays it for any year with workouts, the current one too. On 1 December there is
 one notification at 18:00: the phone plans it for itself when you open the app in November (only if
 notifications are already allowed, it never asks), and your server sends a web push to the browsers
@@ -738,7 +738,7 @@ the way out: a card with the routine, date, duration, volume, sets, records, the
 week streak, as a Story (9:16) or a square, dark or light. History's Share as image makes the same card.
 
 **Widgets you set up yourself, and a streak with backup.** Long press the Home Screen, add the
-openGym widget and pick what it shows: your week streak, the weight goal (how many kg or lb to go,
+GYM Buddy widget and pick what it shows: your week streak, the weight goal (how many kg or lb to go,
 with a little curve of your last weigh-ins), this week, the next workout, records this month or this
 week's volume against last week. The wide one shows two side by side. On the iPhone it also comes for
 the Lock Screen, round, wide or as one line. A tap takes you where it makes sense: Stats, the weigh-in,
@@ -749,11 +749,11 @@ snowflake, no switch to remember. Badges at 4, 12, 26, 52 and 104 weeks, a small
 you finish a week or reach one, and Stats shows it all. Points to the next level come later.
 
 **Share a routine with a friend.** A routine's page and a past workout's options now have Share
-with a friend: one link through your phone's share sheet ("Here's my Push Day on openGym 💪"). Your
+with a friend: one link through your phone's share sheet ("Here's my Push Day on GYM Buddy 💪"). Your
 friend taps it, sees the exercises and sets, and Add to my routines puts it next to theirs, never
 over one they already have. A workout goes as a routine, so "do what I just did" is one tap. Your
 weights and your name only go along if you switch them on. The routine rides inside the link
-itself (the part after the #), so no server, not even opengym.ch, ever sees it. No openGym yet? The
+itself (the part after the #), so no server, not even gymbuddy.ch, ever sees it. No GYM Buddy yet? The
 link opens a page that shows the routine and where to get the app, or opens it in your own web app
 or the demo. A really long routine goes as a plan file instead.
 
@@ -781,7 +781,7 @@ own settings. The Lock Screen counts the hold down with a Stop auto button, and 
 in by itself too. Thanks Mirco for the idea and the perfect description, and to our calisthenics friend
 on Discord who was tired of tapping play between every plank.
 
-**A 1-minute tour, and four tutorials.** Right after the first setup, openGym asks if you want a quick
+**A 1-minute tour, and four tutorials.** Right after the first setup, GYM Buddy asks if you want a quick
 look around. Say yes and it points at the real thing, screen by screen: today's session, week or
 rotation, the Library, a practice workout (tick a set, meet the rest timer, swipe, the ⋯ menu, Finish),
 Stats and Settings. It never just teleports you: to get to the next screen it points at the real tab,
@@ -834,7 +834,7 @@ arrow button once you're a few screens down: one tap and you're back at the top.
 your workout, and with Reduce Motion on it jumps instead of gliding.
 
 **Adding your gym works like a maps app now** (#614). Tap Add a gym and you get a search, the
-same field as everywhere else in openGym: start typing and gyms show up as you go, with their
+same field as everywhere else in GYM Buddy: start typing and gyms show up as you go, with their
 address (and how far away they are, when the phone knows), or tap Current location if you're
 standing in it. Pick one and a small map opens with the pin in the middle: drag the map, not the
 pin, to nudge it onto the door, and pick Small, Medium or Large for the circle around it. Name,
@@ -851,14 +851,14 @@ as a last resort JSON asked for in the prompt only), remembers what that endpoin
 accepted so the next run asks right away, and if nothing works shows you the endpoint's own words.
 
 **"Is that right?" before a likely typo** (#811, thanks @lodepav). Tick a set at 300 kg when your
-best is 30 and openGym asks first, because whatever you tick becomes last time, the next target and
+best is 30 and GYM Buddy asks first, because whatever you tick becomes last time, the next target and
 maybe a shiny fake PR. Fix it leaves the set open, Log as typed means you really did. Only on a tick
 by hand: never an untick, a hold's timer, the watch, a first time or an assisted lift's weight.
 
-**Dates pick like the rest of openGym** (#809, thanks @lajawi). On iOS 27 the date in Log body weight
+**Dates pick like the rest of GYM Buddy** (#809, thanks @lajawi). On iOS 27 the date in Log body weight
 stuck out past the edge and the whole sheet scrolled sideways. Every date field (body weight,
 measurements, progress photos, a workout's date, a past workout, the PDF report and CSV export) is
-now openGym's own: it shows the date the way the app writes it and opens a month grid like the
+now GYM Buddy's own: it shows the date the way the app writes it and opens a month grid like the
 calendar's, with Today one tap away, days after today greyed out, and a tap on the month to jump
 years. Same look on every phone, light or dark, in your accent colour. And no sheet scrolls sideways
 any more, whatever ends up in it.
@@ -928,24 +928,24 @@ Apple Health once, with its heart rate. Take the buds out and the readings simpl
 back in and they carry on. Wearing the watch? It keeps the job, so there's never a second workout.
 No new switch: the Apple Health one covers it.
 - **Self-hosting: containers report healthy in half a minute**, not after five. TrueNAS and friends
-  wait for that before they call openGym running (#844, thanks @andi242 for spotting it).
+  wait for that before they call GYM Buddy running (#844, thanks @andi242 for spotting it).
 
 **Tap your phone on a sticker** (NFC, phone app and Chrome on Android). Settings → Look & Home → Set
 up an NFC sticker writes a cheap blank NTAG sticker for your locker, bag or the gym door: tap it and
 today's workout starts (or the one already running opens), or have it just show your membership code
 at the turnstile. Stick one on a machine too (an exercise's details → Write NFC sticker): tapped during
 a workout it jumps to that exercise, or offers to add it; outside a workout it opens the exercise. On
-iPhone (XS and newer) a tap shows a banner that leads into the app. openGym only writes and reads its
+iPhone (XS and newer) a tap shows a banner that leads into the app. GYM Buddy only writes and reads its
 own stickers: it never reads, copies or imitates your gym's access card.
 
-**Hey Siri, log my weight.** On the iPhone (iOS 16 and up) say "Start my workout in openGym" and
+**Hey Siri, log my weight.** On the iPhone (iOS 16 and up) say "Start my workout in GYM Buddy" and
 today's plan starts (or the workout already running opens, never a second one), or "Log my weight
-in openGym": Siri asks for the number, in your kg or lb, and logs it without opening the app. It
-lands in openGym the next time you open it, with a small "logged by Siri" note, and syncs like any
-weigh-in. "What's my workout today in openGym" and "How's my streak in openGym" get an answer
+in GYM Buddy": Siri asks for the number, in your kg or lb, and logs it without opening the app. It
+lands in GYM Buddy the next time you open it, with a small "logged by Siri" note, and syncs like any
+weigh-in. "What's my workout today in GYM Buddy" and "How's my streak in GYM Buddy" get an answer
 right there. All four are in the Shortcuts app and Spotlight too, ready for an automation or the
 Action button, and Siri understands them in the app's languages. On Android, touch and hold the
-openGym icon for Start workout, Log weight and Stats, and Google Assistant can open them by voice.
+GYM Buddy icon for Start workout, Log weight and Stats, and Google Assistant can open them by voice.
 Settings → Look & Home → Siri & Shortcuts lists what to say.
 
 **Exercise names in European Portuguese and Swedish.** All 5,632 exercises now have their own name in
@@ -980,26 +980,26 @@ imported. How to export from each app is in docs/DATA_IMPORTS.md.
 ## v1.4.3 (2026-10-26)
 
 The community release. Most of what's below was asked for on GitHub and Discord or sent in as a
-pull request, the Apple Watch learned a whole bag of tricks, and openGym starts again on iPhones
+pull request, the Apple Watch learned a whole bag of tricks, and GYM Buddy starts again on iPhones
 that 1.4.2 left staring at the logo. Sorry about that one.
 
-**openGym starts again on iOS 15.5 to 16.3** (P1). 1.4.2 and the web demo sat on the splash
+**GYM Buddy starts again on iOS 15.5 to 16.3** (P1). 1.4.2 and the web demo sat on the splash
 forever there, because one tiny link check used regex syntax Safari only learned in 16.4.
 Rewritten, the build now targets Safari 15 like the app does, and a test reads every built file
-for syntax older iPhones can't handle. Should a browser still choke, openGym says so on screen
+for syntax older iPhones can't handle. Should a browser still choke, GYM Buddy says so on screen
 with the error and a Reload button instead of lifting the logo forever. Thanks h097327 for the
 excellent report. Once it starts, iOS 15.5 to 16.1 also gets its missing tints back (the Coach's
 header and error bubbles, the admin pills, the focus card's badges, the tinted buttons, the body
 map's shades): plain stand-ins close enough that you'd need a colour picker to tell, and a test
 makes sure every new tint brings one.
 
-**Gym reminder** (#614, phone app). Walk into your gym and openGym nudges you to hit Start. Add
+**Gym reminder** (#614, phone app). Walk into your gym and GYM Buddy nudges you to hit Start. Add
 your gyms in Settings → Reminders → Gym reminder: "I'm at the gym right now" or a pin on an
 OpenStreetMap map, each with its own radius and text. Once a day at most, never after you trained,
 never mid-workout, optionally only between certain hours. Off by default, and your gyms stay on
 the phone (not on your server, not in backups). Android uses the system's own proximity alerts,
 so no Google services are needed. Android can be slow to notice you arrived (up to half an hour),
-so near a gym the phone can take a short GPS look and nudge you at the door; that needs openGym's
+so near a gym the phone can take a short GPS look and nudge you at the door; that needs GYM Buddy's
 battery use on Unrestricted (Settings shows it as "Quick arrival check"). And if you logged a
 workout on your laptop that your phone hasn't synced yet, the phone asks your server first (3
 seconds at most) instead of nagging you anyway.
@@ -1015,14 +1015,14 @@ Settings → Workout → Fine-tuning turns it off.
 **Export as a spreadsheet** (#647). Settings → Data & backup → Export as spreadsheet (CSV): your
 workouts with one row per set (date, workout, exercise, set, weight, reps, RPE or RIR, warm-ups,
 drops, supersets, cardio distance and time) and, as a second file, body weight and measurements.
-Pick everything or a stretch of days. Opens in Excel or Sheets, makes your coach happy, and openGym
+Pick everything or a stretch of days. Opens in Excel or Sheets, makes your coach happy, and GYM Buddy
 reads it straight back in without losing a set. The importer also learned GymMane's CSV.
 
 **Keep what you added** (#592). Threw an extra exercise into a routine's workout? The finish
 summary lists it under "New in this workout" with one button to add it to the routine, sets, reps
 and weight as you did them. Ignore it and the routine stays exactly as it was.
 
-**Halloween.** Until the end of October a small spider drops in whenever you open openGym (tap
+**Halloween.** Until the end of October a small spider drops in whenever you open GYM Buddy (tap
 it and it runs), bats cross the header now and then, cobwebs gather in a few corners and a shy
 pumpkin hides somewhere on Home. Find it for a little surprise, once a day. Stats gets a skeleton
 hanging off the activity card, spiders on threads, a moon with a tiny witch and two pumpkins
@@ -1102,7 +1102,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
 - **Next exercise and Skip rest on the Lock Screen** (iPhone, Discord). The Live Activity and the
   Dynamic Island get a small button next to the big one: Skip rest while you rest, Next exercise
   the rest of the time, so a machine somebody grabbed no longer means unlocking the phone. Works
-  with openGym asleep. The big button now says Log set, because "Done" sounded a lot like "I'm
+  with GYM Buddy asleep. The big button now says Log set, because "Done" sounded a lot like "I'm
   going home".
 - **RPE and RIR on the watch.** If you rate your sets, the set page has a little effort disc next
   to Done. Tap it, turn the crown, and it goes in with the weight and reps. Leave it alone and
@@ -1131,7 +1131,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
 - Exercise names on the Lock Screen, in the Dynamic Island, on the watch and in the widgets are
   title-cased like in the app, instead of whispering "barbell bench press".
 - After a long run of Lock Screen taps with the app asleep, the Live Activity said "All sets done"
-  with sets still to go. It now says "Open openGym for the next set".
+  with sets still to go. It now says "Open GYM Buddy for the next set".
 - One "Rest's over" on iOS: the end of a rest could leave two identical banners stacked (#728,
   thanks @2baek2).
 
@@ -1140,7 +1140,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
   to Write to Apple Health / Health Connect: Heart rate from your watch fills in the heart rate of
   every set from workouts of the last day, whatever watch recorded it, and Weigh-ins from other
   apps brings in your scale's weigh-ins from the last 30 days. Both off until you turn them on,
-  read only while openGym is open, and they never overwrite a heart rate the Apple Watch already
+  read only while GYM Buddy is open, and they never overwrite a heart rate the Apple Watch already
   logged or a weigh-in you typed.
 - **A year of weigh-ins from Health Connect** (Android, idea from #801, thanks @antoni-heredia).
   Turning on Weigh-ins from other apps also asks for Health Connect's history permission where
@@ -1151,7 +1151,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
   it's strength training, as before.
 - **Imported weigh-ins stay put.** Weigh-ins you import (an Apple Health export, a Google Health or
   Health Connect CSV, Strong, Hevy) are no longer written back to Apple Health or Health Connect,
-  where they landed a second time. Only weigh-ins you enter in openGym go out.
+  where they landed a second time. Only weigh-ins you enter in GYM Buddy go out.
 
 **Your body and your stats**
 - **Lifts against your body weight** (#729, thanks @radu781). Exercise progress in Stats and an
@@ -1240,7 +1240,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
 - **"Where's my code?"** (#551, thanks @Maximrabd). Signing a computer in with a code from your
   phone needs the phone connected to your server. A phone app that keeps everything to itself now
   says so under Settings → Account and on the sign-in screen.
-- **Support openGym.** Settings → About & updates has the coffee jar: Buy Me a Coffee, Ko-fi and
+- **Support GYM Buddy.** Settings → About & updates has the coffee jar: Buy Me a Coffee, Ko-fi and
   GitHub Sponsors, and on the iPhone a straight line to writing an App Store review. No pop-ups
   asking for anything, promise.
 - The install tip in About on a Windows or Linux browser points at Chrome's install icon, not at an
@@ -1248,7 +1248,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
   like every other button that deletes something for good.
 
 **Languages**
-- **Hej, Sverige!** openGym speaks Swedish, from Settings → Units & language or straight from a
+- **Hej, Sverige!** GYM Buddy speaks Swedish, from Settings → Units & language or straight from a
   Swedish phone (#721, thanks @Grizzly163). Exercise names and instructions stay English for now.
 - **Spanish that sounds like Spain** (#786, thanks @cubetes): over 60 strings reworded, Objetivo
   instead of Meta, Entrenador instead of Coach, and holds that no longer say "sostén".
@@ -1266,7 +1266,7 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
   @davidjorgensen), and a profile whose data was deleted stops showing, also where the system can't
   watch files (thanks @rudycelekli).
 - Hevy import: 55 built-in exercises (Seated Leg Curl, Plank, Air Bike, Triceps Dip and friends)
-  land on the right openGym exercise, 12 more titles find theirs (from Lu Raises to the Bayesian
+  land on the right GYM Buddy exercise, 12 more titles find theirs (from Lu Raises to the Bayesian
   curl), and Side Plank, Squat (Machine) and the cable rear delt fly stay themselves with your Hevy
   API key too. The summary counts an exercise once (thanks @lodepav, and #784, #785, #793, thanks
   @cubetes and @theatosam).
@@ -1276,10 +1276,10 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
 
 **Android**
 - **The update actually installs.** Switch apps while the new APK comes down and Android quietly
-  refused to open the installer. Now the installer waits until you're back in openGym, a second tap
+  refused to open the installer. Now the installer waits until you're back in GYM Buddy, a second tap
   after a hiccup reuses the APK it already has instead of fetching 300 MB twice, and the leftover is
   cleaned up once you're on the new version. (The fix lives in the updater itself, so it helps from
-  the update after 1.4.3 on: for this one, keep openGym open while it downloads.)
+  the update after 1.4.3 on: for this one, keep GYM Buddy open while it downloads.)
 - **Which APK is this?** Settings → About tells you whether you have Standard (180 px), Plus (240
   px) or HD (360 px), no guessing from the file size.
 
@@ -1325,10 +1325,10 @@ per phone and iOS asks you to confirm. Android gets the picker in the next versi
 
 ## v1.4.2 (2026-10-23)
 
-openGym comes to the App Store, with an Apple Watch app in tow. Plus everything you asked for
+GYM Buddy comes to the App Store, with an Apple Watch app in tow. Plus everything you asked for
 since v1.4.1, five reported security holes closed and a fresh look at the animations.
 
-**openGym on the iPhone.** The App Store app is the same openGym: use it on the phone alone, or
+**GYM Buddy on the iPhone.** The App Store app is the same GYM Buddy: use it on the phone alone, or
 connect it to your own server. Your data stays where it is (no account with us, nothing collected).
 Get it on the App Store: https://apps.apple.com/app/id6822275400
 
@@ -1343,7 +1343,7 @@ Get it on the App Store: https://apps.apple.com/app/id6822275400
   streak too. A running workout sits on the Lock Screen and in the Dynamic Island, with a Done
   button that logs the set and starts the rest without opening the app.
 - **Apple Health.** Finished workouts and weigh-ins go to Apple Health, the same switch Android
-  has for Health Connect, offered once at the start. Delete a workout in openGym (on any of your
+  has for Health Connect, offered once at the start. Delete a workout in GYM Buddy (on any of your
   devices) and it leaves Apple Health too.
 - **Sharper animations, your choice.** Settings → Workout → Animation quality: Still only, built in
   (180 px), or 240, 360, 480, 720 and 1080 px, downloaded from the App Store when you pick them.
@@ -1359,9 +1359,9 @@ Get it on the App Store: https://apps.apple.com/app/id6822275400
 - **A logo instead of a black screen** while the app starts, loading its plates.
 
 **Android.** The app now targets Android 16 and needs Android 7.0 or newer (6.0 is out). The APK
-you know stays and updates itself, now in three sizes: **Standard** (`openGym-1.4.2.apk`,
-animations built in at 180 px, the small one), **Plus** (`openGym-Plus-1.4.2.apk`, 240 px) and
-**HD** (`openGym-HD-1.4.2.apk`, 360 px, sharp and hungry). Each one updates to its own kind, so
+you know stays and updates itself, now in three sizes: **Standard** (`GYM Buddy-1.4.2.apk`,
+animations built in at 180 px, the small one), **Plus** (`GYM Buddy-Plus-1.4.2.apk`, 240 px) and
+**HD** (`GYM Buddy-HD-1.4.2.apk`, 360 px, sharp and hungry). Each one updates to its own kind, so
 nobody gets a surprise download twice the size. Phones on v1.4.1 update to Standard; want Plus or
 HD? Install it on top, your data stays (same goes for going back). A Google Play version is ready for the store too: it updates through Play and gets
 the sharper animations as Play downloads, like the iPhone, and an APK phone can move to it later
@@ -1485,7 +1485,7 @@ Bug fixes for v1.4.0, mostly the things you told us about on Discord and GitHub.
 
 ## v1.4.0 (2026-10-09)
 
-The biggest update openGym has had: a new exercise database with 5,632 exercises and new
+The biggest update GYM Buddy has had: a new exercise database with 5,632 exercises and new
 animations, everything that was planned for v1.3.11 and v1.3.12, and the features you asked for
 most. Forty-seven community pull requests from twenty contributors. Web bundle, APK and API image.
 
@@ -1600,7 +1600,7 @@ working with a v1.4.0 server, and shows the new exercises it doesn't know yet wi
 **Licence**
 
 The exercise stills and animations are © Aliaksandr Makatserchyk, Gym visual, licensed for use in
-openGym only and not covered by the AGPL. Details in NOTICE.md.
+GYM Buddy only and not covered by the AGPL. Details in NOTICE.md.
 
 ## v1.3.10 (2026-10-07)
 
@@ -1637,7 +1637,7 @@ arrived.
 
 **Rotation and the session queue**
 
-- **A rotation beside the fixed week** (#158, #69; kurktchiev's #167 and giulioleuci's kurktchiev/openGym#1).
+- **A rotation beside the fixed week** (#158, #69; kurktchiev's #167 and giulioleuci's kurktchiev/GYM Buddy#1).
   A, B, C, A, ...: the next session is the next one you haven't done, whatever the weekday, so a
   missed Tuesday no longer shoves the plan around. Build the loop in Plan, reorder it, start a new
   pass whenever you like. Switching back to a fixed week asks first and leaves your weekdays as
@@ -1659,7 +1659,7 @@ arrived.
 
 **Your own colour**
 
-- **Any accent colour you like**, from the rainbow swatch after the presets. openGym checks it
+- **Any accent colour you like**, from the rainbow swatch after the presets. GYM Buddy checks it
   against light and dark and nudges it until text on it stays readable. It syncs like the presets.
 
 **Safer sync, and no more lost data**
@@ -1680,7 +1680,7 @@ could already happen in v1.3.9:
 - **A server that falls back** to an older copy (say, from a backup) is merged with, not trusted
   blindly. A full disk or a slow answer can no longer hand a device an old state.
 - **Importing a backup keeps the workout you are in the middle of**, whether it replaces or merges.
-- On the server: every write is flushed to disk before openGym says "saved", a copy of the last
+- On the server: every write is flushed to disk before GYM Buddy says "saved", a copy of the last
   good `db.json` is kept as `db.json.bak`, and the server starts from that copy if the main file
   is damaged. We killed it eighty times mid-write; every confirmed save was on disk.
 
@@ -1722,7 +1722,7 @@ Thank you, all of you. This release is half yours.
   that names notes (#352), the muscle chip keeps the equipment filter (#353), the plate load kind
   is kept (#354), MCP tools that answer the question asked (#355) and explain a broken data folder
   (#356), plus tests and tidying (#337, #339, #340, #342).
-- **@giulioleuci**: rotation mode, on top of the queue (kurktchiev/openGym#1).
+- **@giulioleuci**: rotation mode, on top of the queue (kurktchiev/GYM Buddy#1).
 - **@EmilZapata**: planned vs completed weekly volume (#333) and zero-credit muscle mappings (#359).
 - **@horusglez**: per side on timed holds (#322) and progress photos (#361).
 - **@NtsCiccio**: pyramid sets (#367).
@@ -1743,7 +1743,7 @@ Thank you, all of you. This release is half yours.
   #377).
 - Strong's current export, the one with semicolons, imports again (davidjorgensen, #394).
 - Pairing the phone app says why it failed: a proxy or CORS rule in the way, a login page answering
-  in openGym's place, or a server that can't be reached (#329).
+  in GYM Buddy's place, or a server that can't be reached (#329).
 - A cardio block or a long hold at the end no longer shortens the workout's duration.
 - 8.5 in a reps field no longer becomes 85, a running plank survives a reload, and the rest timer
   stops when you sign out.
@@ -1767,12 +1767,12 @@ Thank you, all of you. This release is half yours.
 
 - **`FIRST_USER_ADMIN=1`** (seals187, #328), opt-in: the first profile on an empty instance becomes
   its admin. Off by default; if you turn it on, register yourself before you share the address.
-- **`BASE_PATH`** (#346): serve openGym under a sub-path such as `/gym`. The web container checks
+- **`BASE_PATH`** (#346): serve GYM Buddy under a sub-path such as `/gym`. The web container checks
   the value at start-up.
 - **Phone app and CORS** (#329): a new section in [SELF_HOSTING.md](docs/SELF_HOSTING.md) on proxies
   that answer or change the CORS preflight (Traefik `headers` middleware, a second
-  `Access-Control-Allow-Origin`, SSO in front of `/api/`), with a one-line `curl` check. openGym
-  handles CORS itself, so leave it alone on the openGym route.
+  `Access-Control-Allow-Origin`, SSO in front of `/api/`), with a one-line `curl` check. GYM Buddy
+  handles CORS itself, so leave it alone on the GYM Buddy route.
 - **Show connection status** (seals187, #330; xwr3, #369): Settings → Look & Home can hide the
   sync line at the top. A dot on Home still warns when sync is stuck.
 - **Durable writes**: every file the API keeps is flushed before it is renamed into place, and
@@ -1830,8 +1830,8 @@ in part. Web bundle, APK and API image.
     with the server's. A phone in use renews its sign-in on its own.
   - Signing in or pairing waits for your answer to "add this device's workouts?" before it touches
     anything, and a kg ↔ lb conversion, a reset or a backup import now reaches every device.
-  - Tip if you were hit by this: the phone's daily backup files (`Documents/openGym/`, or
-    `Documents/opengym-backup-….json` from before this version) may still hold the lost days —
+  - Tip if you were hit by this: the phone's daily backup files (`Documents/GYM Buddy/`, or
+    `Documents/gymbuddy-backup-….json` from before this version) may still hold the lost days —
     Settings → Import.
 - **The plan owns the reps** (seals187, Supportlik, #275, #216). A session copied its reps from
   the last time you did that exercise in *any* routine, so a 2 × 10 day opened at the 2 × 15 you
@@ -1953,7 +1953,7 @@ in part. Web bundle, APK and API image.
 - **iPhone**: large photos and videos are kept in a form Safari can read back, so they play and
   upload. The iOS build targets iOS 15.5 (clown-doing-code, #270).
 - The release APK carries only the ARM builds and is about 12 MB smaller (#136). Automatic
-  backups go to `Documents/openGym/` and only the newest 14 are kept (#161).
+  backups go to `Documents/GYM Buddy/` and only the newest 14 are kept (#161).
 - Exercise pictures stay available offline in the installed web app (xwr3, #281).
 
 **Self-hosting**
@@ -2303,8 +2303,8 @@ tab bar mid-screen during a workout. Web bundle, APK and API image.
   list — speech, embeddings, image models, realtime and Responses-only variants — made it easy to
   pick one Chat Completions refuses with a 400 or a 404. Compatible endpoints (Ollama, LM Studio,
   OpenRouter) stay unfiltered. The Gemini key field also names the new `AQ.` key prefix.
-- **openGym is back on GitHub, and GitHub is home again.** The account suspension that took
-  `github.com/DuarteSantos8/openGym` offline on 2026-08-19 is lifted. Everything that happened on
+- **GYM Buddy is back on GitHub, and GitHub is home again.** The account suspension that took
+  `github.com/DuarteSantos8/GYM Buddy` offline on 2026-08-19 is lifted. Everything that happened on
   GitLab in the meantime is there again: history, tags, the releases v1.2.9 to v1.3.5 with their
   APKs, the GHCR images and the GitHub Pages demo. GitLab is now a mirror, pushed by a GitHub
   Actions workflow on every push to `main` and every `v*` tag; it keeps running the CI that builds
@@ -2325,7 +2325,7 @@ APK; the API only carries the version number.
   "thinking…" without end because the job read the key first. The plugin now travels inside a plain
   object, a test drives the store through a Capacitor-style proxy so it cannot come back, and the
   whole flow — save, intake, plan, restart with the key still there — was run on an emulator before
-  tagging. The web app and the "use my self-hosted openGym" mode were never affected.
+  tagging. The web app and the "use my self-hosted GYM Buddy" mode were never affected.
   (issues #42, #58; reported by many on Discord)
 
 ## v1.3.4 (2026-09-05)
@@ -2392,7 +2392,7 @@ install on Android — it is the first APK that can update itself.
 
 ### Android
 
-- **In-app update.** Settings → Data shows "openGym vX available" when a newer release exists; one
+- **In-app update.** Settings → Data shows "GYM Buddy vX available" when a newer release exists; one
   tap downloads the signed APK, verifies its SHA-256 against the published checksum and opens the
   installer. No checksum, no install. Needs the "install unknown apps" permission the first time.
   (ErrorUsernameAlreadyTaken, !40 — issues #38, #9)
@@ -2475,7 +2475,7 @@ ships with a real version code again (16 — the last two releases had reused 15
 
 ## v1.3.1 (2026-09-04)
 
-- **"Use my self-hosted openGym" works on a paired phone.** The phone app never fetched the
+- **"Use my self-hosted GYM Buddy" works on a paired phone.** The phone app never fetched the
   server's `/api/config` after boot or after pairing, so the Coach setup screen told everyone
   "your server has no Coach enabled" — while the admin was looking at a passed test. The screen
   now asks the server afresh every time it opens, and the boot and pairing paths load the config
@@ -2789,7 +2789,7 @@ tests rather than failures in them.
 
 ### Website
 
-- **opengym.duarte-santos.ch has been rebuilt** — a bento layout with real device frames, a
+- **gymbuddy.duarte-santos.ch has been rebuilt** — a bento layout with real device frames, a
   mobile menu that opens instead of hiding, scroll reveals that respect `prefers-reduced-motion`,
   and a section collecting where the project actually lives. It had been live for a while without
   ever being committed, so the repository and the site had drifted apart.
@@ -2895,11 +2895,11 @@ mflova and Aaron Sachs — and to everyone who reported one of the bugs above.
 
 ## v1.2.9 (2026-08-23)
 
-If you run openGym for other people, you have had no way to answer "who signed in, and when?" —
+If you run GYM Buddy for other people, you have had no way to answer "who signed in, and when?" —
 the server kept no record of anything. It does now: an **activity log** in the admin dashboard,
 covering sign-ins, sign-outs, the attempts that failed, and every admin action. The other half of
 this release is that **the live demo is back**, self-hosted this time, after two months offline.
-And the project has a working home again: openGym now lives on **GitLab**, where CI builds the
+And the project has a working home again: GYM Buddy now lives on **GitLab**, where CI builds the
 container images and the signed Android APK for every release — the thing that has been missing
 since the GitHub account went.
 
@@ -2932,18 +2932,18 @@ since the GitHub account went.
 
 ### The live demo is back
 
-- ▶️ **<https://opengym.duarte-santos.ch/demo/>** — the in-browser demo, running on the project's
+- ▶️ **<https://gymbuddy.duarte-santos.ch/demo/>** — the in-browser demo, running on the project's
   own site instead of GitHub Pages, which went down in August with the suspended account. Same
   build as before: no backend, no account, seeded example history, and a reset button in its
   settings. The embedded demo on the landing page works again too.
 
-### openGym moved to GitLab
+### GYM Buddy moved to GitLab
 
-- **<https://gitlab.com/DuarteSantos8/opengym>** is the home of the project. Same history,
+- **<https://gitlab.com/DuarteSantos8/gymbuddy>** is the home of the project. Same history,
   same tags, same AGPL. gitea.com was the stopgap after the GitHub suspension and stays as a
   mirror; it never had a CI runner, which is why releases there had no images.
 - **Prebuilt images are back.** `docker compose pull` now fetches
-  `registry.gitlab.com/duartesantos8/opengym/api` and `/web`, built for **amd64 and arm64** on
+  `registry.gitlab.com/duartesantos8/gymbuddy/api` and `/web`, built for **amd64 and arm64** on
   every release. Pulling is anonymous — the project is public, no login, no token.
 - **The APK is built by CI now, not by hand.** Every `vX.Y.Z` tag produces a `zipalign`ed,
   signed APK, attached to the GitLab release and mirrored onto the download page. The signing
@@ -2953,8 +2953,8 @@ since the GitHub account went.
   the fatigue probe and the MCP suite all run on GitLab CI. The GitHub Actions workflows stay
   in `.github/` for the day that account comes back.
 - The in-browser demo also builds to GitLab Pages
-  (<https://opengym-bc111a.gitlab.io/>, which <https://duartesantos8.gitlab.io/opengym/>
-  redirects to); <https://opengym.duarte-santos.ch/demo/> remains the copy the landing page
+  (<https://gymbuddy-bc111a.gitlab.io/>, which <https://duartesantos8.gitlab.io/gymbuddy/>
+  redirects to); <https://gymbuddy.duarte-santos.ch/demo/> remains the copy the landing page
   embeds.
 - Security reports have a private channel again: a **confidential issue** on GitLab. See
   `SECURITY.md`.
@@ -2973,16 +2973,16 @@ since the GitHub account went.
 
 ## v1.2.8 (2026-08-22)
 
-A housekeeping release, and two things worth reading even if you skip the rest. openGym has moved
+A housekeeping release, and two things worth reading even if you skip the rest. GYM Buddy has moved
 to **gitea.com** — the GitHub account it lived on was suspended, and everything you click to
 self-host pointed there. And the exercise media's licence is now stated correctly: the images and
 animations are © Gym visual, not CC, which matters if you redistribute them.
 
 ### The project moved to gitea.com
 
-- **openGym now lives at <https://gitea.com/DuarteSantos/openGym>.** The GitHub account
+- **GYM Buddy now lives at <https://gitea.com/DuarteSantos/GYM Buddy>.** The GitHub account
   was suspended on 2026-08-19 and took the repository, the GHCR images, the Pages demo and
-  Discussions with it. `docker compose` now pulls `gitea.com/duartesantos/opengym-{api,web}`; the
+  Discussions with it. `docker compose` now pulls `gitea.com/duartesantos/gymbuddy-{api,web}`; the
   README, `SECURITY.md`, `CONTRIBUTING.md` and the self-hosting docs point at the new home; issue
   forms, tests and the image publish run as Gitea Actions. **If you self-host, re-pull:** the old
   `ghcr.io` images are gone and will not update again.
@@ -2993,18 +2993,18 @@ animations are © Gym visual, not CC, which matters if you redistribute them.
 
 ### The exercise media is © Gym visual — not CC
 
-- **openGym described the exercise dataset as "CC". That was wrong**, and it is now
+- **GYM Buddy described the exercise dataset as "CC". That was wrong**, and it is now
   corrected everywhere it appeared (README, `NOTICE.md`, the website, the in-app credit, the
   compose file and `scripts/fetch-media.sh`). Upstream
   [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) licenses its two
   halves differently: the exercise **metadata and instruction text are MIT**, while the **images and
   animations are © [Gym visual](https://gymvisual.com/)**, used under that dataset's terms with
   permission that is not transferable.
-- **Nothing changes for using openGym.** It never shipped that media — not in the repository,
+- **Nothing changes for using GYM Buddy.** It never shipped that media — not in the repository,
   not in its history, not in the images or the APK; your instance downloads it from upstream on
   first run, and the media step now prints where it comes from and under what terms.
 - **It does change what you may do with the media.** Reusing the images or animations — in
-  openGym or anywhere else, commercially or not — needs your own licence from Gym visual. See
+  GYM Buddy or anywhere else, commercially or not — needs your own licence from Gym visual. See
   [NOTICE.md](NOTICE.md).
 
 ### Features
@@ -3031,12 +3031,12 @@ animations are © Gym visual, not CC, which matters if you redistribute them.
 
 ### The website counts visits; the app still counts nothing
 
-- **<https://opengym.duarte-santos.ch> now runs self-hosted, cookieless
+- **<https://gymbuddy.duarte-santos.ch> now runs self-hosted, cookieless
   [Umami](https://umami.is/)** — page views for the landing, about and docs pages, no cookies,
   no third-party service.
 - **Your instance does not.** The frontend only gets an analytics tag when
   `VITE_UMAMI_SRC` *and* `VITE_UMAMI_ID` are set at build time, which they are not in any published
-  image or in a plain `npm run build`. A self-hosted openGym remains telemetry-free, as advertised.
+  image or in a plain `npm run build`. A self-hosted GYM Buddy remains telemetry-free, as advertised.
 
 ## v1.2.7 (2026-08-18)
 
@@ -3051,36 +3051,36 @@ behave: pair them as you go, rest once per round, and drop an exercise you have 
 - **A per-muscle exercise breakdown** behind the muscle card — estimated 1RM per exercise, decay
   bars, and primary/secondary tags, with a best-weight fallback for holds and carries that have no
   reps to work from. Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-  [#92](https://github.com/DuarteSantos8/openGym/pull/92),
-  [#93](https://github.com/DuarteSantos8/openGym/pull/93) and
-  [#94](https://github.com/DuarteSantos8/openGym/pull/94).
+  [#92](https://github.com/DuarteSantos8/GYM Buddy/pull/92),
+  [#93](https://github.com/DuarteSantos8/GYM Buddy/pull/93) and
+  [#94](https://github.com/DuarteSantos8/GYM Buddy/pull/94).
 - **Fatigue is now intensity-weighted**, not volume alone: a set counts for more the closer it is
   to your estimated maximum. It also reads against a stable historical reference, so fatigue can no
   longer *rise* across a rest week, and bodyweight movements no longer register as zero load. A
   property probe over 108,000 comparisons runs in CI to keep it that way. Contributed by
   [@Space-Hermes](https://github.com/Space-Hermes) in
-  [#55](https://github.com/DuarteSantos8/openGym/pull/55).
+  [#55](https://github.com/DuarteSantos8/GYM Buddy/pull/55).
 
 ### In a session
 
 - **Supersets advance properly.** Completing a set moves to the next member of the group, the
   active exercise scrolls into view, and rest starts once the whole round is done rather than after
   each set. Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-  [#80](https://github.com/DuarteSantos8/openGym/pull/80).
+  [#80](https://github.com/DuarteSantos8/GYM Buddy/pull/80).
 - **Remove an exercise from a running session**, with a superset-aware picker and a confirmation.
   Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-  [#83](https://github.com/DuarteSantos8/openGym/pull/83).
+  [#83](https://github.com/DuarteSantos8/GYM Buddy/pull/83).
 - **The Android back button closes the open sheet** instead of leaving the screen or the app
   ([#63]). Each open sheet gets its own history entry, so stacked sheets unwind one at a time.
   Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-  [#85](https://github.com/DuarteSantos8/openGym/pull/85).
+  [#85](https://github.com/DuarteSantos8/GYM Buddy/pull/85).
 
 ### Self-hosting
 
 - **The API service no longer has to be called `api`** ([#99]). The web image builds its nginx
   config at startup from `BACKEND`, `PORT` and `NGINX_PORT`, all defaulted to today's values, so
   existing compose files are unaffected. Reported and fixed by
-  [@GAS85](https://github.com/GAS85) in [#100](https://github.com/DuarteSantos8/openGym/pull/100).
+  [@GAS85](https://github.com/GAS85) in [#100](https://github.com/DuarteSantos8/GYM Buddy/pull/100).
 - **…and the shipped `docker-compose.yml` now actually passes those through.** The `web` service
   had no environment of its own and published a hardcoded `:80`, so setting `BACKEND` or
   `NGINX_PORT` in `.env` did nothing at all on the stock stack — the setting existed, the wiring
@@ -3089,7 +3089,7 @@ behave: pair them as you go, rest once per round, and drop an exercise you have 
   as before.
 - **Health checks and OCI image labels** on both images — source, licence, version, revision and
   build date, so image tooling can tell what it is holding. Contributed by
-  [@GAS85](https://github.com/GAS85) in [#98](https://github.com/DuarteSantos8/openGym/pull/98).
+  [@GAS85](https://github.com/GAS85) in [#98](https://github.com/DuarteSantos8/GYM Buddy/pull/98).
 - **Images are published from a release, not from any tag** ([#87]). A tag that gets consolidated
   away before it becomes a release used to leave its image tags behind in the registry, where
   dependency bots read them as newer versions.
@@ -3100,9 +3100,9 @@ behave: pair them as you go, rest once per round, and drop an exercise you have 
   places still read the older boolean, so warm-ups from FitNotes/Strong/Hevy history inflated set
   counts, progression and the fatigue map.
 
-[#63]: https://github.com/DuarteSantos8/openGym/issues/63
-[#87]: https://github.com/DuarteSantos8/openGym/issues/87
-[#99]: https://github.com/DuarteSantos8/openGym/issues/99
+[#63]: https://github.com/DuarteSantos8/GYM Buddy/issues/63
+[#87]: https://github.com/DuarteSantos8/GYM Buddy/issues/87
+[#99]: https://github.com/DuarteSantos8/GYM Buddy/issues/99
 
 ## v1.2.6 (2026-08-11)
 
@@ -3176,7 +3176,7 @@ account.
   reads from history instead.
 
 Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-[#50](https://github.com/DuarteSantos8/openGym/pull/50).
+[#50](https://github.com/DuarteSantos8/GYM Buddy/pull/50).
 
 ### Pair exercises into a superset mid-session (#64)
 
@@ -3191,7 +3191,7 @@ Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
 - Session-only by design: pairings drive the workout, and history stores the sets.
 
 Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-[#64](https://github.com/DuarteSantos8/openGym/pull/64).
+[#64](https://github.com/DuarteSantos8/GYM Buddy/pull/64).
 
 ### The muscle map stops rewriting the catalogue (#67)
 
@@ -3203,7 +3203,7 @@ Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
   they always did.
 
 Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
-[#67](https://github.com/DuarteSantos8/openGym/pull/67).
+[#67](https://github.com/DuarteSantos8/GYM Buddy/pull/67).
 
 ### Fixes
 
@@ -3214,7 +3214,7 @@ Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
   found, by [@lemi1000](https://github.com/lemi1000).
 - **Imports mapped more of what other apps export** ([#74]). Treadmill, Goblet Squat, Cycling and
   Cable Core Pallof Press arrived as *custom* exercises rather than catalogue ones — no word
-  overlap could reach the names openGym stores them under. Those and their neighbours are now in
+  overlap could reach the names GYM Buddy stores them under. Those and their neighbours are now in
   the alias table. Already-imported history stays custom; new imports resolve. Reported by
   [@KiloOscarSix](https://github.com/KiloOscarSix).
 - **A progression edge case that could loop forever** ([#60]). An entry left with nothing but
@@ -3224,9 +3224,9 @@ Contributed by [@Space-Hermes](https://github.com/Space-Hermes) in
 - Documented that `VITE_IMG_BASE` / `VITE_GIF_BASE` are build-time values, so setting them next to
   `docker compose` does nothing on a prebuilt image.
 
-[#79]: https://github.com/DuarteSantos8/openGym/issues/79
-[#74]: https://github.com/DuarteSantos8/openGym/issues/74
-[#60]: https://github.com/DuarteSantos8/openGym/pull/60
+[#79]: https://github.com/DuarteSantos8/GYM Buddy/issues/79
+[#74]: https://github.com/DuarteSantos8/GYM Buddy/issues/74
+[#60]: https://github.com/DuarteSantos8/GYM Buddy/pull/60
 
 ## v1.2.5 (2026-08-04)
 
@@ -3268,7 +3268,7 @@ release is invisible to you.
   MCP tests — neither had ever run there before.
 
 The MCP server was contributed by [@Pengboi](https://github.com/Pengboi) — the first feature in
-openGym written by someone other than me. Thank you.
+GYM Buddy written by someone other than me. Thank you.
 
 ## v1.2.4 (2026-08-01)
 
@@ -3504,11 +3504,11 @@ importer for your history from other apps.
 
 ### One codebase, two flavors
 
-openGym is also a standalone mobile app — and it ships as a direct APK download, not
+GYM Buddy is also a standalone mobile app — and it ships as a direct APK download, not
 through app stores.
 
 - **Standalone mobile app.** The same frontend now also builds as a native iPhone /
-  Android app (Capacitor) — the install-and-done flavor of openGym: no account, no server,
+  Android app (Capacitor) — the install-and-done flavor of GYM Buddy: no account, no server,
   no sync. Everything stays on the phone.
   - State is mirrored into a file in the app's private storage on every change, so your
     log survives even when the OS evicts WebView storage (iOS does).
@@ -3519,7 +3519,7 @@ through app stores.
   - `npm run build:mobile`, then open `android/` in Android Studio or `ios/` in Xcode —
     see **docs/MOBILE.md**. `NOTICE.md` now carries an AGPL §7 app-store exception.
 - **Android APK, no Play Store.** The official build is a signed, sideloadable APK
-  (~4.5 MB) from [opengym.duarte-santos.ch](https://opengym.duarte-santos.ch) — deliberately
+  (~4.5 MB) from [gymbuddy.duarte-santos.ch](https://gymbuddy.duarte-santos.ch) — deliberately
   store-free. docs/MOBILE.md covers building and signing your own.
 - **iOS reality check.** Apple permits no installs outside the App Store, so there is no
   iOS download; the docs explain the free options (self-hosted PWA on the home screen, or
@@ -3568,7 +3568,7 @@ A muscle map across the app, and a live demo you can try without installing anyt
 - **Fixed: finishing a workout from its last exercise could blank the whole app.** The
   per-exercise weight sheet read the running workout without checking it was still there, and
   finishing clears it while that sheet is still on screen.
-- ▶️ **Live demo** at [duartesantos8.github.io/openGym](https://duartesantos8.github.io/openGym/) —
+- ▶️ **Live demo** at [duartesantos8.github.io/GYM Buddy](https://duartesantos8.github.io/GYM Buddy/) —
   a browser-only build (`VITE_DEMO=1`) published to GitHub Pages on every push to `main`. It boots
   into guest mode with a seeded example profile (12 weeks of Push/Pull/Legs, weigh-ins, PRs) so
   every screen has something to show, and it never talks to a server. Passkeys, sync and the admin
@@ -3719,7 +3719,7 @@ Reliability fixes for the push notifications shipped in v1.1.0, found through li
 
 ## v1.1.0 (2026-07-21)
 
-- Prebuilt Docker images published to `ghcr.io/duartesantos8/opengym-{api,web}` (amd64 + arm64)
+- Prebuilt Docker images published to `ghcr.io/duartesantos8/gymbuddy-{api,web}` (amd64 + arm64)
   via GitHub Actions, so self-hosting no longer requires building from source. `docker compose pull`
   grabs them; `docker compose up -d --build` still builds locally if you'd rather.
 - Push notifications: rest-timer-over alert (fires even if the app is closed) and an optional

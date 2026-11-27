@@ -7,11 +7,11 @@
 //
 // The Data Layer only links a watch app to a phone app with the same package name and the same
 // signing key. So the watch app has to come from where the phone app came from: Google Play for
-// the Play app, the Wear OS APK of the same release for the APK from opengym.ch. A watch with the
+// the Play app, the Wear OS APK of the same release for the APK from gymbuddy.ch. A watch with the
 // other one looks exactly like a watch without the app, which is why the two "get it" lines differ.
 
 // How to put the watch app on a watch next to the sideloaded phone APK.
-export const WEAR_DOCS = 'https://github.com/DuarteSantos8/openGym/blob/main/docs/WEAR_OS.md#installing'
+export const WEAR_DOCS = 'https://github.com/DuarteSantos8/GYM Buddy/blob/main/docs/WEAR_OS.md#installing'
 
 /**
  * The page's one line about the link, as a key (the page has the words), what it offers
@@ -28,7 +28,7 @@ export function wearView (wear, channel) {
   return { ...base, key: wear.reachable ? 'on-watch' : 'on-watch-away' }
 }
 
-/** A watch's own line: whether openGym is on it, and whether it is in reach. */
+/** A watch's own line: whether GYM Buddy is on it, and whether it is in reach. */
 export function wearWatchLine (w) {
   if (!w?.installed) return 'not-installed'
   return w.reachable || w.connected ? 'connected' : 'away'

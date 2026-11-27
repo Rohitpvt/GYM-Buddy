@@ -7,8 +7,8 @@ import WidgetKit
 
 /*
  * What the Home Screen and Lock Screen widgets and the workout's Live Activity look like.
- * Compiled into the widget extension, which shows them (OpenGymWidgets), and into the app, which
- * only draws them into pictures for CI when started with -OpenGymWidgetPreview
+ * Compiled into the widget extension, which shows them (GymBuddyWidgets), and into the app, which
+ * only draws them into pictures for CI when started with -GymBuddyWidgetPreview
  * (WidgetPreview.swift). Text and SF Symbols, and in the Live Activity the exercise's 180 px still
  * the app ships when Settings asks for the picture (LiveStills): never an animation, never a
  * full-size picture (Gym visual licence). The words come from the page in the app's language.
@@ -80,7 +80,7 @@ struct WidgetSnapshot: Codable {
     var challenges: Challenges?
 
     static func load() -> WidgetSnapshot? {
-        guard let url = OpenGymGroup.container?.appendingPathComponent("widget.json"),
+        guard let url = GymBuddyGroup.container?.appendingPathComponent("widget.json"),
               let data = try? Data(contentsOf: url) else { return nil }
         return try? JSONDecoder().decode(WidgetSnapshot.self, from: data)
     }
@@ -110,8 +110,8 @@ struct WidgetModel {
     }
     var weekPlanned: Int { snap?.week?.planned ?? 0 }
     var streak: Int { snap?.streak ?? 0 }
-    var accent: Color { Color(hex: snap?.accent) ?? .openGymGreen }
-    var ink: Color { Color(hex: snap?.ink) ?? .openGymInk }
+    var accent: Color { Color(hex: snap?.accent) ?? .gymBuddyGreen }
+    var ink: Color { Color(hex: snap?.ink) ?? .gymBuddyInk }
     /// The set to log from the widget while a workout runs today (v1.4.5, WidgetLogger), or nil.
     var logger: WidgetLogger.Shown? { active != nil ? WidgetLogger.shown() : nil }
 }
@@ -133,8 +133,8 @@ extension Color {
 /// The brand's colours: the green (#a3e635), what every surface falls back on until the app has
 /// said which accent it wears (1.4.5), and the near-black (#0c0e12) that reads on it.
 extension Color {
-    static let openGymGreen = Color(red: 0xa3 / 255, green: 0xe6 / 255, blue: 0x35 / 255)
-    static let openGymInk = Color(red: 0x0c / 255, green: 0x0e / 255, blue: 0x12 / 255)
+    static let gymBuddyGreen = Color(red: 0xa3 / 255, green: 0xe6 / 255, blue: 0x35 / 255)
+    static let gymBuddyInk = Color(red: 0x0c / 255, green: 0x0e / 255, blue: 0x12 / 255)
 }
 
 @available(iOS 17.0, *)
@@ -289,8 +289,8 @@ struct StreakLine: View {
 struct WidgetEmpty: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            OpenGymMark(width: 30)
-            Text("Open openGym once to see your plan here.").font(.caption).foregroundStyle(.secondary)
+            GymBuddyMark(width: 30)
+            Text("Open gymBuddy once to see your plan here.").font(.caption).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -526,24 +526,24 @@ struct NextInlineView: View {
     }
 }
 
-// MARK: - the configurable widget ("openGym": what to show, OpenGymWidgets.swift)
+// MARK: - the configurable widget ("gymBuddy": what to show, GymBuddyWidgets.swift)
 
-/// What the configurable widget can show. The menu's words are in OpenGymWidgets.swift (AppEnum).
+/// What the configurable widget can show. The menu's words are in GymBuddyWidgets.swift (AppEnum).
 enum GymWidgetKind: String, CaseIterable, Codable {
     case streak, weight, week, next, records, volume, challenges
 }
 
 /// The links a tap opens (lib/widget-links.js reads them; Android builds the same ones).
 enum GymLink {
-    static let home = URL(string: "opengym://home")!
-    static let stats = URL(string: "opengym://stats")!
-    static let weighIn = URL(string: "opengym://weigh-in")!
+    static let home = URL(string: "gymbuddy://home")!
+    static let stats = URL(string: "gymbuddy://stats")!
+    static let weighIn = URL(string: "gymbuddy://weigh-in")!
     /// The workout already running (a start with no routines goes back to it).
-    static let workout = URL(string: "opengym://start")!
+    static let workout = URL(string: "gymbuddy://start")!
     static func start(_ ids: [String]?) -> URL {
         let ok = (ids ?? []).filter { $0.range(of: "^[A-Za-z0-9_.:-]{1,64}$", options: .regularExpression) != nil }.prefix(8)
         if ok.isEmpty { return home }
-        return URL(string: "opengym://start?r=" + ok.joined(separator: ",")) ?? home
+        return URL(string: "gymbuddy://start?r=" + ok.joined(separator: ",")) ?? home
     }
 }
 
@@ -778,7 +778,7 @@ struct LiveRest: View {
     var align: TextAlignment = .trailing
 
     var body: some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         // A hold (or its count-in) comes first: it is what is happening now.
         if let range = state.holdRange {
             Text(timerInterval: range, countsDown: true)
@@ -807,7 +807,7 @@ extension WorkoutActivityAttributes {
     /// The line with no set to show: all done, or sets left that the activity does not carry
     /// (many taps with the page asleep), where "All sets done" was simply wrong (Discord).
     func noSetText(_ state: ContentState) -> String {
-        state.done < state.total ? (labels.openApp ?? "Open openGym for the next set") : labels.allDone
+        state.done < state.total ? (labels.openApp ?? "Open gymBuddy for the next set") : labels.allDone
     }
 
     /// The word over the clock: the count-in, the hold, or the rest.
@@ -827,7 +827,7 @@ struct LiveDoneButton: View {
     var words: Bool = true
 
     var body: some View {
-        let ink = Color(hex: attributes.ink) ?? .openGymInk
+        let ink = Color(hex: attributes.ink) ?? .gymBuddyInk
         Button(intent: DoneSetIntent(wid: attributes.wid, exId: cur.exId, entryIdx: cur.entryIdx, setIdx: cur.setIdx)) {
             if words {
                 Label(attributes.labels.done, systemImage: "checkmark")
@@ -841,7 +841,7 @@ struct LiveDoneButton: View {
             }
         }
         .buttonStyle(.borderedProminent)
-        .tint(Color(hex: attributes.accent) ?? .openGymGreen)
+        .tint(Color(hex: attributes.accent) ?? .gymBuddyGreen)
         .accessibilityLabel(Text(attributes.labels.done))
         .accessibilityHint(Text([cur.exName, cur.setLine].filter { !$0.isEmpty }.joined(separator: ", ")))
     }
@@ -855,7 +855,7 @@ struct LiveSecondaryButton: View {
     let state: WorkoutActivityAttributes.ContentState
 
     var body: some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         if state.holding && state.auto == true {
             Button(intent: StopAutoIntent(wid: attributes.wid)) {
                 Image(systemName: "stop.fill").font(.subheadline.weight(.semibold))
@@ -888,7 +888,7 @@ struct LiveLockView: View {
     let state: WorkoutActivityAttributes.ContentState
 
     var body: some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 10) {
                 VStack(alignment: .leading, spacing: 2) {
@@ -930,7 +930,7 @@ struct LiveCompactTrailing: View {
             LiveRest(attributes: attributes, state: state, font: .caption).frame(width: 46)
         } else {
             Text("\(state.done)/\(state.total)").font(.caption.weight(.bold)).monospacedDigit()
-                .foregroundStyle(Color(hex: attributes.accent) ?? .openGymGreen)
+                .foregroundStyle(Color(hex: attributes.accent) ?? .gymBuddyGreen)
         }
     }
 }
@@ -945,10 +945,10 @@ struct LiveMinimal: View {
             Text(timerInterval: range, countsDown: true, showsHours: false)
                 .font(.caption2.weight(.bold)).monospacedDigit()
                 .multilineTextAlignment(.center)
-                .foregroundStyle(Color(hex: attributes.accent) ?? .openGymGreen)
+                .foregroundStyle(Color(hex: attributes.accent) ?? .gymBuddyGreen)
                 .frame(width: 34)
         } else {
-            OpenGymMark()
+            GymBuddyMark()
         }
     }
 }
@@ -969,7 +969,7 @@ enum LiveStills {
     }
 
     static func file(_ path: String) -> URL? {
-        guard let n = name(path), let dir = OpenGymGroup.container?.appendingPathComponent("live-stills") else { return nil }
+        guard let n = name(path), let dir = GymBuddyGroup.container?.appendingPathComponent("live-stills") else { return nil }
         return dir.appendingPathComponent(n)
     }
 
@@ -980,7 +980,7 @@ enum LiveStills {
 
     /// In the app: the stills not copied yet, made small. Old ones beyond 60 go, oldest first.
     static func prepare(_ paths: [String]) {
-        guard let dir = OpenGymGroup.container?.appendingPathComponent("live-stills") else { return }
+        guard let dir = GymBuddyGroup.container?.appendingPathComponent("live-stills") else { return }
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         for p in Set(paths) {
             guard let out = file(p), !FileManager.default.fileExists(atPath: out.path) else { continue }
@@ -1035,7 +1035,7 @@ struct LiveButtonsView: View {
     var logWords: Bool = true
 
     var body: some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         HStack(spacing: 8) {
             if state.holding && state.auto == true {
                 Button(intent: StopAutoIntent(wid: attributes.wid)) { Image(systemName: "stop.fill") }
@@ -1095,7 +1095,7 @@ struct LiveButtonsView: View {
                     .buttonStyle(.bordered).tint(accent).accessibilityLabel(label)
             }
         case "finish":
-            if let url = URL(string: "opengym://start?do=finish") {
+            if let url = URL(string: "gymbuddy://start?do=finish") {
                 Link(destination: url) { Image(systemName: "flag.checkered") }
                     .buttonStyle(.bordered).tint(accent).accessibilityLabel(label)
             }
@@ -1331,7 +1331,7 @@ struct GlanceSteps: View {
     }
 
     private func row(withSub: Bool) -> some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         return HStack(spacing: 6) {
             ForEach(steps, id: \.self) { s in
                 if s.f == "r" && steps.count > 1 {
@@ -1379,7 +1379,7 @@ struct GlanceLockView: View {
 
     var body: some View {
         let g = GlanceModel(attributes, state, room: 4)
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         VStack(alignment: .leading, spacing: 6) {
             if g.timed {
                 HStack(alignment: .center, spacing: 14) {
@@ -1468,7 +1468,7 @@ struct GlanceCompactLeading: View {
         if state.g?.pic == true, let p = state.cur?.img, LiveStills.image(p) != nil {
             LiveStillView(path: p, size: 24)
         } else {
-            OpenGymMark()
+            GymBuddyMark()
         }
     }
 }
@@ -1479,7 +1479,7 @@ struct GlanceCompactTrailing: View {
     let state: WorkoutActivityAttributes.ContentState
 
     var body: some View {
-        let accent = Color(hex: attributes.accent) ?? .openGymGreen
+        let accent = Color(hex: attributes.accent) ?? .gymBuddyGreen
         if state.holding || state.resting {
             LiveRest(attributes: attributes, state: state, font: .caption).frame(maxWidth: 52)
         } else if let c = state.cur, !c.short.isEmpty {
@@ -1565,9 +1565,9 @@ struct GlanceIslandBottom: View {
 
 // MARK: - the logo
 
-/// openGym's logo mark (assets/logo/opengym-mark.svg): five plain rectangles on a 352 x 174 grid,
+/// gymBuddy's logo mark (assets/logo/gymbuddy-mark.svg): five plain rectangles on a 352 x 174 grid,
 /// square corners. Where the app shows who it is (the Dynamic Island, an empty widget), not an SF Symbol.
-struct OpenGymMarkShape: Shape {
+struct GymBuddyMarkShape: Shape {
     func path(in rect: CGRect) -> Path {
         let boxes: [(CGFloat, CGFloat, CGFloat, CGFloat)] = [
             (0, 73, 352, 28), (0, 30, 36, 114), (51, 0, 47, 174), (254, 0, 47, 174), (316, 30, 36, 114),
@@ -1581,11 +1581,11 @@ struct OpenGymMarkShape: Shape {
 }
 
 /// The mark in brand green (#A3E635), `width` points wide. The logo's colour, never the accent.
-struct OpenGymMark: View {
+struct GymBuddyMark: View {
     var width: CGFloat = 20
 
     var body: some View {
-        OpenGymMarkShape()
+        GymBuddyMarkShape()
             .fill(Color(red: 163 / 255, green: 230 / 255, blue: 53 / 255))
             .frame(width: width, height: width * 174 / 352)
             .accessibilityHidden(true)

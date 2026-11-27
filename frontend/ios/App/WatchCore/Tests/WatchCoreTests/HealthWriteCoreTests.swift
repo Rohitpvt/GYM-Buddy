@@ -1,13 +1,13 @@
 import XCTest
 @testable import WatchCore
 
-/// openGym v1.4.5 (TestFlight 59): every value HealthKit would raise an uncatchable exception for,
+/// gymBuddy v1.4.5 (TestFlight 59): every value HealthKit would raise an uncatchable exception for,
 /// and every number that would trap in Swift, is turned away before it gets there.
 final class HealthWriteCoreTests: XCTestCase {
     let now: Double = 1_793_000_000_000            // 2026-10-26
     let hour: Double = 3_600_000
 
-    private func verdict(_ start: Double?, _ end: Double?, id: String? = "opengym-w-1") -> HealthWriteCore.Verdict {
+    private func verdict(_ start: Double?, _ end: Double?, id: String? = "gymbuddy-w-1") -> HealthWriteCore.Verdict {
         HealthWriteCore.session(id: id, start: start, end: end, now: now)
     }
 
@@ -72,7 +72,7 @@ final class HealthWriteCoreTests: XCTestCase {
     }
 
     func testWeighIns() {
-        XCTAssertTrue(HealthWriteCore.weight(id: "opengym-bw-2026-10-26", time: now, kg: 81.4, now: now))
+        XCTAssertTrue(HealthWriteCore.weight(id: "gymbuddy-bw-2026-10-26", time: now, kg: 81.4, now: now))
         XCTAssertTrue(HealthWriteCore.weight(id: "a", time: now, kg: 999.9, now: now))
         for kg in [0, -1, 1000, 1500, Double.nan, .infinity] {
             XCTAssertFalse(HealthWriteCore.weight(id: "a", time: now, kg: kg, now: now), "kg \(kg)")

@@ -20,8 +20,8 @@ const mc = f => read('garmin', 'source', f).replace(/\/\/.*$/gm, '')
 const core = mc('Core.mc')
 const app = mc('App.mc')
 const watchSources = ['Core.mc', 'App.mc', 'Actions.mc', 'Views.mc', 'Ui.mc', 'Nav.mc'].map(mc).join('\n')
-const java = read('android', 'app', 'src', 'ciq', 'java', 'ch', 'duartesantos', 'opengym', 'GarminLink.java')
-const javaMessages = read('android', 'app', 'src', 'main', 'java', 'ch', 'duartesantos', 'opengym', 'GarminMessages.java')
+const java = read('android', 'app', 'src', 'ciq', 'java', 'ch', 'duartesantos', 'gymbuddy', 'GarminLink.java')
+const javaMessages = read('android', 'app', 'src', 'main', 'java', 'ch', 'duartesantos', 'gymbuddy', 'GarminMessages.java')
 const swift = read('ios', 'App', 'App', 'GarminLink.swift')
 const watchSync = read('src', 'lib', 'watch-sync.js')
 const snapshotJs = read('src', 'lib', 'garmin-snapshot.js')
@@ -203,7 +203,7 @@ describe('the ids both ends find each other by', () => {
     expect(dashed.replace(/-/g, '').toLowerCase()).toBe(appId)
   })
 
-  it('the store id is the same wherever "Get openGym for Garmin" goes', () => {
+  it('the store id is the same wherever "Get GYM Buddy for Garmin" goes', () => {
     expect(GARMIN_STORE_ID).toMatch(/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/)
     expect(has(java, new RegExp(`STORE_ID = "${GARMIN_STORE_ID}"`))).toBe(true)
     expect(has(swift, new RegExp(`storeId: UUID\\? = UUID\\(uuidString: "${GARMIN_STORE_ID}"\\)`))).toBe(true)
@@ -252,7 +252,7 @@ describe('the Android app is set up for Garmin Connect', () => {
     expect(has(gradle, /playImplementation "com\.garmin\.connectiq:ciq-companion-app-sdk:/)).toBe(true)
     expect(has(gradle, /fdroidImplementation "com\.garmin/)).toBe(false)
     expect(has(gradle, /^\s*implementation "com\.garmin/m)).toBe(false)
-    const fdroid = read('android', 'app', 'src', 'fdroid', 'java', 'ch', 'duartesantos', 'opengym', 'WatchBridgePlugin.java')
+    const fdroid = read('android', 'app', 'src', 'fdroid', 'java', 'ch', 'duartesantos', 'gymbuddy', 'WatchBridgePlugin.java')
     expect(has(fdroid, /out\.put\("state", "build"\)/)).toBe(true)
     expect(has(fdroid, /import com\.garmin/)).toBe(false)
   })

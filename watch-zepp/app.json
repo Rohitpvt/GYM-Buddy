@@ -2,15 +2,15 @@
   "configVersion": "v3",
   "app": {
     "appId": 9990145,
-    "appName": "openGym",
+    "appName": "GYM Buddy",
     "appType": "app",
     "version": {
       "code": 10405,
       "name": "1.4.5"
     },
     "icon": "icon.png",
-    "vender": "openGym",
-    "description": "openGym on your wrist: start a routine, log sets with the crown, rest with a ring. Pairs with your own openGym server."
+    "vender": "GYM Buddy",
+    "description": "GYM Buddy on your wrist: start a routine, log sets with the crown, rest with a ring. Pairs with your own GYM Buddy server."
   },
   "permissions": [
     "data:os.device.info",
@@ -38,7 +38,7 @@
             {
               "path": "app-widget/index",
               "icon": "icon.png",
-              "name": "openGym",
+              "name": "GYM Buddy",
               "runtime": {
                 "type": "js"
               }
@@ -66,64 +66,64 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "de-DE": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "fr-FR": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "es-ES": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "it-IT": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "pt-PT": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "pt-BR": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "pl-PL": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "hu-HU": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "tr-TR": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "ru-RU": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "uk-UA": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "ar-EG": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "hi-IN": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "bn-BD": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "th-TH": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "ko-KR": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "sv-SE": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "zh-CN": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     },
     "zh-TW": {
-      "appName": "openGym"
+      "appName": "GYM Buddy"
     }
   },
   "defaultLanguage": "en-US"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the static copy of opengym.ch that Cloudflare serves while the homelab is down.
+# Builds the static copy of gymbuddy.ch that Cloudflare serves while the homelab is down.
 # Same layout as the nginx site (see website/README.md): website/ + img/ + icons + demo/.
 # Output: dist/ (uploaded as the Worker's static assets, cloudflare/wrangler.jsonc)
 set -euo pipefail

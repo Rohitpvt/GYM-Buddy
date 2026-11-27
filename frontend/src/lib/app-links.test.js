@@ -1,4 +1,4 @@
-// The links that open the phone apps instead of opengym.ch (lib/routine-link.js, lib/nfc-tags.js,
+// The links that open the phone apps instead of gymbuddy.ch (lib/routine-link.js, lib/nfc-tags.js,
 // lib/library-link.js): what the Android intent filters and the iPhone's apple-app-site-association
 // claim, matched the way the phones match them, against the paths the app can actually handle.
 import { describe, it, expect } from 'vitest'
@@ -49,7 +49,7 @@ function simpleGlob(pattern, s) {
 const httpsFilters = [...manifest.matchAll(/<intent-filter android:autoVerify="true">([\s\S]*?)<\/intent-filter>/g)].map(m => m[1])
 const androidClaims = path => httpsFilters.some(f => [...f.matchAll(/<data ([^>]*)\/>/g)].some(([, attrs]) => {
   const a = Object.fromEntries([...attrs.matchAll(/android:(\w+)="([^"]*)"/g)].map(x => [x[1], x[2]]))
-  if (a.scheme !== 'https' || a.host !== 'opengym.ch') return false
+  if (a.scheme !== 'https' || a.host !== 'gymbuddy.ch') return false
   if (a.path) return a.path === path
   if (a.pathPrefix) return path.startsWith(a.pathPrefix)
   if (a.pathPattern) return simpleGlob(a.pathPattern.replace(/\\\\/g, '\\'), path)
@@ -65,7 +65,7 @@ const iosClaims = path => {
 }
 
 const ROUTINE_PAGES = ['/routines/bar-and-floor/', '/routines/ppl-six-days/', '/routines/a/']
-const NOT_CLAIMED = ['/routines/', '/routines', '/routines/index.html', '/routines/plans/bar-and-floor.opengym-plan.json',
+const NOT_CLAIMED = ['/routines/', '/routines', '/routines/index.html', '/routines/plans/bar-and-floor.gymbuddy-plan.json',
   '/routines/media/0025.webp', '/routines/assets/routines.css', '/routines/covers/x.jpg', '/routines/index.json',
   '/routines/names.json', '/routines/sitemap.xml', '/routines/bar-and-floor/index.html', '/routines/submit/index.html', '/', '/demo/']
 
@@ -81,7 +81,7 @@ describe('app links', () => {
     for (const p of ROUTINE_PAGES) {
       expect(androidClaims(p), 'android ' + p).toBe(true)
       expect(iosClaims(p), 'ios ' + p).toBe(true)
-      expect(libraryLinkFromUrl('https://opengym.ch' + p)?.kind, p).toBe('routine')
+      expect(libraryLinkFromUrl('https://gymbuddy.ch' + p)?.kind, p).toBe('routine')
     }
   })
 
@@ -95,14 +95,14 @@ describe('app links', () => {
   it('the submit form: never on iPhone; on Android (no "except" there) the app hands it back', () => {
     expect(iosClaims('/routines/submit/')).toBe(false)
     expect(androidClaims('/routines/submit/')).toBe(true)
-    const back = libraryLinkFromUrl('https://opengym.ch/routines/submit/')
+    const back = libraryLinkFromUrl('https://gymbuddy.ch/routines/submit/')
     expect(back.kind).toBe('page')
     expect(androidClaims(new URL(back.browserUrl).pathname)).toBe(false)
   })
 
   it('every way back to the browser is a path neither phone claims', () => {
     for (const p of [...ROUTINE_PAGES, ...NOT_CLAIMED, '/routines/submit/', '/routines/a/b/']) {
-      const l = libraryLinkFromUrl('https://opengym.ch' + p)
+      const l = libraryLinkFromUrl('https://gymbuddy.ch' + p)
       if (!l) continue
       const back = new URL(l.browserUrl).pathname
       expect(androidClaims(back), 'android ' + back).toBe(false)

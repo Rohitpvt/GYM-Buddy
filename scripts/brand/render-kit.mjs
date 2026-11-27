@@ -1,8 +1,8 @@
-// openGym brand kit: PNGs of every logo SVG (make-kit.py) and the banners, with headless Chrome.
+// GYM Buddy brand kit: PNGs of every logo SVG (make-kit.py) and the banners, with headless Chrome.
 //
 //   CHROME=/path/to/chrome node scripts/brand/render-kit.mjs website/brand/kit
 //
-// Banners use the official lockup (logo/opengym-logo-for-dark-backgrounds.svg, outlined),
+// Banners use the official lockup (logo/gymbuddy-logo-for-dark-backgrounds.svg, outlined),
 // brand green only, ink #0C0E12, and a real app screenshot from assets/screenshots.
 // Text is Roboto (ROBOTO=path/to/Roboto.ttf), the app's typeface on Android.
 import fs from 'node:fs'
@@ -22,8 +22,8 @@ if (!chrome || !roboto) { console.error('set CHROME and ROBOTO'); process.exit(2
 
 const b64 = f => fs.readFileSync(f).toString('base64')
 const svgOf = f => fs.readFileSync(path.join(out, f), 'utf8').replace(/^<svg[^>]*?width="[^"]*"\s*height="[^"]*"/, m => m.replace(/width="[^"]*"\s*height="[^"]*"/, 'width="100%" height="100%"'))
-const LOCKUP = svgOf('logo/opengym-logo-for-dark-backgrounds.svg')
-const MARK = svgOf('logo/opengym-mark-green.svg')
+const LOCKUP = svgOf('logo/gymbuddy-logo-for-dark-backgrounds.svg')
+const MARK = svgOf('logo/gymbuddy-mark-green.svg')
 const SHOT = 'data:image/png;base64,' + b64(path.join(root, 'assets/screenshots/workout.png'))
 const SHOT2 = 'data:image/png;base64,' + b64(path.join(root, 'assets/screenshots/home.png'))
 
@@ -41,14 +41,14 @@ h1 em{font-style:normal;color:#a3e635}
 
 // x, y, sizes in px of each banner; s = scale unit (1% of the height)
 const BANNERS = [
-  { name: 'opengym-social-1200x630', w: 1200, h: 630, kind: 'split' },
-  { name: 'opengym-github-1280x640', w: 1280, h: 640, kind: 'split' },
-  { name: 'opengym-discord-960x540', w: 960, h: 540, kind: 'split' },
-  { name: 'opengym-x-header-1500x500', w: 1500, h: 500, kind: 'wide' },
-  { name: 'opengym-linkedin-1584x396', w: 1584, h: 396, kind: 'wide' },
-  { name: 'opengym-youtube-2560x1440', w: 2560, h: 1440, kind: 'safe' },
-  { name: 'opengym-wallpaper-desktop-2560x1440', w: 2560, h: 1440, kind: 'wall' },
-  { name: 'opengym-wallpaper-phone-1170x2532', w: 1170, h: 2532, kind: 'wallphone' },
+  { name: 'gymbuddy-social-1200x630', w: 1200, h: 630, kind: 'split' },
+  { name: 'gymbuddy-github-1280x640', w: 1280, h: 640, kind: 'split' },
+  { name: 'gymbuddy-discord-960x540', w: 960, h: 540, kind: 'split' },
+  { name: 'gymbuddy-x-header-1500x500', w: 1500, h: 500, kind: 'wide' },
+  { name: 'gymbuddy-linkedin-1584x396', w: 1584, h: 396, kind: 'wide' },
+  { name: 'gymbuddy-youtube-2560x1440', w: 2560, h: 1440, kind: 'safe' },
+  { name: 'gymbuddy-wallpaper-desktop-2560x1440', w: 2560, h: 1440, kind: 'wall' },
+  { name: 'gymbuddy-wallpaper-phone-1170x2532', w: 1170, h: 2532, kind: 'wallphone' },
 ]
 
 function body(b) {
@@ -59,7 +59,7 @@ function body(b) {
 <div style="position:absolute;left:${h * 0.1}px;top:${h * 0.13}px;bottom:${h * 0.11}px;width:${w - pw - h * 0.38}px;display:flex;flex-direction:column;justify-content:space-between">
   <div class="lockup" style="width:${h * 0.5}px;height:${h * 0.5 * 238 / 868}px">${LOCKUP}</div>
   <h1 style="font-size:${h * 0.115}px">Your workouts.<br>Your weights.<br><em>Your data.</em></h1>
-  <p class="url" style="font-size:${h * 0.04}px">Free and open source · iPhone, Android, Apple Watch, Wear OS, Garmin · opengym.ch</p>
+  <p class="url" style="font-size:${h * 0.04}px">Free and open source · iPhone, Android, Apple Watch, Wear OS, Garmin · gymbuddy.ch</p>
 </div>
 <div class="phone" style="width:${pw}px;right:${h * 0.1}px;top:${h * 0.12}px;transform:rotate(4deg)"><img src="${SHOT}"></div>`
   }
@@ -68,7 +68,7 @@ function body(b) {
 <div style="position:absolute;right:${h * 0.22}px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;gap:${h * 0.07}px">
   <div class="lockup" style="width:${h * 0.95}px;height:${h * 0.95 * 238 / 868}px">${LOCKUP}</div>
   <h1 style="font-size:${h * 0.15}px">Your workouts. Your weights. <em>Your data.</em></h1>
-  <p class="url" style="font-size:${h * 0.065}px">Free and open source · opengym.ch</p>
+  <p class="url" style="font-size:${h * 0.065}px">Free and open source · gymbuddy.ch</p>
 </div>`
   }
   if (b.kind === 'safe') { // YouTube: everything inside the 1546 x 423 centre that every device shows

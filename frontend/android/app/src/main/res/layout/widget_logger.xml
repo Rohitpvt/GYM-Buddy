@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget while a workout runs (OpenGymWidgetProvider.shape, WidgetLogger): the set to do now,
+<!-- The widget while a workout runs (GymBuddyWidgetProvider.shape, WidgetLogger): the set to do now,
      its weight and reps (or seconds) with − and +, and Log set. 2x2 and wider. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"

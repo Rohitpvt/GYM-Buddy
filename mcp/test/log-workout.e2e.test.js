@@ -63,8 +63,8 @@ describe.skipIf(!HAVE_API)('log_workout against the real api', () => {
     })
     base = `http://127.0.0.1:${port}`
     // The read tools read the same directory the server writes, as on a real install.
-    process.env.OPENGYM_DATA = dataDir
-    process.env.OPENGYM_UID = UID
+    process.env.GYMBUDDY_DATA = dataDir
+    process.env.GYMBUDDY_UID = UID
     ;({ logWorkout } = await import('../src/write-tools.js'))
     ;({ getState } = await import('../src/state.js'))
     ;({ TOOLS } = await import('../src/tools.js'))
@@ -74,7 +74,7 @@ describe.skipIf(!HAVE_API)('log_workout against the real api', () => {
     if (dataDir) fs.rmSync(dataDir, { recursive: true, force: true })
   })
 
-  const env = () => ({ OPENGYM_URL: base, OPENGYM_TOKEN: TOKEN })
+  const env = () => ({ GYMBUDDY_URL: base, GYMBUDDY_TOKEN: TOKEN })
   const CURLS = { exercises: [{ exercise: 'dumbbell curl', sets: [{ reps: 12, weight: 12 }, { reps: 12, weight: 12 }, { reps: 10, weight: 12 }] }] }
 
   test('stored: the device document as it was, plus one workout, one revision on', async () => {

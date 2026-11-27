@@ -1,6 +1,6 @@
-// One routine's page: counts a "Copy to openGym" (no cookie, nothing about you, see the service),
+// One routine's page: counts a "Copy to GYM Buddy" (no cookie, nothing about you, see the service),
 // turns the sessions into tabs on phones and tablets, draws the QR code on computers when asked,
-// and keeps a "Copy to openGym" button in reach on phones.
+// and keeps a "Copy to GYM Buddy" button in reach on phones.
 const $ = id => document.getElementById(id)
 const art = document.querySelector('.rt-art')
 const id = art?.dataset.id
@@ -32,13 +32,13 @@ document.addEventListener('click', e => {
   const a = e.target.closest('[data-copy]')
   if (!a) return
   count(a.dataset.copy)
-  if (a.dataset.copy === 'file') flash('Saved. Now in openGym: Plan, Import plan, and pick the file.')
-  else flash('Opening openGym. No app yet? The page that opens has the download.')
+  if (a.dataset.copy === 'file') flash('Saved. Now in GYM Buddy: Plan, Import plan, and pick the file.')
+  else flash('Opening GYM Buddy. No app yet? The page that opens has the download.')
 })
 
 fetch(api + 'stats', { headers: { accept: 'application/json' } }).then(r => (r.ok ? r.json() : null)).then(j => {
   const n = j?.copies?.[id] || 0
-  if (n && pop && !pop.classList.contains('flash')) { pop.hidden = false; pop.textContent = `Copied into openGym ${n === 1 ? 'once' : n + ' times'} so far.` }
+  if (n && pop && !pop.classList.contains('flash')) { pop.hidden = false; pop.textContent = `Copied into GYM Buddy ${n === 1 ? 'once' : n + ' times'} so far.` }
 }).catch(() => {})
 
 /* ------------------------------- sessions as tabs (below 1100px) ------------------------------- */

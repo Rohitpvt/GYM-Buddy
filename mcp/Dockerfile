@@ -13,11 +13,11 @@ ARG VERSION=dev
 ARG VCS_REF=dev
 ARG BUILD_DATE=unknown
 LABEL maintainer="Duarte Santos https://github.com/DuarteSantos8" \
-    org.opencontainers.image.title="opengym-mcp" \
-    org.opencontainers.image.description="Optional MCP server for openGym over HTTPS: lets an AI assistant read and, if you allow it, change your training plan and log, with a scoped token you make in Settings." \
-    org.opencontainers.image.source="https://github.com/DuarteSantos8/openGym" \
-    org.opencontainers.image.url="https://opengym.ch" \
-    org.opencontainers.image.documentation="https://github.com/DuarteSantos8/openGym/blob/main/docs/MCP_REMOTE.md" \
+    org.opencontainers.image.title="gymbuddy-mcp" \
+    org.opencontainers.image.description="Optional MCP server for GYM Buddy over HTTPS: lets an AI assistant read and, if you allow it, change your training plan and log, with a scoped token you make in Settings." \
+    org.opencontainers.image.source="https://github.com/DuarteSantos8/GYM Buddy" \
+    org.opencontainers.image.url="https://gymbuddy.ch" \
+    org.opencontainers.image.documentation="https://github.com/DuarteSantos8/GYM Buddy/blob/main/docs/MCP_REMOTE.md" \
     org.opencontainers.image.licenses="AGPL-3.0-or-later" \
     org.opencontainers.image.version=$VERSION \
     org.opencontainers.image.revision=$VCS_REF \
@@ -39,7 +39,7 @@ COPY mcp/src/ ./src/
 
 ENV NODE_ENV=production
 ENV MCP_PORT=3100
-ENV OPENGYM_API_URL=http://api:3000
+ENV GYMBUDDY_API_URL=http://api:3000
 EXPOSE 3100
 USER node
 CMD ["node", "src/http.js"]

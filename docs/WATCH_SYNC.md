@@ -59,7 +59,7 @@ out (Clocks, below); the phone takes it off `at`, `restEnd` and `endsAt` before 
 2. **Transport.** Apple Watch: one `sendMessage` with the waiting events while the phone is in
    reach (the iPhone stores them and answers with the ids stored), else, or when that fails,
    `transferUserInfo` (queued by the system, in order, survives either app being killed).
-   Wear OS: one Data Layer item per event (`/opengym/event/<id>`); the phone deletes it once stored.
+   Wear OS: one Data Layer item per event (`/gymbuddy/event/<id>`); the phone deletes it once stored.
    Either signal marks the event *delivered*.
 3. **Resend.** Not delivered: again after 20 s (Wear OS: then 40 s, 80 s … up to 10 min).
    Delivered but not applied: again after 10 min. Back in reach and at launch: everything not
@@ -103,7 +103,7 @@ The snapshot also carries `now`, the phone's clock when it was made (protocol 2)
 as a message too while the watch app is there. Both carry a stamp `at`; the watch skips a stamp
 older than the newest it applied (`SnapshotOrder`: the two travel apart). The stamp always goes up,
 whatever the phone's clock does (`WatchBridgePlugin.nextStamp`).
-Wear OS: the data item `/opengym/snapshot` (kept, read at launch) and, since protocol 2, the same
+Wear OS: the data item `/gymbuddy/snapshot` (kept, read at launch) and, since protocol 2, the same
 snapshot as a message on that path to the watches in reach (its stamp on the first line, then the
 JSON; none over 90 KB): the watch takes its clock offset from messages only and skips a stamp older
 than the newest it applied from that phone (`RestSync.kt`).

@@ -7,7 +7,7 @@ day while the app is open, and whenever you tap **Back up now**. On a new phone,
 folder and tap **Restore from a backup**: you pick the day, then choose whether it replaces what
 is on the phone or merges with it (the same question as importing a backup file).
 
-No openGym server is involved: the device talks to your WebDAV server directly. That is what makes
+No GYM Buddy server is involved: the device talks to your WebDAV server directly. That is what makes
 it useful for the phone apps without a server (#582).
 
 ## What it keeps, and where
@@ -16,7 +16,7 @@ it useful for the phone apps without a server (#582).
 |---|---|
 | Folder address, user name, "Back up every day", last result | this device only (`localStorage`, `gym_webdav_v1`), never synced, never in a backup |
 | Password | this device's secure storage: the Keychain on iPhone, the Android Keystore; a browser keeps it in its own site storage |
-| Backups | your folder: `opengym-backup-YYYY-MM-DD.json`, one per day, the newest 14, plus `opengym-backups.json` (the list, so no PROPFIND is needed) |
+| Backups | your folder: `gymbuddy-backup-YYYY-MM-DD.json`, one per day, the newest 14, plus `gymbuddy-backups.json` (the list, so no PROPFIND is needed) |
 
 Photos and videos are not in it (like the plain JSON export). Use "Export with photos & videos
 (.zip)" for those, or a server, which keeps them.
@@ -28,11 +28,11 @@ password), not your main one.
 
 The address of the folder itself, for example:
 
-- Nextcloud: `https://cloud.example.com/remote.php/dav/files/USERNAME/openGym/`
-- ownCloud: `https://cloud.example.com/remote.php/webdav/openGym/`
-- Synology: `https://nas.example.com:5006/home/openGym/`
+- Nextcloud: `https://cloud.example.com/remote.php/dav/files/USERNAME/GYM Buddy/`
+- ownCloud: `https://cloud.example.com/remote.php/webdav/GYM Buddy/`
+- Synology: `https://nas.example.com:5006/home/GYM Buddy/`
 
-openGym makes the last folder (`MKCOL`) when it is missing. Only `GET`, `PUT`, `DELETE` and that
+GYM Buddy makes the last folder (`MKCOL`) when it is missing. Only `GET`, `PUT`, `DELETE` and that
 one `MKCOL` are used.
 
 ## Browser (web app) and CORS
@@ -40,16 +40,16 @@ one `MKCOL` are used.
 The phone apps (Android, iPhone) send these requests through native HTTP, where CORS does not
 apply: any WebDAV server works.
 
-In a **browser**, the WebDAV server has to allow requests from your openGym address (CORS), or the
+In a **browser**, the WebDAV server has to allow requests from your GYM Buddy address (CORS), or the
 browser blocks them and the sheet says it could not reach the server. Nextcloud and most NAS
 systems do not allow that out of the box. Options:
 
-- add the headers on the reverse proxy in front of the WebDAV server, for your openGym origin only:
+- add the headers on the reverse proxy in front of the WebDAV server, for your GYM Buddy origin only:
   `Access-Control-Allow-Origin: https://gym.example.com`,
   `Access-Control-Allow-Methods: GET, PUT, DELETE, MKCOL, OPTIONS`,
   `Access-Control-Allow-Headers: Authorization, Content-Type`,
   `Access-Control-Allow-Credentials: true`, and answer `OPTIONS` with 204 without asking for a login;
-- or serve WebDAV under the same origin as openGym (a path on the same host), which needs no CORS;
+- or serve WebDAV under the same origin as GYM Buddy (a path on the same host), which needs no CORS;
 - or use the phone app for the backup.
 
 A plain `http://` address only works where the page itself is not https (a browser blocks mixed

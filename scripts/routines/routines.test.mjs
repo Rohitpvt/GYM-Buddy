@@ -56,7 +56,7 @@ test('a good routine passes and comes back normalised', () => {
 
 test('an exercise the catalogue does not hold is refused', () => {
   const r = good(); r.sessions[0].exercises[0].id = '99999'
-  assert.match(check(r).problems.join('\n'), /not in the openGym catalogue/)
+  assert.match(check(r).problems.join('\n'), /not in the GYM Buddy catalogue/)
 })
 
 test('silly numbers are refused', () => {
@@ -91,7 +91,7 @@ test('required fields, licence, credit and words', () => {
 test('em dashes are only refused in our own copy', () => {
   const r = { ...good(), description: 'Short sessions — for a doorway bar and the floor.' }
   assert.deepEqual(check(r).problems, [])
-  assert.match(check(r, { source: 'opengym' }).problems.join(), /em dash/)
+  assert.match(check(r, { source: 'gymbuddy' }).problems.join(), /em dash/)
 })
 
 test('file names and covers', () => {
@@ -128,7 +128,7 @@ test('kit, volume and focus are read off the exercises', () => {
 
 test('the index entry is one the app reads', () => {
   const r = check(good()).routine
-  const idx = { format: 'opengym-routines', version: 1, routines: [indexEntry(r, cat, 'https://opengym.ch/routines/pullup-test/')] }
+  const idx = { format: 'gymbuddy-routines', version: 1, routines: [indexEntry(r, cat, 'https://gymbuddy.ch/routines/pullup-test/')] }
   const { entries } = normalizeIndex(idx)
   assert.equal(entries.length, 1)
   assert.deepEqual(entries[0].equipment, ['pull-up bar'])
@@ -138,7 +138,7 @@ test('the index entry is one the app reads', () => {
 
 test('the plan file is the app\'s format, with the week', () => {
   const p = planFile(check(good()).routine, cat)
-  assert.equal(p.opengym_plan, 1)
+  assert.equal(p.gymbuddy_plan, 1)
   assert.deepEqual(p.week, { 1: ['r0'], 3: ['r1'], 5: ['r0'] })
   assert.deepEqual(p.routines[0].ex[0], { id: '0652', sets: 3, reps: 6, restSec: 120 })
   assert.deepEqual(p.routines[0].ex[1], { id: '0463', sets: 3, mode: 'time', sec: 40 })
@@ -149,7 +149,7 @@ test('the plan file is the app\'s format, with the week', () => {
 test('a day link round-trips through the app\'s link format', async () => {
   const r = check(good()).routine
   const url = dayLink(r, 0, cat)
-  assert.ok(url.startsWith('https://opengym.ch/r#1.d.'))
+  assert.ok(url.startsWith('https://gymbuddy.ch/r#1.d.'))
   const payload = payloadFromLink(url)
   const bundle = decodePayload(payload)
   assert.deepEqual(bundle, linkBundle(r, 0, cat))
@@ -169,9 +169,9 @@ test('reading a plan file or link people submit', () => {
   assert.deepEqual(got.schedule, [[1, 0], [3, 1], [5, 0]])
   assert.deepEqual(got.sessions[0].exercises[0], { id: '0652', sets: 3, reps: 6, rest: 120 })
   assert.throws(() => sessionsFromPlan({ ...plan, customEx: [{ id: 'c1', n: 'My thing' }], routines: [{ id: 'r0', name: 'X', ex: [{ id: 'c1', sets: 3, reps: 5 }] }] }, cat), /custom exercise/)
-  assert.throws(() => sessionsFromPlan({ hello: 1 }, cat), /not an openGym plan/)
+  assert.throws(() => sessionsFromPlan({ hello: 1 }, cat), /not an GYM Buddy plan/)
   assert.equal(payloadFromLink('https://evil.example/r#1.d.abc'), null)
-  assert.equal(payloadFromLink('opengym://r#1.j.e30'), '1.j.e30')
+  assert.equal(payloadFromLink('gymbuddy://r#1.j.e30'), '1.j.e30')
   assert.throws(() => decodePayload('1.d.' + Buffer.from(zlib.deflateRawSync(Buffer.alloc(400000, 32))).toString('base64url')), /cut off|garbled/)
   assert.equal(slugify('Pull-up bar basics!'), 'pull-up-bar-basics')
   assert.equal(slugify('Ganzkörper zu Hause'), 'ganzkorper-zu-hause')
@@ -187,10 +187,10 @@ test('the build writes pages, the app index, plan files and only the stills it s
   const index = JSON.parse(fs.readFileSync(path.join(out, 'index.json'), 'utf8'))
   assert.equal(normalizeIndex(index).entries.length, index.routines.length)
   assert.ok(!index.routines.some(x => x.id.startsWith('starter/')), 'built-in plans stay out of the index')
-  assert.ok(index.routines.every(x => x.url.startsWith('https://opengym.ch/routines/')))
+  assert.ok(index.routines.every(x => x.url.startsWith('https://gymbuddy.ch/routines/')))
   for (const x of r.routines) {
     assert.ok(fs.existsSync(path.join(out, x.slug, 'index.html')))
-    assert.ok(fs.existsSync(path.join(out, 'plans', x.slug + '.opengym-plan.json')))
+    assert.ok(fs.existsSync(path.join(out, 'plans', x.slug + '.gymbuddy-plan.json')))
   }
   const media = fs.readdirSync(path.join(out, 'media')).filter(f => f.endsWith('.webp'))
   assert.equal(media.length, r.media)
@@ -198,8 +198,8 @@ test('the build writes pages, the app index, plan files and only the stills it s
   assert.ok(fs.existsSync(path.join(out, 'media/NOTICE.md')))
   const page = fs.readFileSync(path.join(out, 'pullup-bar-basics/index.html'), 'utf8')
   assert.match(page, /"@type":"ExercisePlan"/)
-  assert.match(page, /<link rel="canonical" href="https:\/\/opengym.ch\/routines\/pullup-bar-basics\/">/)
-  assert.match(page, /href="https:\/\/opengym.ch\/r#1\.d\./)
+  assert.match(page, /<link rel="canonical" href="https:\/\/gymbuddy.ch\/routines\/pullup-bar-basics\/">/)
+  assert.match(page, /href="https:\/\/gymbuddy.ch\/r#1\.d\./)
   assert.match(page, /gymvisual\.com/)
   assert.doesNotMatch(page, /noindex/)
   assert.match(fs.readFileSync(path.join(out, 'sitemap.xml'), 'utf8'), /routines\/ten-sets-of-ten\//)
@@ -459,11 +459,11 @@ test('header: one line at every width, and the panels hang from the bar', () => 
 function startApp(over = {}) {
   const dataDir = fs.mkdtempSync(path.join(tmp, 'svc-'))
   const routinesFile = path.join(dataDir, 'routines.json')
-  fs.writeFileSync(routinesFile, JSON.stringify([{ id: 'opengym/pullup-bar-basics', slug: 'pullup-bar-basics' }]))
+  fs.writeFileSync(routinesFile, JSON.stringify([{ id: 'gymbuddy/pullup-bar-basics', slug: 'pullup-bar-basics' }]))
   const sent = []
   const committed = []
   let t = Date.parse('2026-11-08T12:00:00Z')
-  const app = createApp({ base: '/routines/', api: '/routines/api/', siteDir: '', dataDir, label: 'STAGING', origin: 'https://opengym.ch', tgChat: '42', ghBranch: 'routines-inbox', ...over.cfg }, {
+  const app = createApp({ base: '/routines/', api: '/routines/api/', siteDir: '', dataDir, label: 'STAGING', origin: 'https://gymbuddy.ch', tgChat: '42', ghBranch: 'routines-inbox', ...over.cfg }, {
     cat, routinesFile, saveDelay: 0, now: () => t,
     telegram: async (method, payload, file) => { sent.push({ method, payload, file }); return {} },
     github: over.github === null ? null : async (slug, json, cover) => { committed.push({ slug, json, cover }); return { slug, url: 'https://github.com/x/commit/1' } },
@@ -586,16 +586,16 @@ test('service: without a GitHub token ✅ keeps the routine on disk and says so'
 test('service: copies count once per visitor a day, stats, unknown ids', async () => {
   const s = await startApp()
   try {
-    const one = { id: 'opengym/pullup-bar-basics', kind: 'day' }
+    const one = { id: 'gymbuddy/pullup-bar-basics', kind: 'day' }
     assert.equal((await s.post('copy', one)).status, 204)
     assert.equal((await s.post('copy', one)).status, 204)
     assert.equal((await s.post('copy', one, { 'cf-connecting-ip': '198.51.100.7' })).status, 204)
-    assert.equal((await s.post('copy', { id: 'opengym/nope' })).status, 400)
+    assert.equal((await s.post('copy', { id: 'gymbuddy/nope' })).status, 400)
     const stats = await (await fetch(s.base + 'stats')).json()
-    assert.equal(stats.copies['opengym/pullup-bar-basics'], 2)
+    assert.equal(stats.copies['gymbuddy/pullup-bar-basics'], 2)
     s.tick(86400e3)
     await s.post('copy', one)
-    assert.equal(s.app.counts()['opengym/pullup-bar-basics'], 3)
+    assert.equal(s.app.counts()['gymbuddy/pullup-bar-basics'], 3)
     s.app.flush()
     const disk = fs.readFileSync(path.join(s.dataDir, 'counts.json'), 'utf8')
     assert.doesNotMatch(disk, /203\.0\.113|198\.51/, 'no addresses on disk')
@@ -633,7 +633,7 @@ test('service: static files, no listings, media only for our pages, CORS on the 
     assert.equal(idx.headers.get('access-control-allow-origin'), '*')
     assert.equal((await fetch(root + 'media/')).status, 404)
     assert.equal((await fetch(root + 'media/0652.webp', { headers: { referer: 'https://elsewhere.example/' } })).status, 403)
-    const ok = await fetch(root + 'media/0652.webp', { headers: { referer: 'https://opengym.ch/routines/x/' } })
+    const ok = await fetch(root + 'media/0652.webp', { headers: { referer: 'https://gymbuddy.ch/routines/x/' } })
     assert.equal(ok.status, 200)
     assert.match(ok.headers.get('x-robots-tag'), /noimageindex/)
     await ok.arrayBuffer()

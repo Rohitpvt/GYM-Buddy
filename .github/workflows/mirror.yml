@@ -1,6 +1,6 @@
 # Keeps the GitLab copy identical to this repository, so nobody has to push twice.
 #
-# GitHub is the home of openGym; gitlab.com/DuarteSantos8/opengym is a mirror that stays
+# GitHub is the home of GYM Buddy; gitlab.com/DuarteSantos8/gymbuddy is a mirror that stays
 # because its CI builds the release artefacts (signed APK, multi-arch images, SBOMs) and
 # nothing there is merged by hand. Every push to main and every v* tag is forwarded here.
 # Pull mirroring on gitlab.com is a paid feature, so the push runs from this side.
@@ -34,7 +34,7 @@ concurrency:
 jobs:
   mirror:
     # Forks have neither the secret nor a mirror to push to.
-    if: github.repository == 'DuarteSantos8/openGym'
+    if: github.repository == 'DuarteSantos8/GYM Buddy'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -57,7 +57,7 @@ jobs:
           git config credential.helper '!f() { echo "username=oauth2"; echo "password=$GITLAB_MIRROR_TOKEN"; }; f'
           # main first, then the tags: a tag pipeline on GitLab checks that its commit is on
           # main, so the branch has to be there before the tag arrives.
-          remote=https://gitlab.com/DuarteSantos8/opengym.git
+          remote=https://gitlab.com/DuarteSantos8/gymbuddy.git
           git push "$remote" refs/remotes/origin/main:refs/heads/main
           if git push --force "$remote" 'refs/tags/v*:refs/tags/v*'; then exit 0; fi
           # Something was refused even with --force. Usually a moved tag that GitLab protects

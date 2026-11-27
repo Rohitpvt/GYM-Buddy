@@ -46,19 +46,19 @@ describe('display prefs', () => {
   it('Default follows the phone: Android asks the bridge, iOS reads Dynamic Type', () => {
     expect(systemTextScale({})).toBe(1)
     expect(followsSystemText({})).toBe(false)
-    expect(systemTextScale({ OpenGymText: { scale: () => 1.15 } })).toBe(1.15)
-    expect(followsSystemText({ OpenGymText: { scale: () => 1 } })).toBe(true)
+    expect(systemTextScale({ GymBuddyText: { scale: () => 1.15 } })).toBe(1.15)
+    expect(followsSystemText({ GymBuddyText: { scale: () => 1 } })).toBe(true)
     expect(systemTextScale({ __ogTextScale: 0.88 })).toBe(0.88)
     // Clamped to the span the layouts are checked at.
-    expect(systemTextScale({ OpenGymText: { scale: () => 2 } })).toBe(1.4)
+    expect(systemTextScale({ GymBuddyText: { scale: () => 2 } })).toBe(1.4)
     expect(systemTextScale({ __ogTextScale: 0.5 })).toBe(0.82)
     // Rubbish from a bridge is the default size, never NaN.
-    expect(systemTextScale({ OpenGymText: { scale: () => 'x' } })).toBe(1)
-    expect(systemTextScale({ OpenGymText: { scale: () => { throw new Error('gone') } } })).toBe(1)
+    expect(systemTextScale({ GymBuddyText: { scale: () => 'x' } })).toBe(1)
+    expect(systemTextScale({ GymBuddyText: { scale: () => { throw new Error('gone') } } })).toBe(1)
   })
 
   it('a pick of its own replaces the phone size, it does not stack on it', () => {
-    const win = { OpenGymText: { scale: () => 1.3 } }
+    const win = { GymBuddyText: { scale: () => 1.3 } }
     expect(textScaleFor('default', win)).toBe(1.3)
     expect(textScaleFor('larger', win)).toBe(1.25)
     expect(textScaleFor('smallest', win)).toBe(0.82)
@@ -69,17 +69,17 @@ describe('display prefs', () => {
     _resetDisplay()
     let k = 1.2
     const listeners = {}
-    const win = { document, OpenGymText: { scale: () => k }, addEventListener: (n, f) => { listeners[n] = f } }
+    const win = { document, GymBuddyText: { scale: () => k }, addEventListener: (n, f) => { listeners[n] = f } }
     applyDisplay({ motion: 'system', text: 'default' }, { save: true, win })
     expect(document.documentElement.style.fontSize).toBe('120%')
     expect(document.documentElement.style.getPropertyValue('--text-k')).toBe('1.2')
     k = 0.9
-    listeners['opengym:text-scale']()
+    listeners['gymbuddy:text-scale']()
     expect(document.documentElement.style.fontSize).toBe('90%')
     // A pick of its own is not moved by the phone.
     applyDisplay({ motion: 'system', text: 'largest' }, { save: true, win })
     k = 1.1
-    listeners['opengym:text-scale']()
+    listeners['gymbuddy:text-scale']()
     expect(document.documentElement.style.fontSize).toBe('140%')
     _resetDisplay()
   })

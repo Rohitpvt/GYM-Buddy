@@ -482,7 +482,7 @@ test('server.js gives a slow upload half an hour, not node\'s default five minut
 test('an upload or a missing-check meant for another account is refused with 409', async t => {
   const h = await start(t);
   const bytes = M.jpeg(2000);
-  const meant = { ...cookie(U2), 'X-OpenGym-Account': U1 };
+  const meant = { ...cookie(U2), 'X-GYM Buddy-Account': U1 };
   const up = await h.put(bytes, { headers: meant });
   assert.equal(up.status, 409);
   assert.equal((await up.json()).code, 'account-mismatch');
@@ -491,12 +491,12 @@ test('an upload or a missing-check meant for another account is refused with 409
   const miss = await fetch(`${h.api}/api/media/missing`, { method: 'POST', headers: { ...meant, 'Content-Type': 'application/json' }, body: JSON.stringify({ hashes: [M.sha(bytes)] }) });
   assert.equal(miss.status, 409);
   // The right account, and an older app without the header, still upload.
-  assert.equal((await h.put(bytes, { headers: { ...cookie(U2), 'X-OpenGym-Account': U2 } })).status, 201);
+  assert.equal((await h.put(bytes, { headers: { ...cookie(U2), 'X-GYM Buddy-Account': U2 } })).status, 201);
   assert.equal((await h.put(M.jpeg(2100), { uid: U1 })).status, 201);
 });
 
 test('the account header is allowed across origins, for a paired phone', async t => {
   const h = await start(t);
-  const r = await fetch(`${h.api}/api/media/missing`, { method: 'OPTIONS', headers: { Origin: 'capacitor://localhost', 'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'x-opengym-account' } });
-  assert.match(r.headers.get('access-control-allow-headers') || '', /X-OpenGym-Account/);
+  const r = await fetch(`${h.api}/api/media/missing`, { method: 'OPTIONS', headers: { Origin: 'capacitor://localhost', 'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'x-gymbuddy-account' } });
+  assert.match(r.headers.get('access-control-allow-headers') || '', /X-GYM Buddy-Account/);
 });

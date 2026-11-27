@@ -64,7 +64,7 @@ describe('in the health records', () => {
 
 describe('the native sides', () => {
   const swift = readFileSync(new URL('../../ios/App/App/AppleHealthPlugin.swift', import.meta.url), 'utf8')
-  const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/opengym/HealthWrite.java', import.meta.url), 'utf8')
+  const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/gymbuddy/HealthWrite.java', import.meta.url), 'utf8')
   const manifest = readFileSync(new URL('../../android/app/src/main/AndroidManifest.xml', import.meta.url), 'utf8')
   it('Apple Health adds the estimate to the workout under its own sync id', () => {
     expect(swift).toMatch(/activeEnergyBurned/)

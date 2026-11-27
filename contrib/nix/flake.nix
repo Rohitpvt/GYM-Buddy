@@ -1,5 +1,5 @@
 {
-  description = "openGym — self-hosted gym & body-weight tracker";
+  description = "GYM Buddy — self-hosted gym & body-weight tracker";
 
   inputs = {
     # A release branch, not nixos-unstable: this flake is contributed packaging that has to
@@ -21,16 +21,16 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        opengymPackages = import ./default.nix { inherit pkgs; };
+        gymbuddyPackages = import ./default.nix { inherit pkgs; };
 
-        opengymNixOSModule = self.nixosModules.opengym;
+        gymbuddyNixOSModule = self.nixosModules.gymbuddy;
 
         testConfig = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            opengymNixOSModule
+            gymbuddyNixOSModule
             {
-              services.opengym = {
+              services.gymbuddy = {
                 enable = true;
                 rpId = "localhost";
                 origin = "http://localhost:8080";
@@ -44,7 +44,7 @@
           ];
         };
 
-        cfg = testConfig.config.services.opengym;
+        cfg = testConfig.config.services.gymbuddy;
 
         nginxEnabled = testConfig.config.services.nginx.enable;
 
@@ -52,9 +52,9 @@
         nginxTestConfig = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            opengymNixOSModule
+            gymbuddyNixOSModule
             {
-              services.opengym = {
+              services.gymbuddy = {
                 enable = true;
                 nginx.enable = true;
               };
@@ -63,23 +63,23 @@
           ];
         };
 
-        check = pkgs.runCommand "opengym-module-check" { } ''
+        check = pkgs.runCommand "gymbuddy-module-check" { } ''
           set -euo pipefail
           # Verify the module evaluated correctly
-          echo "services.opengym.enable = ${if cfg.enable then "true" else "false"}"
-          echo "services.opengym.apiPort = ${toString cfg.apiPort}"
-          echo "services.opengym.rpId = ${cfg.rpId}"
-          echo "services.opengym.origin = ${cfg.origin}"
+          echo "services.gymbuddy.enable = ${if cfg.enable then "true" else "false"}"
+          echo "services.gymbuddy.apiPort = ${toString cfg.apiPort}"
+          echo "services.gymbuddy.rpId = ${cfg.rpId}"
+          echo "services.gymbuddy.origin = ${cfg.origin}"
 
           # Verify systemd service exists
-          echo "systemd.services.opengym-api exists = ${
-            if testConfig.config.systemd.services ? opengym-api then "true" else "false"
+          echo "systemd.services.gymbuddy-api exists = ${
+            if testConfig.config.systemd.services ? gymbuddy-api then "true" else "false"
           }"
 
           # Verify extra environment is applied to the API unit
-          echo "opengym-api env MY_FLAG = ${
-            if testConfig.config.systemd.services.opengym-api.environment ? MY_FLAG then
-              testConfig.config.systemd.services.opengym-api.environment.MY_FLAG
+          echo "gymbuddy-api env MY_FLAG = ${
+            if testConfig.config.systemd.services.gymbuddy-api.environment ? MY_FLAG then
+              testConfig.config.systemd.services.gymbuddy-api.environment.MY_FLAG
             else
               "missing"
           }"
@@ -106,12 +106,12 @@
           }"
 
           # Verify frontend/media store paths are exposed for a web server
-          echo "services.opengym.web.root = ${cfg.web.root}"
-          echo "services.opengym.media.root = ${cfg.media.root}"
+          echo "services.gymbuddy.web.root = ${cfg.web.root}"
+          echo "services.gymbuddy.media.root = ${cfg.media.root}"
 
           # Verify user exists
-          echo "users.users.opengym exists = ${
-            if testConfig.config.users.users ? opengym then "true" else "false"
+          echo "users.users.gymbuddy exists = ${
+            if testConfig.config.users.users ? gymbuddy then "true" else "false"
           }"
 
           # All checks passed
@@ -119,29 +119,29 @@
         '';
       in
       {
-        packages = opengymPackages // {
-          default = opengymPackages.opengym-frontend;
+        packages = gymbuddyPackages // {
+          default = gymbuddyPackages.gymbuddy-frontend;
         };
 
-        apps.opengym = {
+        apps.gymbuddy = {
           type = "app";
           # Runs the full local stack: API + frontend (exercise media included) behind a throwaway
           # Caddy. Defaults to http://localhost:8080; env vars override ports/data/rp.
-          program = "${pkgs.writeShellScript "opengym" ''
+          program = "${pkgs.writeShellScript "gymbuddy" ''
             set -euo pipefail
 
-            DATA_DIR=''${OPENGYM_DATA_DIR:-/tmp/opengym-data}
-            API_PORT=''${OPENGYM_API_PORT:-3000}
-            WEB_PORT=''${OPENGYM_WEB_PORT:-8080}
+            DATA_DIR=''${GYMBUDDY_DATA_DIR:-/tmp/gymbuddy-data}
+            API_PORT=''${GYMBUDDY_API_PORT:-3000}
+            WEB_PORT=''${GYMBUDDY_WEB_PORT:-8080}
             mkdir -p "$DATA_DIR"
 
             export PORT="$API_PORT"
             export DATA_DIR
-            export RP_ID=''${OPENGYM_RP_ID:-localhost}
-            export ORIGIN=''${OPENGYM_ORIGIN:-http://localhost:$WEB_PORT}
+            export RP_ID=''${GYMBUDDY_RP_ID:-localhost}
+            export ORIGIN=''${GYMBUDDY_ORIGIN:-http://localhost:$WEB_PORT}
             export ALLOW_GUEST=''${ALLOW_GUEST:-1}
 
-            ${opengymPackages.opengym-api}/bin/opengym-api &
+            ${gymbuddyPackages.gymbuddy-api}/bin/gymbuddy-api &
             API_PID=$!
 
             CFGDIR=$(mktemp -d)
@@ -164,28 +164,28 @@
                 reverse_proxy 127.0.0.1:$API_PORT
               }
               handle {
-                root * ${opengymPackages.opengym-frontend}/share/opengym
+                root * ${gymbuddyPackages.gymbuddy-frontend}/share/gymbuddy
                 try_files {path} /index.html
                 file_server
               }
             }
             EOF
 
-            echo "openGym running at http://localhost:$WEB_PORT (API on :$API_PORT, data in $DATA_DIR) — Ctrl-C to stop"
+            echo "GYM Buddy running at http://localhost:$WEB_PORT (API on :$API_PORT, data in $DATA_DIR) — Ctrl-C to stop"
             ${pkgs.caddy}/bin/caddy run --config "$CGFILE"
           ''}";
         };
 
-        apps.default = self.apps.${system}.opengym;
+        apps.default = self.apps.${system}.gymbuddy;
 
         checks = {
           nixos-module-eval = check;
         }
         // (pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
           # Boots a NixOS VM and exercises the full HTTP contract (API + nginx vhost + SPA).
-          opengym-nixos-test = import ./tests.nix {
+          gymbuddy-nixos-test = import ./tests.nix {
             inherit pkgs;
-            modules = [ opengymNixOSModule ];
+            modules = [ gymbuddyNixOSModule ];
           };
         });
 
@@ -196,7 +196,7 @@
             git
           ];
           shellHook = ''
-            echo "openGym dev shell (Node.js $(node --version))"
+            echo "GYM Buddy dev shell (Node.js $(node --version))"
             echo "  cd frontend && npm install && npm run dev"
             echo "  cd api && npm install && node server.js"
           '';
@@ -204,21 +204,21 @@
       }
     )
     // {
-      # Wraps the module so NixOS configurations using it get openGym packages built from this
-      # flake's LOCKED nixpkgs input. Importing contrib/nix/opengym.nix directly falls back to
+      # Wraps the module so NixOS configurations using it get GYM Buddy packages built from this
+      # flake's LOCKED nixpkgs input. Importing contrib/nix/gymbuddy.nix directly falls back to
       # the importing system's nixpkgs.
-      nixosModules.opengym =
+      nixosModules.gymbuddy =
         { pkgs, ... }:
         {
-          imports = [ ./opengym.nix ];
-          _module.args.opengymPkgs = self.packages.${pkgs.stdenv.hostPlatform.system} or null;
+          imports = [ ./gymbuddy.nix ];
+          _module.args.gymbuddyPkgs = self.packages.${pkgs.stdenv.hostPlatform.system} or null;
         };
-      nixosModules.default = self.nixosModules.opengym;
+      nixosModules.default = self.nixosModules.gymbuddy;
 
       # Conventional NixOS test output (boots a VM; also wired into checks on Linux).
-      nixosTests.opengym = import ./tests.nix {
+      nixosTests.gymbuddy = import ./tests.nix {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ self.nixosModules.opengym ];
+        modules = [ self.nixosModules.gymbuddy ];
       };
     };
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Builds opengym.ch/routines from routines/: the list, a page per routine, the submit page, the
+// Builds gymbuddy.ch/routines from routines/: the list, a page per routine, the submit page, the
 // app's index.json, plan files, the search names and the sitemap. Static files only.
 //
-//   node scripts/routines/build.mjs --out <dir> [--base /routines/] [--origin https://opengym.ch]
+//   node scripts/routines/build.mjs --out <dir> [--base /routines/] [--origin https://gymbuddy.ch]
 //                                   [--api /routines/api/] [--staging] [--lite <file>]
 //
 // --staging marks every page noindex and shows a banner. --lite also writes the catalogue the
@@ -15,7 +15,7 @@ import { factsOf, indexEntry, planFile, dayLink, loadNames, imageInfo, liteJSON,
 import { listPage, routinePage, submitPage, relatedTo, esc } from './render.mjs'
 
 export function parseArgs(argv) {
-  const o = { base: '/routines/', origin: 'https://opengym.ch', staging: false }
+  const o = { base: '/routines/', origin: 'https://gymbuddy.ch', staging: false }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--staging') o.staging = true
@@ -102,13 +102,13 @@ export function build(opts, root = ROOT) {
   for (const r of routines) {
     const links = r.sessions.map((_, i) => dayLink(r, i, cat))
     write(`${r.slug}/index.html`, routinePage(ctx, r, { cat, names, links, related: relatedTo(r, routines) }))
-    write(`plans/${r.slug}.opengym-plan.json`, JSON.stringify(planFile(r, cat), null, 2) + '\n')
+    write(`plans/${r.slug}.gymbuddy-plan.json`, JSON.stringify(planFile(r, cat), null, 2) + '\n')
   }
 
   // The app's index: everything except the starter plans, which every app already has built in.
   const updated = routines.reduce((d, r) => (r.added > d ? r.added : d), '2026-01-01')
   const entries = routines.filter(r => r.source !== 'starter').map(r => indexEntry(r, cat, ctx.url(r.slug + '/')))
-  write('index.json', JSON.stringify({ format: 'opengym-routines', version: 1, updated, routines: entries }) + '\n')
+  write('index.json', JSON.stringify({ format: 'gymbuddy-routines', version: 1, updated, routines: entries }) + '\n')
 
   // Search: every name an exercise has, in one lowercase string, fetched on the first keystroke.
   const search = {}
@@ -126,7 +126,7 @@ ${routines.map(r => `  <url><loc>${esc(ctx.url(r.slug + '/'))}</loc><lastmod>${r
   if (opts.lite) fs.writeFileSync(opts.lite, liteJSON(cat))
   return { routines, out, entries, media: allIds.size }
 }
-const SOURCE_ORDER = { community: 0, opengym: 1, starter: 2 }
+const SOURCE_ORDER = { community: 0, gymbuddy: 1, starter: 2 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   try {

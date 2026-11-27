@@ -1,4 +1,4 @@
-// #821: Android can keep openGym upright (or sideways) without touching the phone's auto-rotate.
+// #821: Android can keep GYM Buddy upright (or sideways) without touching the phone's auto-rotate.
 // The choice is per device, survives a restart, and an APK without the plugin keeps working.
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
@@ -56,7 +56,7 @@ describe('screen orientation (#821)', () => {
   })
 
   it('the activity applies the saved choice before the page loads, and the app re-applies it', () => {
-    const dir = '../../android/app/src/main/java/ch/duartesantos/opengym/'
+    const dir = '../../android/app/src/main/java/ch/duartesantos/gymbuddy/'
     const activity = readFileSync(new URL(dir + 'MainActivity.java', import.meta.url), 'utf8')
     const plugin = readFileSync(new URL(dir + 'OrientationPlugin.java', import.meta.url), 'utf8')
     expect(activity).toMatch(/registerPlugin\(OrientationPlugin\.class\);[\s\S]*OrientationPlugin\.applySaved\(this\);[\s\S]*super\.onCreate/)

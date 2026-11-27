@@ -1,12 +1,12 @@
 // The phone app signs in with the server's identity provider (#130) in the system browser, never
 // in a WebView of its own: ASWebAuthenticationSession on iPhone, a Custom Tab on Android (the
 // local OidcBrowser plugin, ios/App/App/OidcBrowserPlugin.swift and android/.../OidcBrowserPlugin.java).
-// The server sends the browser back to opengym://oidc with a one-time code, and the code is only
+// The server sends the browser back to gymbuddy://oidc with a one-time code, and the code is only
 // good together with the verifier made here, so another app that grabs the scheme gets nothing.
 import { oidcRedeem } from './api.js'
 import { oidcErrorText } from './oidc.js'
 
-export const APP_RETURN = 'opengym://oidc'
+export const APP_RETURN = 'gymbuddy://oidc'
 const WAIT_MS = 10 * 60000
 // Android: back in the app without the link means the tab was closed. The link can land a moment
 // after the app comes to the front, so it gets this long.
@@ -37,8 +37,8 @@ const browserPlugin = () => pluginP || (pluginP = (async () => {
   return { OidcBrowser: registerPlugin('OidcBrowser'), App, platform: Capacitor.getPlatform() }
 })())
 
-/** Opens `url` in the system browser and resolves with the opengym:// address it came back on
- *  (opengym://oidc unless `returnTo` names another, like the OpenRouter sign-in's). */
+/** Opens `url` in the system browser and resolves with the gymbuddy:// address it came back on
+ *  (gymbuddy://oidc unless `returnTo` names another, like the OpenRouter sign-in's). */
 export async function openForReturn(url, deps, returnTo = APP_RETURN) {
   const { OidcBrowser, App, platform } = deps || await browserPlugin()
   if (platform === 'ios') {

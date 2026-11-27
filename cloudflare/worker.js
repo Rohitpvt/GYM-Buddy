@@ -1,10 +1,10 @@
-// opengym.ch failover. Normally this Worker is NOT in front of opengym.ch at all: every request
+// gymbuddy.ch failover. Normally this Worker is NOT in front of gymbuddy.ch at all: every request
 // goes straight through the Cloudflare Tunnel to the homelab and costs no Worker requests.
 //
 // scheduled(): once a minute (Cron Trigger) it checks the homelab four times, 15 s apart.
-//   Two failed checks in a row → it adds the route opengym.ch/* so this Worker serves the
+//   Two failed checks in a row → it adds the route gymbuddy.ch/* so this Worker serves the
 //   static copy (cloudflare/build.sh). Two good checks in a row → it removes the route again.
-//   Needs the secret CF_API_TOKEN (Zone → Workers Routes → Edit, zone opengym.ch).
+//   Needs the secret CF_API_TOKEN (Zone → Workers Routes → Edit, zone gymbuddy.ch).
 //
 // fetch(): only runs while the route exists (an outage). It still asks the homelab first, so
 //   visitors get the real site the moment it is back, even before the timer removes the route.
@@ -32,7 +32,7 @@ export default {
     }
 
     if (request.method !== 'GET' && request.method !== 'HEAD') {
-      return new Response('openGym is offline right now, try again in a few minutes.', {
+      return new Response('GYM Buddy is offline right now, try again in a few minutes.', {
         status: 503,
         headers: { 'retry-after': '120' },
       })
@@ -74,9 +74,9 @@ export async function failover(env, deps = {}) {
   const sleep = deps.sleep || (ms => new Promise(r => setTimeout(r, ms)))
   const checks = deps.checks || 4
   const gap = deps.gap ?? 15000
-  const pattern = env.ROUTE_PATTERN || 'opengym.ch/*'
-  const script = env.SCRIPT_NAME || 'opengym'
-  const origin = env.ORIGIN || 'https://opengym.ch'
+  const pattern = env.ROUTE_PATTERN || 'gymbuddy.ch/*'
+  const script = env.SCRIPT_NAME || 'gymbuddy'
+  const origin = env.ORIGIN || 'https://gymbuddy.ch'
   if (!env.CF_API_TOKEN || !env.ZONE_ID) {
     console.log('failover: CF_API_TOKEN or ZONE_ID missing, doing nothing')
     return 'unconfigured'

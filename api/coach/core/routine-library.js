@@ -1,7 +1,7 @@
 /* The routines library the Coach can search and import from (coach-146).
  *
  * Sources plug in as indexes of one small JSON format (docs/ROUTINES_LIBRARY.md): the built-in
- * starter plans today, the opengym.ch community routines when that index exists (read from a
+ * starter plans today, the gymbuddy.ch community routines when that index exists (read from a
  * configurable URL by the app, never by the server). Every entry is normalised here, field by
  * field, and only catalogue exercise ids survive, so whatever an index says, an import is a plan
  * the app can run. Searching is plain word matching: small, deterministic, the same on every
@@ -9,9 +9,9 @@
 import { LIB_BY_ID } from './library.js';
 import { STARTER_PLANS } from './starter-plans.js';
 
-export const FORMAT = 'opengym-routines';
+export const FORMAT = 'gymbuddy-routines';
 export const FORMAT_VERSION = 1;
-export const DEFAULT_INDEX_URL = 'https://opengym.ch/routines/index.json';
+export const DEFAULT_INDEX_URL = 'https://gymbuddy.ch/routines/index.json';
 export const MAX_ENTRIES = 500;
 export const MAX_SESSIONS = 7;
 export const MAX_EXERCISES = 20;
@@ -73,7 +73,7 @@ export function cleanEntry(raw) {
 
 /** A whole index, normalised: { entries } with the broken ones left out, or { entries: [], error }. */
 export function normalizeIndex(raw) {
-  if (!isMap(raw) || raw.format !== FORMAT) return { entries: [], error: 'not an openGym routines index' };
+  if (!isMap(raw) || raw.format !== FORMAT) return { entries: [], error: 'not an GYM Buddy routines index' };
   if (raw.version !== FORMAT_VERSION) return { entries: [], error: `index version ${raw.version} is not ${FORMAT_VERSION}` };
   const seen = new Set();
   const entries = [];
@@ -109,7 +109,7 @@ export function builtinIndex() {
   builtin = Object.entries(STARTER_PLANS).map(([key, plan]) => {
     const keys = plan.routines.map(r => r[0]);
     return cleanEntry({
-      id: 'starter/' + key, author: 'openGym', language: 'en',
+      id: 'starter/' + key, author: 'GYM Buddy', language: 'en',
       ...STARTER_META[key],
       days: plan.schedule.length,
       duration: 45,

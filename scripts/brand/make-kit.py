@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""openGym brand kit: every logo variant as SVG, built from the official geometry.
+"""GYM Buddy brand kit: every logo variant as SVG, built from the official geometry.
 
-The mark is the five rectangles of assets/logo/opengym-mark.svg (352 x 174, square corners).
+The mark is the five rectangles of assets/logo/gymbuddy-mark.svg (352 x 174, square corners).
 The wordmark is Liberation Sans Bold 700 at 112 with -4 letter spacing, as in the official
 lockup SVGs, converted to outlines (wordmark-paths.json, made with opentype.js) so it looks
-the same on machines without that font. Pixel-checked against assets/logo/opengym-logo-dark.png.
+the same on machines without that font. Pixel-checked against assets/logo/gymbuddy-logo-dark.png.
 Never edit the shapes here by hand.
 
   python3 scripts/brand/make-kit.py <out-dir>      writes <out-dir>/logo/*.svg and icons/*.svg
@@ -26,7 +26,7 @@ LOCKUP_VB = '3.265 132.5 868 238'
 
 def lockup(open_c, gym_c, mark_c, bg=None):
     bgr = f'\n  <rect x="3.265" y="132.5" width="868" height="238" fill="{bg}"/>' if bg else ''
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="868" height="238" viewBox="{LOCKUP_VB}" role="img" aria-label="openGym">{bgr}
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="868" height="238" viewBox="{LOCKUP_VB}" role="img" aria-label="GYM Buddy">{bgr}
   <g transform="translate(60,250) scale(0.6897) translate(-80,-256)" fill="{mark_c}">
     {RECTS}
   </g>
@@ -37,7 +37,7 @@ def lockup(open_c, gym_c, mark_c, bg=None):
 
 
 def mark(c):
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="352" height="174" viewBox="80 169 352 174" role="img" aria-label="openGym">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="352" height="174" viewBox="80 169 352 174" role="img" aria-label="GYM Buddy">
   <g fill="{c}">
     {RECTS}
   </g>
@@ -47,7 +47,7 @@ def mark(c):
 
 def icon(rx, bg=INK, c=GREEN):
     r = f' rx="{rx}"' if rx else ''
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="openGym">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="GYM Buddy">
   <rect width="512" height="512"{r} fill="{bg}"/>
   <g fill="{c}">
     {RECTS}
@@ -57,17 +57,17 @@ def icon(rx, bg=INK, c=GREEN):
 
 
 FILES = {
-    'logo/opengym-logo-dark.svg': lockup(LIGHT, GREEN, GREEN, INK),
-    'logo/opengym-logo-light.svg': lockup(DARK, GREEN, GREEN, WHITE),
-    'logo/opengym-logo-for-dark-backgrounds.svg': lockup(LIGHT, GREEN, GREEN),
-    'logo/opengym-logo-for-light-backgrounds.svg': lockup(DARK, GREEN, GREEN),
-    'logo/opengym-logo-white.svg': lockup(WHITE, WHITE, WHITE),
-    'logo/opengym-logo-black.svg': lockup(INK, INK, INK),
-    'logo/opengym-mark-green.svg': mark(GREEN),
-    'logo/opengym-mark-white.svg': mark(WHITE),
-    'logo/opengym-mark-black.svg': mark(INK),
-    'icons/opengym-icon-square.svg': icon(0),
-    'icons/opengym-icon-rounded.svg': icon(114),
+    'logo/gymbuddy-logo-dark.svg': lockup(LIGHT, GREEN, GREEN, INK),
+    'logo/gymbuddy-logo-light.svg': lockup(DARK, GREEN, GREEN, WHITE),
+    'logo/gymbuddy-logo-for-dark-backgrounds.svg': lockup(LIGHT, GREEN, GREEN),
+    'logo/gymbuddy-logo-for-light-backgrounds.svg': lockup(DARK, GREEN, GREEN),
+    'logo/gymbuddy-logo-white.svg': lockup(WHITE, WHITE, WHITE),
+    'logo/gymbuddy-logo-black.svg': lockup(INK, INK, INK),
+    'logo/gymbuddy-mark-green.svg': mark(GREEN),
+    'logo/gymbuddy-mark-white.svg': mark(WHITE),
+    'logo/gymbuddy-mark-black.svg': mark(INK),
+    'icons/gymbuddy-icon-square.svg': icon(0),
+    'icons/gymbuddy-icon-rounded.svg': icon(114),
 }
 
 for name, svg in FILES.items():

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget at 2x1 (OpenGymWidgetProvider): icon, the number, one line under it. -->
+<!-- The widget at 2x1 (GymBuddyWidgetProvider): icon, the number, one line under it. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"

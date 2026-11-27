@@ -1,4 +1,4 @@
-// openGym for Wear OS (docs/WEAR_OS.md). The watch follows the workout the phone runs and logs sets
+// gymBuddy for Wear OS (docs/WEAR_OS.md). The watch follows the workout the phone runs and logs sets
 // on it; the phone stays the source of truth. It speaks the same JSON as the Apple Watch app
 // (frontend/src/lib/watch-sync.js), carried over the Wearable Data Layer instead of WatchConnectivity.
 //
@@ -23,10 +23,10 @@ def phoneName = (phoneGradle =~ /versionName\s+"([^"]+)"/)[0][1]
 ext.WEAR_VERSION_OFFSET = 10000
 
 android {
-    namespace = "ch.duartesantos.opengym.wear"
+    namespace = "ch.duartesantos.gymbuddy.wear"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ch.duartesantos.opengym"
+        applicationId "ch.duartesantos.gymbuddy"
         minSdkVersion rootProject.ext.wearMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode phoneCode + WEAR_VERSION_OFFSET

@@ -6,7 +6,7 @@
  * nobody can finish their own sign-in in someone else's browser (login CSRF). The ID token is
  * checked in jwt.js; who it lets in is decided in accounts.js.
  *
- * The phone app goes through the system browser and comes back on opengym://oidc with a one-time
+ * The phone app goes through the system browser and comes back on gymbuddy://oidc with a one-time
  * code. The code alone is worth nothing: it is bound to a verifier only the app holds (the same
  * idea as PKCE), so another app grabbing the custom scheme gets nothing it can redeem. */
 import crypto from 'node:crypto';

@@ -17,7 +17,7 @@ describe('the Android widget (#981)', () => {
     expect(layouts.sort()).toEqual(['widget_logger.xml', 'widget_logger_row.xml', 'widget_medium.xml', 'widget_preview.xml', 'widget_row.xml', 'widget_small.xml'])
   })
   it('the widget picker shows the preview with numbers, not an empty widget (Android 12+)', () => {
-    const info = readFileSync(new URL('xml/opengym_widget_info.xml', res), 'utf8')
+    const info = readFileSync(new URL('xml/gymbuddy_widget_info.xml', res), 'utf8')
     expect(info).toMatch(/android:previewLayout="@layout\/widget_preview"/)
     expect(readFileSync(new URL('layout/widget_preview.xml', res), 'utf8')).toMatch(/android:text="12"/)
   })
@@ -27,15 +27,15 @@ describe('the Android widget (#981)', () => {
     expect(tags.filter(t => !ALLOWED.has(t))).toEqual([])
   })
   it('the provider gives Android 12+ every shape, sized like its layouts', () => {
-    const java = readFileSync(new URL('../java/ch/duartesantos/opengym/OpenGymWidgetProvider.java', res), 'utf8')
+    const java = readFileSync(new URL('../java/ch/duartesantos/gymbuddy/GymBuddyWidgetProvider.java', res), 'utf8')
     expect(java).toMatch(/new RemoteViews\(shapes\)/)
     expect(java.match(/shapes\.put\(new SizeF/g)).toHaveLength(3)
-    const info = readFileSync(new URL('xml/opengym_widget_info.xml', res), 'utf8')
+    const info = readFileSync(new URL('xml/gymbuddy_widget_info.xml', res), 'utf8')
     expect(Number(/minResizeWidth="(\d+)dp"/.exec(info)[1])).toBeGreaterThanOrEqual(Number(/ROW_MIN_W = (\d+)/.exec(java)[1]))
     expect(Number(/minResizeHeight="(\d+)dp"/.exec(info)[1])).toBeGreaterThanOrEqual(Number(/ROW_MIN_H = (\d+)/.exec(java)[1]))
   })
   it('the configure screen is not a narrow column', () => {
-    const java = readFileSync(new URL('../java/ch/duartesantos/opengym/OpenGymWidgetConfigure.java', res), 'utf8')
+    const java = readFileSync(new URL('../java/ch/duartesantos/gymbuddy/GymBuddyWidgetConfigure.java', res), 'utf8')
     expect(java).toMatch(/getWindow\(\)\.setLayout\(/)
   })
 })

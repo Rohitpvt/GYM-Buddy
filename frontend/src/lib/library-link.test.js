@@ -5,7 +5,7 @@ import { libraryLinkFromUrl, libraryBase, fetchLibraryRoutine, authorFromEntries
 
 const BENCH = '0025', CURL = '0463'
 const plan = (over = {}) => ({
-  opengym_plan: 1, exported: '2026-11-08', name: 'Bar and floor', unit: 'kg', week: { 1: ['r0'], 4: ['r1'] },
+  gymbuddy_plan: 1, exported: '2026-11-08', name: 'Bar and floor', unit: 'kg', week: { 1: ['r0'], 4: ['r1'] },
   routines: [
     { id: 'r0', name: 'Day A', emoji: 'barbell', ex: [{ id: BENCH, sets: 3, reps: 8, restSec: 90 }] },
     { id: 'r1', name: 'Day B', emoji: 'dumbbell', ex: [{ id: CURL, sets: 3, reps: 12 }] },
@@ -17,35 +17,35 @@ const answer = (body, status = 200) => async () => ({ ok: status >= 200 && statu
 describe('library links', () => {
   it('reads a routine page in every shape a phone hands over', () => {
     for (const url of [
-      'https://opengym.ch/routines/bar-and-floor/',
-      'https://opengym.ch/routines/bar-and-floor',
-      'https://opengym.ch/routines/bar-and-floor/#copy',
-      'https://www.opengym.ch/routines/bar-and-floor/?utm_source=x',
-      'https://opengym.ch/routines/Bar-And-Floor/',
-      'https://opengym.ch/routines/bar-and-floor/index.html',
+      'https://gymbuddy.ch/routines/bar-and-floor/',
+      'https://gymbuddy.ch/routines/bar-and-floor',
+      'https://gymbuddy.ch/routines/bar-and-floor/#copy',
+      'https://www.gymbuddy.ch/routines/bar-and-floor/?utm_source=x',
+      'https://gymbuddy.ch/routines/Bar-And-Floor/',
+      'https://gymbuddy.ch/routines/bar-and-floor/index.html',
     ]) {
       expect(libraryLinkFromUrl(url), url).toEqual({
         kind: 'routine', slug: 'bar-and-floor',
-        pageUrl: 'https://opengym.ch/routines/bar-and-floor/',
-        planUrl: 'https://opengym.ch/routines/plans/bar-and-floor.opengym-plan.json',
-        browserUrl: 'https://opengym.ch/routines/bar-and-floor/index.html',
+        pageUrl: 'https://gymbuddy.ch/routines/bar-and-floor/',
+        planUrl: 'https://gymbuddy.ch/routines/plans/bar-and-floor.gymbuddy-plan.json',
+        browserUrl: 'https://gymbuddy.ch/routines/bar-and-floor/index.html',
       })
     }
   })
 
   it('sends the pages that are not a routine to the website, as index.html', () => {
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/')).toEqual({ kind: 'page', browserUrl: 'https://opengym.ch/routines/index.html' })
-    expect(libraryLinkFromUrl('https://opengym.ch/routines')).toEqual({ kind: 'page', browserUrl: 'https://opengym.ch/routines/index.html' })
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/submit/')).toEqual({ kind: 'page', browserUrl: 'https://opengym.ch/routines/submit/index.html' })
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/plans/x.opengym-plan.json')?.kind).toBe('page')
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/media/0025.webp')?.kind).toBe('page')
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/index.json')?.kind).toBe('page')
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/a/b/')?.kind).toBe('page')
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/')).toEqual({ kind: 'page', browserUrl: 'https://gymbuddy.ch/routines/index.html' })
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines')).toEqual({ kind: 'page', browserUrl: 'https://gymbuddy.ch/routines/index.html' })
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/submit/')).toEqual({ kind: 'page', browserUrl: 'https://gymbuddy.ch/routines/submit/index.html' })
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/plans/x.gymbuddy-plan.json')?.kind).toBe('page')
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/media/0025.webp')?.kind).toBe('page')
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/index.json')?.kind).toBe('page')
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/a/b/')?.kind).toBe('page')
   })
 
   it('leaves everything else alone', () => {
-    for (const url of ['https://opengym.ch/r#1.j.e30', 'https://opengym.ch/', 'https://opengym.ch/routinesx/a/', 'https://evil.example/routines/a/',
-      'https://opengym.ch.evil.example/routines/a/', 'opengym://routines/a', 'ftp://opengym.ch/routines/a/', 'not a url', '', null, 'https://opengym.ch/routines/' + 'a'.repeat(2000)]) {
+    for (const url of ['https://gymbuddy.ch/r#1.j.e30', 'https://gymbuddy.ch/', 'https://gymbuddy.ch/routinesx/a/', 'https://evil.example/routines/a/',
+      'https://gymbuddy.ch.evil.example/routines/a/', 'gymbuddy://routines/a', 'ftp://gymbuddy.ch/routines/a/', 'not a url', '', null, 'https://gymbuddy.ch/routines/' + 'a'.repeat(2000)]) {
       expect(libraryLinkFromUrl(url), String(url).slice(0, 60)).toBe(null)
     }
   })
@@ -54,23 +54,23 @@ describe('library links', () => {
     const at = 'https://lib.example.org/gym/routines/index.json'
     expect(libraryBase(at)).toBe('https://lib.example.org/gym/routines/')
     expect(libraryLinkFromUrl('https://lib.example.org/gym/routines/hotel-hiit/', at)).toMatchObject({
-      kind: 'routine', slug: 'hotel-hiit', planUrl: 'https://lib.example.org/gym/routines/plans/hotel-hiit.opengym-plan.json',
+      kind: 'routine', slug: 'hotel-hiit', planUrl: 'https://lib.example.org/gym/routines/plans/hotel-hiit.gymbuddy-plan.json',
     })
     expect(libraryLinkFromUrl('https://lib.example.org/gym/routines/hotel-hiit/')).toBe(null)
-    expect(libraryLinkFromUrl('https://opengym.ch/routines/x/', at)?.slug).toBe('x')
+    expect(libraryLinkFromUrl('https://gymbuddy.ch/routines/x/', at)?.slug).toBe('x')
     expect(libraryBase('http://plain.example/index.json')).toBe(null)
     expect(libraryBase('nope')).toBe(null)
   })
 })
 
 describe('fetching a library routine', () => {
-  const link = libraryLinkFromUrl('https://opengym.ch/routines/bar-and-floor/')
+  const link = libraryLinkFromUrl('https://gymbuddy.ch/routines/bar-and-floor/')
 
   it('fetches the plan file and reads it like an imported one, with the author', async () => {
     const asked = []
     const fetchImpl = async (url, init) => { asked.push([url, init.method]); return answer(plan({ from: 'Ana' }))() }
     const b = await fetchLibraryRoutine(link, { fetchImpl })
-    expect(asked).toEqual([['https://opengym.ch/routines/plans/bar-and-floor.opengym-plan.json', 'GET']])
+    expect(asked).toEqual([['https://gymbuddy.ch/routines/plans/bar-and-floor.gymbuddy-plan.json', 'GET']])
     expect(b.name).toBe('Bar and floor')
     expect(b.routineCount).toBe(2)
     expect(b.exerciseCount).toBe(2)
@@ -79,7 +79,7 @@ describe('fetching a library routine', () => {
   })
 
   it('asks the index for the author when an older plan file has none', async () => {
-    const b = await fetchLibraryRoutine(link, { fetchImpl: answer(plan()), authorOf: async l => authorFromEntries([{ url: 'https://opengym.ch/routines/bar-and-floor/', author: 'Bea' }], l) })
+    const b = await fetchLibraryRoutine(link, { fetchImpl: answer(plan()), authorOf: async l => authorFromEntries([{ url: 'https://gymbuddy.ch/routines/bar-and-floor/', author: 'Bea' }], l) })
     expect(b.from).toBe('Bea')
     const none = await fetchLibraryRoutine(link, { fetchImpl: answer(plan()), authorOf: async () => { throw new Error('offline') } })
     expect(none.from).toBe('')

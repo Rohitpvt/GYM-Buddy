@@ -37,7 +37,7 @@ test('a callback is ours only with the state we sent; a denial and a missing cod
 
 test('a pasted code is taken bare or out of a whole address, and junk is not', () => {
   assert.equal(pastedCode('  abcDEF123456  '), 'abcDEF123456');
-  assert.equal(pastedCode('opengym://openrouter?code=zz9988776655'), 'zz9988776655');
+  assert.equal(pastedCode('gymbuddy://openrouter?code=zz9988776655'), 'zz9988776655');
   assert.equal(pastedCode('two words'), null);
   assert.equal(pastedCode(''), null);
 });

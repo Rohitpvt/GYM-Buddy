@@ -80,7 +80,7 @@ describe('applyImport: a copy that is yours and says where it came from', () => 
   })
   it('a plan adds routines and never touches the week', () => {
     const s = { unit: 'kg', routines: [{ id: 'mine', name: 'Mine', ex: [] }], week: { 1: ['mine'] }, customEx: [] }
-    const bundle = { opengym_plan: 1, unit: 'kg', week: { 2: ['r1'] }, routines: [{ id: 'r1', name: 'Push', ex: [{ id: '0001', sets: 3, reps: 8 }] }], customEx: [] }
+    const bundle = { gymbuddy_plan: 1, unit: 'kg', week: { 2: ['r1'] }, routines: [{ id: 'r1', name: 'Push', ex: [{ id: '0001', sets: 3, reps: 8 }] }], customEx: [] }
     applyImport(s, { type: 'plan', payload: { bundle }, origin })
     expect(s.routines).toHaveLength(2)
     expect(s.routines[1].origin.by).toBe('Anna')

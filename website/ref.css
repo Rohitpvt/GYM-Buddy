@@ -1,4 +1,4 @@
-/* opengym.ch reference pages (docs, API, about, privacy, brand): one template.
+/* gymbuddy.ch reference pages (docs, API, about, privacy, brand): one template.
    The site's 1120 px column (.wrap), a sticky contents column on the left built from the page's
    h2/h3 (scripts/site/ref-template.mjs), one reading column. Below 960 px the column goes and the
    shared Contents button opens the same list as a drawer (.side in styles.css).

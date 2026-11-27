@@ -1,4 +1,4 @@
-// opengym.ch/brand: the background picker and copy-on-tap colours. The contents column is site.js.
+// gymbuddy.ch/brand: the background picker and copy-on-tap colours. The contents column is site.js.
 (() => {
   const K = 'brand/kit/logo/'
   // 1. Pick a background, get the right logo file

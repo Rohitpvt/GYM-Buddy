@@ -5,12 +5,12 @@ import AuthenticationServices
 /**
  * Sign in with the server's identity provider (OIDC) in the system browser
  * (lib/oidc-app.js). ASWebAuthenticationSession shows the provider's page with Safari's cookies
- * and passwords, and catches the way back on the opengym scheme itself, so the code never goes
+ * and passwords, and catches the way back on the gymbuddy scheme itself, so the code never goes
  * through the app's URL handler where another app could have claimed the scheme.
  *
  * Usage from JS:
  *   const OidcBrowser = registerPlugin('OidcBrowser');
- *   await OidcBrowser.open({ url });   // { url: 'opengym://oidc?...' }; rejects 'cancelled' or 'failed'
+ *   await OidcBrowser.open({ url });   // { url: 'gymbuddy://oidc?...' }; rejects 'cancelled' or 'failed'
  */
 @objc(OidcBrowserPlugin)
 public class OidcBrowserPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPresentationContextProviding {
@@ -28,7 +28,7 @@ public class OidcBrowserPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthentication
             return
         }
         DispatchQueue.main.async {
-            let session = ASWebAuthenticationSession(url: url, callbackURLScheme: "opengym") { [weak self] back, error in
+            let session = ASWebAuthenticationSession(url: url, callbackURLScheme: "gymbuddy") { [weak self] back, error in
                 self?.session = nil
                 if let e = error as? ASWebAuthenticationSessionError, e.code == .canceledLogin {
                     call.reject("cancelled", "cancelled")

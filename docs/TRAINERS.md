@@ -1,6 +1,6 @@
 # Trainers, gym leads and gyms
 
-openGym can connect members with human trainers on the same server. The member decides, the
+GYM Buddy can connect members with human trainers on the same server. The member decides, the
 server enforces, and the admin dashboard looks away. Off unless the server runs with
 `TRAINERS=on` (see [SELF_HOSTING.md](SELF_HOSTING.md)).
 
@@ -271,7 +271,7 @@ The default source knows nothing, so the category reads "no nutrition app linked
 `NUTRITION_SOURCE=opennutrition` and `NUTRITION_URL`, the server asks openNutrition's
 `/api/v1/integration/summary` on the member's behalf with their `summary:read` token, only when a
 trainer with nutrition at See opens the member, and caches the answer for 15 minutes. The trainer
-never sees the token. Linking an openNutrition account in openGym (and sealing the token in
+never sees the token. Linking an openNutrition account in GYM Buddy (and sealing the token in
 `DATA_DIR/integrations/`) comes with openNutrition's public release; until then `tokenFor` returns
 nothing and the source reports `not-linked`.
 

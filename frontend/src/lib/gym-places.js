@@ -24,7 +24,7 @@ import { nativeFetch } from './capacitor-fetch.js'
 
 export const NOMINATIM = 'https://nominatim.openstreetmap.org/search'
 export const PHOTON = 'https://photon.komoot.io'
-export const USER_AGENT = 'openGym/' + (typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev') + ' (gym reminder; +https://opengym.ch)'
+export const USER_AGENT = 'GYM Buddy/' + (typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev') + ' (gym reminder; +https://gymbuddy.ch)'
 export const TILES = Object.freeze({
   url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   maxZoom: 19,
@@ -305,7 +305,7 @@ async function nativeReverse(pos) {
  * question (the page drops it).
  */
 export async function findPlaces(q, { near = null, suggest = suggestPlaces } = {}) {
-  // openGym Offline (lib/build-caps.js): no search to ask.
+  // GYM Buddy Offline (lib/build-caps.js): no search to ask.
   if (offlineBuild()) return []
   const query = String(q || '').trim().replace(/\s+/g, ' ')
   if (query.length < SHORT) return []

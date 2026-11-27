@@ -5,7 +5,7 @@ For people, the same map with diagrams is [docs/ARCHITECTURE.md](docs/ARCHITECTU
 
 ## What this is
 
-openGym is a self-hosted gym and body-weight tracker. Two containers (`api` + `web`) plus a
+GYM Buddy is a self-hosted gym and body-weight tracker. Two containers (`api` + `web`) plus a
 `./data` folder the user owns: no third-party account, no telemetry. Passkey (WebAuthn) login,
 installable as a PWA, and Capacitor apps for Android and iPhone (with an Apple Watch app and
 widgets) that work on their own or synced to a server. License: AGPL-3.0-or-later; the exercise
@@ -30,7 +30,7 @@ mcp/        Optional MCP server: stdio (src/index.js, reads DATA_DIR or the api)
             HTTP (src/http.js, the opt-in `mcp` container behind /mcp, scoped tokens only).
             Write tools (log_workout, routines) save through the api. docs/MCP_REMOTE.md.
 scripts/    Build, CI and release helpers (scripts/README.md).
-website/    opengym.ch, plain HTML/CSS/JS, deployed separately.
+website/    gymbuddy.ch, plain HTML/CSS/JS, deployed separately.
 helm/, kubernetes/, contrib/nix/   Other ways to deploy.
 docs/       Guides indexed in docs/README.md; docs/dev/ holds feature design notes.
 ```
@@ -65,7 +65,7 @@ cd frontend && npm run build:mobile   # VITE_MOBILE build + 180 px media from ca
 
 There is no linter/formatter config and no TypeScript; match the existing style by hand.
 
-GitHub (`github.com/DuarteSantos8/openGym`) is the home of the project; `.github/workflows/mirror.yml`
+GitHub (`github.com/DuarteSantos8/GYM Buddy`) is the home of the project; `.github/workflows/mirror.yml`
 pushes `main` and `v*` tags to the GitLab mirror (fast-forward only, never push or merge there).
 Pull requests are gated by `.github/workflows/test.yml`; `ios.yml` compiles the iPhone app on a Mac
 runner. Release packages (APK, Play bundle, App Store IPA) are built and signed on the release

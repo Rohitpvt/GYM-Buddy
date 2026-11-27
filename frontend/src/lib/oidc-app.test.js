@@ -49,7 +49,7 @@ describe('lib/oidc-app', () => {
     await expect(openForReturn('https://x', { OidcBrowser, platform: 'ios' })).rejects.toMatchObject({ code: 'cancelled' })
   })
 
-  it('Android: waits for opengym://oidc, ignores other links, and a return without one is a cancel', async () => {
+  it('Android: waits for gymbuddy://oidc, ignores other links, and a return without one is a cancel', async () => {
     vi.useFakeTimers()
     try {
       const listeners = {}
@@ -58,7 +58,7 @@ describe('lib/oidc-app', () => {
       const p = openForReturn('https://x', { OidcBrowser, App, platform: 'android' })
       await vi.advanceTimersByTimeAsync(0)
       expect(OidcBrowser.open).toHaveBeenCalledWith({ url: 'https://x' })
-      listeners.appUrlOpen({ url: 'opengym://home' })
+      listeners.appUrlOpen({ url: 'gymbuddy://home' })
       listeners.resume()
       listeners.appUrlOpen({ url: APP_RETURN + '?code=9' })
       await expect(p).resolves.toBe(APP_RETURN + '?code=9')

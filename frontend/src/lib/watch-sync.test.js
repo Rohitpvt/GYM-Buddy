@@ -252,7 +252,7 @@ describe('the workout\'s animations for the watch', () => {
 
   it('or the downloaded 240 px pack of the figure, when it is there', async () => {
     const { clipsFor } = await import('./watch-sync.js')
-    const packs = { 'anim-240-male': { state: 'ready', base: 'opengym-pack://anim-240-male' } }
+    const packs = { 'anim-240-male': { state: 'ready', base: 'gymbuddy-pack://anim-240-male' } }
     const clips = clipsFor(state(), packs)
     expect(clips.length).toBeGreaterThan(0)
     for (const c of clips) {

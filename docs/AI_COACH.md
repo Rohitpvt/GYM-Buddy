@@ -95,11 +95,11 @@ picks it up the next time it is opened or reloaded.
 ### Sign in with OpenRouter (one login for Claude, GPT, Gemini and more)
 
 On the admin card pick **OpenRouter**, then **Sign in with OpenRouter**: openrouter.ai asks you to
-approve openGym and hands back an API key of your own, billed to your OpenRouter credits (its
+approve GYM Buddy and hands back an API key of your own, billed to your OpenRouter credits (its
 official OAuth PKCE flow, https://openrouter.ai/docs/guides/overview/auth/oauth). The key is filed
 like a pasted one. The default model is `openrouter/auto`, OpenRouter's router; **List models**
 shows the rest with a price hint. On the phone the same button opens the system browser and comes
-back through `https://opengym.ch/openrouter/` into the app; "Paste a code instead" uses
+back through `https://gymbuddy.ch/openrouter/` into the app; "Paste a code instead" uses
 OpenRouter's no-callback mode when the way back is blocked.
 
 Anthropic and Google offer third-party apps no sign-in that buys API access, so those stay API
@@ -119,9 +119,9 @@ Signing in with a Claude *subscription* is not offered, on purpose: Anthropic's 
 a third-party app to use claude.ai logins or route requests through Free, Pro or Max plan
 credentials ([Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview)). What they
 do allow, and what feels the same to the person, is the other direction: **Settings → Use your
-subscription** adds openGym to the Claude, ChatGPT or Gemini app as a connector
+subscription** adds GYM Buddy to the Claude, ChatGPT or Gemini app as a connector
 ([MCP_REMOTE.md](MCP_REMOTE.md)), so the assistant on their own plan reads their training and
-writes routines with openGym's tools. That needs no Coach provider at all, only `MCP=on` and an
+writes routines with GYM Buddy's tools. That needs no Coach provider at all, only `MCP=on` and an
 address the internet can reach.
 
 ### Your ChatGPT plan (preview)
@@ -133,7 +133,7 @@ the Coach's requests then count against the admin's ChatGPT Plus or Pro plan (Pl
 five-hour limit across every app using it) instead of an API key.
 
 1. Admin card → pick **ChatGPT plan (preview)** → **Continue with ChatGPT**. ChatGPT's page opens
-   in your browser: sign in, name the agent (openGym), allow plan use.
+   in your browser: sign in, name the agent (GYM Buddy), allow plan use.
 2. It sends you to `http://127.0.0.1:1455/auth/callback?code=…`, which shows an error page. That is
    expected: the address is for programs on your own computer and your server cannot receive it.
    Copy the whole address from the address bar and paste it into the card, **Finish sign-in**.
@@ -207,7 +207,7 @@ come back from trying Gemini, and each chip shows a mark when it holds one.
 
 The model field is never a guess: **List models** asks the endpoint what it actually serves.
 For an Ollama box that means the admin decides what exists — `ollama pull` anything the
-hardware can hold and it appears in the picker on the next refresh; nothing in openGym pins
+hardware can hold and it appears in the picker on the next refresh; nothing in GYM Buddy pins
 you to a blessed list. The choice is remembered **per provider**, so trying a cloud model for
 a week and coming back to the local one restores exactly what was set before.
 
@@ -268,10 +268,10 @@ there's no need to change the execution policy.
 
 > **Read this first.** Anthropic's terms only allow this token in Claude Code; using it here can get
 > your Claude account limited. An API key (with Claude Max, Ultra or Team its monthly API credits
-> cover it), or openGym as a connector inside Claude (Settings → Use your subscription), is the
+> cover it), or GYM Buddy as a connector inside Claude (Settings → Use your subscription), is the
 > safe way. The option stays for owners who decide otherwise, and the admin card says the same.
 
-Complete its normal browser sign-in and copy the token it prints. openGym never opens or handles
+Complete its normal browser sign-in and copy the token it prints. GYM Buddy never opens or handles
 that flow — it only ever receives the finished token. (Claude also accepts an Anthropic API key
 here, under the same chip; the setup token is the route for a Claude subscription.)
 
@@ -404,7 +404,7 @@ Catalogue ids only, checked against your equipment. A question gets a library sl
 ### Routines library
 
 The Coach can suggest routines from a library: the built-in starter plans, and community routines
-from an index the **app** reads (default `https://opengym.ch/routines/index.json`, set on the
+from an index the **app** reads (default `https://gymbuddy.ch/routines/index.json`, set on the
 admin card under Advanced, `off` for none; cached a day, simply absent when it cannot be read).
 The few entries that match a question go along with it. Format: [ROUTINES_LIBRARY.md](ROUTINES_LIBRARY.md).
 
@@ -467,7 +467,7 @@ No job runs. That is a refusal, not a warning, on purpose — a warning moves th
 whoever clicks past it, and the decision is about spending somebody else's personal
 subscription. It is the same posture the payload allowlist takes.
 
-**The instance owner is responsible for their provider's terms.** openGym does not interpret
+**The instance owner is responsible for their provider's terms.** GYM Buddy does not interpret
 them on a self-hoster's behalf; it makes the shape that doesn't need the interpretation
 available, and refuses the shape that does.
 
@@ -498,7 +498,7 @@ renders from, so the screen cannot drift from the payload — are:
 Before the first request that would send anything to an AI provider, the app asks once: a sheet
 that names the provider (OpenAI, Anthropic, Google Gemini, or the host of a compatible endpoint),
 lists what goes there (the categories above plus whatever you type to the Coach) and says whether
-it goes straight from the phone with your key or through your openGym server to the provider its
+it goes straight from the phone with your key or through your GYM Buddy server to the provider its
 admin picked. "Not now" sends nothing. The intake's own consent screen names the same provider
 and list, so agreeing there counts as this yes and a first-timer is asked once. The answer is kept on that device, per provider and host
 (`frontend/src/lib/coach-consent.js`), so pointing the Coach somewhere else asks again; the Coach
@@ -697,7 +697,7 @@ in a device sync or in a user's own JSON export.
 The App-Store build has no server of its own, so the Coach there is a choice made in
 **Settings → AI Coach**, and until it is made nothing AI-related is loaded at all:
 
-- **Use my self-hosted openGym.** Pair the phone with your instance (the same pairing flow as
+- **Use my self-hosted GYM Buddy.** Pair the phone with your instance (the same pairing flow as
   syncing — **Settings → Account → Pair the mobile app** on the site, then the address and code on the
   phone). A paired phone is an ordinary profile: the Coach runs on your server with whatever
   provider the admin configured, under the rules above, and nothing on the phone changes. The

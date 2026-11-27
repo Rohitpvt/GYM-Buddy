@@ -1,4 +1,4 @@
-/* opengym-api — passkey (WebAuthn) auth + per-user state storage for openGym
+/* gymbuddy-api — passkey (WebAuthn) auth + per-user state storage for GYM Buddy
    No framework, JSON-file storage, signed session cookies.               */
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -69,7 +69,7 @@ const PORT = +(process.env.PORT || 3000);
 const DATA = process.env.DATA_DIR || '/data';
 const RP_ID = process.env.RP_ID || 'localhost';
 const ORIGIN = process.env.ORIGIN || 'http://localhost:8080';
-const RP_NAME = process.env.RP_NAME || 'openGym';
+const RP_NAME = process.env.RP_NAME || 'GYM Buddy';
 // Admin dashboard (issue): admins are matched by uid (or the admin flag FIRST_USER_ADMIN sets);
 // INVITE_ONLY gates new signups behind a code the admin generates. Off by default, so a fresh
 // self-hosted instance stays open.
@@ -643,7 +643,7 @@ function checkinTick(user, sum) {
   saveDb();
   sendPush(user.id, checkinPush(S?.lang, kind));
 }
-// "Your year in openGym" (wrapped.js): once per user and year, on Dec 1 from 18:00 server time.
+// "Your year in GYM Buddy" (wrapped.js): once per user and year, on Dec 1 from 18:00 server time.
 // The year it went out for is written to db.json before the send, so a crash after it, a restart
 // or the next tick cannot send it twice. Read from the summary only: no state is parsed for it.
 function wrappedTick(user, sum, year) {
@@ -2257,7 +2257,7 @@ async function sendMediaFile(res, f, hash) {
 // GHSA-699c-6p5r-q574: a device sends the account it means a media request for. A sync started
 // under A that is still sending after this browser signed in as B (another tab) must not land in
 // B's folder. Without the header (an older app) the session alone decides, as before.
-const ACCOUNT_HEADER = 'x-opengym-account';
+const ACCOUNT_HEADER = 'x-gymbuddy-account';
 const wrongAccount = (req, user) => {
   const want = req.headers[ACCOUNT_HEADER];
   return typeof want === 'string' && want !== '' && want !== String(user.id);
@@ -2471,14 +2471,14 @@ function oauthRoutes() {
       const opts = { issuer: OAUTH_ORIGIN, resource: MCP_RESOURCE };
       if (oauth.isCimdId(q.get('client_id'))) {
         const c = await oauth.resolveCimd(q.get('client_id'), { lookup: CIMD_LOOKUP });
-        if (!c.ok) { res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' }); return res.end('openGym could not start this sign-in: ' + c.error); }
+        if (!c.ok) { res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' }); return res.end('GYM Buddy could not start this sign-in: ' + c.error); }
         opts.client = c.client;
       }
       const r = oauth.startAuthorize(db, q, oauthPending, Date.now(), opts);
       if (r.ok) return redirectTo(res, `${OAUTH_ORIGIN}/#/connect/${r.request.id}`);
       if (r.redirect) return redirectTo(res, r.redirect);
       res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
-      res.end('openGym could not start this sign-in: ' + r.error);
+      res.end('GYM Buddy could not start this sign-in: ' + r.error);
     },
     'GET /api/oauth/request': async (req, res) => {
       const user = readSession(req);
@@ -2873,7 +2873,7 @@ const routes = {
   },
 
   // The watch relay (watch-relay.js, docs/ZEPP_OS.md). A signed-in device asks for a code, the
-  // Zepp app's settings page for openGym redeems it for a watch token, and from then on the page
+  // Zepp app's settings page for GYM Buddy redeems it for a watch token, and from then on the page
   // and the watch's Side Service meet in this profile's mailbox. A watch token opens the two
   // /api/watch/box routes and nothing else, so a session is all that minting one asks; "sign out
   // everywhere" and a new password end every watch link with the sessions (their version).
@@ -3055,7 +3055,7 @@ const routes = {
       const state = readStateStrict(user.id);
       if (state === UNREADABLE) return json(res, 503, { error: 'state unreadable' });
       const ics = buildIcs(state ? scopedState(state, row.scopes) : {}, { uid: user.id, done: row.scopes?.workouts === 'view', tz: state?.reminder?.tz, name: user.name || '' });
-      res.writeHead(200, { 'Content-Type': 'text/calendar; charset=utf-8', 'Cache-Control': 'private, max-age=900', 'Content-Disposition': 'inline; filename="opengym.ics"', 'X-Content-Type-Options': 'nosniff' });
+      res.writeHead(200, { 'Content-Type': 'text/calendar; charset=utf-8', 'Cache-Control': 'private, max-age=900', 'Content-Disposition': 'inline; filename="gymbuddy.ics"', 'X-Content-Type-Options': 'nosniff' });
       res.end(ics);
     },
 
@@ -3693,9 +3693,9 @@ const server = http.createServer(async (req, res) => {
       'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
       // The CF-Access-* pair: a phone's Cloudflare Access service token (frontend lib/cf-access.js),
       // for an Access application that passes OPTIONS through to the origin.
-      // X-OpenGym-Account: the account a media upload is meant for (GHSA-699c-6p5r-q574).
+      // X-GYM Buddy-Account: the account a media upload is meant for (GHSA-699c-6p5r-q574).
       // PATCH and If-Match: a new version of a shared item (library/routes.js).
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, CF-Access-Client-Id, CF-Access-Client-Secret, X-OpenGym-Account, If-Match',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, CF-Access-Client-Id, CF-Access-Client-Secret, X-GYM Buddy-Account, If-Match',
       'Access-Control-Max-Age': '86400',
       ...(pna ? { 'Access-Control-Allow-Private-Network': 'true' } : {})
     });

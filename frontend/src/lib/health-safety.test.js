@@ -91,7 +91,7 @@ describe('a workout for the stores', () => {
 describe('a weigh-in for the stores', () => {
   const b = (over = {}) => ({ d: D, w: 80, t: NOW - H, ...over })
   it('an ordinary one', () => {
-    expect(weightRecord(b(), 'kg', null, NOW)).toEqual({ id: 'opengym-bw-' + D, time: NOW - H, kg: 80 })
+    expect(weightRecord(b(), 'kg', null, NOW)).toEqual({ id: 'gymbuddy-bw-' + D, time: NOW - H, kg: 80 })
   })
   it.each([
     ['zero', { w: 0 }], ['negative', { w: -1 }], ['a ton', { w: MAX_KG }], ['a typo', { w: 8000 }],
@@ -118,9 +118,9 @@ describe('healthRecords', () => {
       bodyweight: [{ d: '2026-10-20', w: 0 }, { d: D, w: 81, t: NOW - H }],
     }
     const out = healthRecords(S, { nameOf, kcal: true, segments: true, now: NOW })
-    expect(out.sessions.map(s => s.id)).toEqual(['opengym-w-good', 'opengym-w-long'])
+    expect(out.sessions.map(s => s.id)).toEqual(['gymbuddy-w-good', 'gymbuddy-w-long'])
     expect(out.sessions[1]).not.toHaveProperty('kcal')
-    expect(out.weights.map(x => x.id)).toEqual(['opengym-bw-' + D])
+    expect(out.weights.map(x => x.id)).toEqual(['gymbuddy-bw-' + D])
   })
   it('a record ahead of the clock waits until it is not', () => {
     const S = { unit: 'kg', workouts: [w({ start: NOW + 3 * DAY_MS, end: NOW + 3 * DAY_MS + H })], bodyweight: [] }

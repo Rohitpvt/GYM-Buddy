@@ -13,7 +13,7 @@ import { apiBase } from '../src/api-client.js'
 
 const [url, code] = process.argv.slice(2)
 if (!url || !code) {
-  console.error('usage: node scripts/pair.mjs <openGym URL> <pairing code>\n  the code: Settings → Account → "Pair the mobile app", in the app signed in as your profile')
+  console.error('usage: node scripts/pair.mjs <GYM Buddy URL> <pairing code>\n  the code: Settings → Account → "Pair the mobile app", in the app signed in as your profile')
   process.exit(2)
 }
 
@@ -35,7 +35,7 @@ try {
   process.exit(1)
 }
 if (res.status >= 300 && res.status < 400) {
-  console.error(`${base} redirects (${res.status}): use the https address openGym is actually served at`)
+  console.error(`${base} redirects (${res.status}): use the https address GYM Buddy is actually served at`)
   process.exit(1)
 }
 const data = await res.json().catch(() => null)
@@ -43,5 +43,5 @@ if (!res.ok || !data?.token) {
   console.error(res.status === 400 ? 'that code is wrong or has expired (they last five minutes): make a new one in the app' : `the server answered ${res.status}`)
   process.exit(1)
 }
-console.error(`paired with ${data.user?.name || 'your profile'} (${data.user?.id}). Put this in the MCP config as OPENGYM_TOKEN, with OPENGYM_URL=${base}:`)
+console.error(`paired with ${data.user?.name || 'your profile'} (${data.user?.id}). Put this in the MCP config as GYMBUDDY_TOKEN, with GYMBUDDY_URL=${base}:`)
 console.log(data.token)

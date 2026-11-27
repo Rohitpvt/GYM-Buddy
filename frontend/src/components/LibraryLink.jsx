@@ -1,5 +1,5 @@
 // A routines-library link that came into the app (lib/library-link.js): a tap on
-// https://opengym.ch/routines/<slug>/ in a chat, the phone camera on the page's QR code, or
+// https://gymbuddy.ch/routines/<slug>/ in a chat, the phone camera on the page's QR code, or
 // Plan > Scan a QR code. The routine's plan file is fetched and shown in the same import sheet
 // as Plan > Import a plan file, with the author's name on it. Anything that is not a routine, or
 // a routine that cannot be fetched, goes to the website.

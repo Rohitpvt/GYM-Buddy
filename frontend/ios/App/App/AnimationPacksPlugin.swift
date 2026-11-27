@@ -20,7 +20,7 @@ import BackgroundAssets
  * that is only meant to be read through AssetPackManager (contents(at:), descriptor(for:)); a
  * URL from url(for:) is valid for this process only and is not a folder with the pack's files in
  * it (build 30 showed a "downloaded" pack of 0.1 MB and no new animations). So the page never
- * gets a path: it asks for opengym-pack://<packId>/<drawing>.webp, which AnimationPackSchemeHandler
+ * gets a path: it asks for gymbuddy-pack://<packId>/<drawing>.webp, which AnimationPackSchemeHandler
  * answers with the file's bytes from contents(at:searchingInAssetPackWithID:), memory-mapped, on a
  * background queue. Nothing is copied and nothing leaves the app.
  *
@@ -317,7 +317,7 @@ public class AnimationPacksPlugin: CAPPlugin, CAPBridgedPlugin {
                 monitor.cancel()
                 done.resume(returning: path.status == .satisfied && !path.isExpensive && !path.isConstrained)
             }
-            monitor.start(queue: DispatchQueue(label: "ch.opengym.app.anim-packs.path"))
+            monitor.start(queue: DispatchQueue(label: "ch.gymbuddy.app.anim-packs.path"))
         }
     }
 }
@@ -335,15 +335,15 @@ private final class Once: @unchecked Sendable {
 }
 
 /**
- * Serves opengym-pack://<packId>/<drawing>.webp to the web view from the downloaded asset pack,
+ * Serves gymbuddy-pack://<packId>/<drawing>.webp to the web view from the downloaded asset pack,
  * read through AssetPackManager (memory-mapped) off the main thread. Only the app's pack ids and
  * plain drawing names; anything else is a 404. Registered on the web view's configuration by
  * MainViewController.
  */
 final class AnimationPackSchemeHandler: NSObject, WKURLSchemeHandler {
-    static let scheme = "opengym-pack"
+    static let scheme = "gymbuddy-pack"
     private static let filePattern = try! NSRegularExpression(pattern: "^[A-Za-z0-9_-]{1,64}\\.webp$")
-    private let queue = DispatchQueue(label: "ch.opengym.app.anim-pack-files", qos: .userInitiated, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "ch.gymbuddy.app.anim-pack-files", qos: .userInitiated, attributes: .concurrent)
     private var stopped = Set<ObjectIdentifier>()
     private let lock = NSLock()
 

@@ -1,9 +1,9 @@
-// Failover for opengym.ch: a timer that puts this Worker in front of opengym.ch only while the
+// Failover for gymbuddy.ch: a timer that puts this Worker in front of gymbuddy.ch only while the
 // homelab is down (see worker.js). Built by cloudflare/build.sh, deployed by Workers Builds with:
 //   npx wrangler deploy -c cloudflare/wrangler.jsonc
-// Secret (dashboard → opengym → Settings → Variables and Secrets): CF_API_TOKEN
+// Secret (dashboard → gymbuddy → Settings → Variables and Secrets): CF_API_TOKEN
 {
-  "name": "opengym",
+  "name": "gymbuddy",
   "main": "worker.js",
   "compatibility_date": "2026-10-01",
   "assets": {
@@ -17,9 +17,9 @@
   "triggers": { "crons": ["* * * * *"] },
   "vars": {
     "ZONE_ID": "1bc5adc37e669a8168a9cfa7333155e6",
-    "ROUTE_PATTERN": "opengym.ch/*",
-    "SCRIPT_NAME": "opengym",
-    "ORIGIN": "https://opengym.ch"
+    "ROUTE_PATTERN": "gymbuddy.ch/*",
+    "SCRIPT_NAME": "gymbuddy",
+    "ORIGIN": "https://gymbuddy.ch"
   },
   "workers_dev": true
 }

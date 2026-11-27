@@ -27,8 +27,8 @@ struct WidgetState: Codable, Equatable {
     /// Sets logged on the watch that have not reached the iPhone yet (nil: none).
     var unsent: Int?
 
-    static let idle = WidgetState(mode: "idle", title: "openGym", detail: "", restEndsAt: nil)
-    static let groupId = "group.ch.opengym.app"
+    static let idle = WidgetState(mode: "idle", title: "gymBuddy", detail: "", restEndsAt: nil)
+    static let groupId = "group.ch.gymbuddy.app"
     private static let key = "widgetState"
 
     static func == (a: WidgetState, b: WidgetState) -> Bool {
@@ -72,9 +72,9 @@ extension WidgetState {
     }
 }
 
-/// openGym's mark (assets/logo/opengym-mark.svg): five plain rectangles on a 352 x 174 grid, square
+/// gymBuddy's mark (assets/logo/gymbuddy-mark.svg): five plain rectangles on a 352 x 174 grid, square
 /// corners. One shape, so it takes the watch face's tint and stays sharp at every complication size.
-struct OpenGymLogo: Shape {
+struct GymBuddyLogo: Shape {
     /// The brand green (#A3E635): the logo's colour wherever it is not tinted by the face.
     static let green = Color(red: 163 / 255, green: 230 / 255, blue: 53 / 255)
 

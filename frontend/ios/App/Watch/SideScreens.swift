@@ -94,14 +94,14 @@ struct WorkoutRow: View {
     }
 }
 
-/// openGym's mark in a circle where Apple's Workout shows the workout's symbol: brand green on a dark tint of it.
+/// gymBuddy's mark in a circle where Apple's Workout shows the workout's symbol: brand green on a dark tint of it.
 struct WorkoutBadge: View {
     let size: CGFloat
     var body: some View {
-        OpenGymLogo().fill(OpenGymLogo.green)
+        GymBuddyLogo().fill(GymBuddyLogo.green)
             .frame(width: size * 0.62, height: size * 0.31)
             .frame(width: size, height: size)
-            .background(Circle().fill(OpenGymLogo.green.opacity(0.22)))
+            .background(Circle().fill(GymBuddyLogo.green.opacity(0.22)))
             .accessibilityHidden(true)
     }
 }

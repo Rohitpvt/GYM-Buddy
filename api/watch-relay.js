@@ -1,9 +1,9 @@
 /* The watch relay: a mailbox on the user's own server for watches whose phone app cannot be
- * openGym's (docs/ZEPP_OS.md). A Zepp OS watch talks to the phone through a "Side Service" that runs
- * inside the Zepp app, not inside openGym, so the two meet here instead of on the phone:
+ * GYM Buddy's (docs/ZEPP_OS.md). A Zepp OS watch talks to the phone through a "Side Service" that runs
+ * inside the Zepp app, not inside GYM Buddy, so the two meet here instead of on the phone:
  *
- *   openGym (phone or web)  --PUT snapshot-->  [ this mailbox ]  <--GET snapshot--  Side Service
- *   openGym (phone or web)  <--GET events---   [ this mailbox ]  <--POST events---  Side Service
+ *   GYM Buddy (phone or web)  --PUT snapshot-->  [ this mailbox ]  <--GET snapshot--  Side Service
+ *   GYM Buddy (phone or web)  <--GET events---   [ this mailbox ]  <--POST events---  Side Service
  *
  * The messages are exactly the Apple Watch's (frontend/src/lib/watch-sync.js): the snapshot as the
  * page builds it, the events as the page applies them. Nothing here reads either one beyond what
@@ -47,7 +47,7 @@ const sameHash = (a, b) => {
 export function createWatchCode(codes, userId, now = Date.now()) {
   for (const [k, v] of codes) if (v.userId === userId || v.exp <= now) codes.delete(k);
   const raw = Array.from(crypto.randomBytes(CODE_LENGTH), b => ALPHABET[b % ALPHABET.length]).join('');
-  codes.set(sha('opengym-watch-code:', raw), { userId, exp: now + WATCH_CODE_TTL_MS });
+  codes.set(sha('gymbuddy-watch-code:', raw), { userId, exp: now + WATCH_CODE_TTL_MS });
   return { code: raw.slice(0, 4) + '-' + raw.slice(4, 8) + '-' + raw.slice(8), exp: now + WATCH_CODE_TTL_MS };
 }
 
@@ -55,7 +55,7 @@ export function createWatchCode(codes, userId, now = Date.now()) {
 export function takeWatchCode(codes, code, now = Date.now()) {
   const c = clean(code);
   if (c.length !== CODE_LENGTH) return null;
-  const h = sha('opengym-watch-code:', c);
+  const h = sha('gymbuddy-watch-code:', c);
   for (const [k, v] of codes) {
     if (!sameHash(k, h)) continue;
     codes.delete(k);
@@ -83,7 +83,7 @@ function prune(db, now) {
 export function createWatchLink(db, userId, sv, name, now = Date.now()) {
   prune(db, now);
   const token = 'ogw_' + crypto.randomBytes(32).toString('base64url');
-  const link = { id: crypto.randomBytes(6).toString('hex'), userId, sv, h: sha('opengym-watch:', token), name: linkName(name), created: now, seen: now };
+  const link = { id: crypto.randomBytes(6).toString('hex'), userId, sv, h: sha('gymbuddy-watch:', token), name: linkName(name), created: now, seen: now };
   const mine = db.watchLinks.filter(l => l.userId === userId).sort((a, b) => (a.seen || 0) - (b.seen || 0));
   const drop = new Set(mine.slice(0, Math.max(0, mine.length - WATCH_LINKS_MAX + 1)));
   db.watchLinks = db.watchLinks.filter(l => !drop.has(l)).concat(link);
@@ -93,7 +93,7 @@ export function createWatchLink(db, userId, sv, name, now = Date.now()) {
 /** The live link a token stands for, or null. `svOf(userId)` is the account's session version, null when it may not sign in. */
 export function findWatchLink(db, token, svOf, now = Date.now()) {
   if (typeof token !== 'string' || !token.startsWith('ogw_') || token.length > 100) return null;
-  const h = sha('opengym-watch:', token);
+  const h = sha('gymbuddy-watch:', token);
   const link = (db.watchLinks || []).find(l => l && typeof l.h === 'string' && sameHash(l.h, h));
   if (!link || now - (link.seen || link.created || 0) >= WATCH_IDLE_MS) return null;
   const sv = svOf(link.userId);

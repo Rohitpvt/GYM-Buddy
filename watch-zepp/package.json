@@ -1,8 +1,8 @@
 {
-  "name": "opengym-zepp",
+  "name": "gymbuddy-zepp",
   "version": "1.4.5",
   "private": true,
-  "description": "openGym for Zepp OS (Amazfit) watches",
+  "description": "GYM Buddy for Zepp OS (Amazfit) watches",
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "scripts": {

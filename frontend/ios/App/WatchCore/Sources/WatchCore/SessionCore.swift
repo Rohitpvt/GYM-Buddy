@@ -371,7 +371,7 @@ enum SessionCore {
     static func healthToDelete(gone: [String]?, done: [String]) -> [String] {
         let seen = Set(done)
         var out: [String] = []
-        for id in gone ?? [] where id.hasPrefix("opengym-w-") && !seen.contains(id) && !out.contains(id) { out.append(id) }
+        for id in gone ?? [] where id.hasPrefix("gymbuddy-w-") && !seen.contains(id) && !out.contains(id) { out.append(id) }
         return out
     }
 

@@ -58,7 +58,7 @@ describe('Strong measurements export', () => {
 
 // Discord lajawi, eibergerd: an Apple Health export (or a Google Health / Health Connect CSV)
 // imported here went straight back into Apple Health / Health Connect, a second copy of every
-// weigh-in. An imported weigh-in is marked, and only one typed into openGym goes out.
+// weigh-in. An imported weigh-in is marked, and only one typed into GYM Buddy goes out.
 describe('imported weigh-ins never go back to the health hub', () => {
   it('marks what an import brings, and leaves what was there alone', async () => {
     const { mergeImport } = await import('./import-csv.js')
@@ -70,8 +70,8 @@ describe('imported weigh-ins never go back to the health hub', () => {
     expect(S.bodyweight.map(b => b.src || null)).toEqual([null, 'import', 'import'])
     // The writer both apps use (Apple Health on the iPhone, Health Connect on Android).
     const recs = healthRecords(S, { nameOf: () => '' })
-    expect(recs.weights.map(r => r.id)).toEqual(['opengym-bw-2026-09-01'])
-    expect(planSync(recs, {}).weights.map(r => r.id)).toEqual(['opengym-bw-2026-09-01'])
+    expect(recs.weights.map(r => r.id)).toEqual(['gymbuddy-bw-2026-09-01'])
+    expect(planSync(recs, {}).weights.map(r => r.id)).toEqual(['gymbuddy-bw-2026-09-01'])
   })
 
   it('a CSV of weights and a Hevy import count as imports too', async () => {

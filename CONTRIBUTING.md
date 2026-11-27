@@ -1,6 +1,6 @@
-# Contributing to openGym
+# Contributing to GYM Buddy
 
-Thanks for taking a look. openGym is deliberately small and light on dependencies, and the aim is
+Thanks for taking a look. GYM Buddy is deliberately small and light on dependencies, and the aim is
 to keep it that way: easy to read, easy to self-host.
 
 ## Project layout
@@ -14,7 +14,7 @@ api/       Backend: server.js on plain node:http, three dependencies (@simpleweb
 web/       Multi-stage Dockerfile (builds the frontend, serves it with nginx) and the nginx template.
 mcp/       Optional read-only MCP server for LLM clients (Claude Desktop, Cursor, ...). Not in the
            Docker build; it only runs when a client spawns it. See mcp/README.md.
-website/   The static project site at opengym.ch.
+website/   The static project site at gymbuddy.ch.
 kubernetes/ Example manifests (docs/SELF_HOSTING_KUBERNETES.md).
 docs/      User and operator guides (index: docs/README.md); docs/dev/ has feature design notes.
 scripts/   Build and release helpers (scripts/README.md).
@@ -70,8 +70,8 @@ cd mcp && npm test
 
 ## Using AI tools
 
-openGym itself is developed with Claude Code (see
-[How openGym is built](README.md#how-opengym-is-built)), and [`CLAUDE.md`](CLAUDE.md) holds the
+GYM Buddy itself is developed with Claude Code (see
+[How GYM Buddy is built](README.md#how-gymbuddy-is-built)), and [`CLAUDE.md`](CLAUDE.md) holds the
 project context for it. You're welcome to use whatever tools you like for a pull request. The bar
 is the same either way: you understand the change, it's tested, and you can answer questions about
 it in review.
@@ -110,11 +110,11 @@ should come as a GitHub pull request.
 | You have | Goes to |
 | --- | --- |
 | A quick question, or you'd rather chat | [Discord](https://discord.gg/e62jY6fwVb) |
-| A question, or self-hosting that won't behave | [Discussions → Q&A](https://github.com/DuarteSantos8/openGym/discussions/categories/q-a) |
-| An idea you're not sure about yet | [Discussions → Ideas](https://github.com/DuarteSantos8/openGym/discussions/categories/ideas) |
-| A reproducible bug | [Issues](https://github.com/DuarteSantos8/openGym/issues) |
-| A change you've already built | [A pull request](https://github.com/DuarteSantos8/openGym/pulls) |
-| A security problem | [Private report](https://github.com/DuarteSantos8/openGym/security/advisories/new), see [SECURITY.md](SECURITY.md) |
+| A question, or self-hosting that won't behave | [Discussions → Q&A](https://github.com/DuarteSantos8/GYM Buddy/discussions/categories/q-a) |
+| An idea you're not sure about yet | [Discussions → Ideas](https://github.com/DuarteSantos8/GYM Buddy/discussions/categories/ideas) |
+| A reproducible bug | [Issues](https://github.com/DuarteSantos8/GYM Buddy/issues) |
+| A change you've already built | [A pull request](https://github.com/DuarteSantos8/GYM Buddy/pulls) |
+| A security problem | [Private report](https://github.com/DuarteSantos8/GYM Buddy/security/advisories/new), see [SECURITY.md](SECURITY.md) |
 
 An answered question in Discussions is worth more than the same answer in a chat log, because the
 next person searching "passkey login fails behind my reverse proxy" finds it. If a Discord answer
@@ -130,6 +130,6 @@ login issues are an origin mismatch.
 
 Before your first pull request is merged, you sign the [Contributor License Agreement](CLA.md) once,
 by commenting the sentence the CLA check asks for on your pull request. It covers all your past and
-future contributions. You keep the copyright in your work; openGym may use and relicense it, which
+future contributions. You keep the copyright in your work; GYM Buddy may use and relicense it, which
 is what keeps the app possible in the App Store and Google Play long term. Every version released
 under the [GNU AGPL v3.0](LICENSE) stays available under it.

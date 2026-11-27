@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "ch.duartesantos.opengym"
+    namespace = "ch.duartesantos.gymbuddy"
     compileSdk = rootProject.ext.compileSdkVersion
     buildFeatures {
         buildConfig = true
     }
     defaultConfig {
-        applicationId "ch.duartesantos.opengym"
+        applicationId "ch.duartesantos.gymbuddy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 46
@@ -38,7 +38,7 @@ android {
             applicationIdSuffix ".test"
         }
     }
-    // Where the app is installed from. "sideload" is the APK on GitHub and opengym.ch: it checks
+    // Where the app is installed from. "sideload" is the APK on GitHub and gymbuddy.ch: it checks
     // GitHub for a newer release and installs it itself (InstallPlugin, REQUEST_INSTALL_PACKAGES).
     // "play" is the Google Play build: Play installs the updates, so the updater, its permission
     // and its plugin are left out (Play does not allow an app to update itself). Same
@@ -48,7 +48,7 @@ android {
     // or ML Kit (see the F-Droid block below the dependencies), no updater (F-Droid updates it),
     // the repository's 180 px animations only. Same applicationId and versionCode as the APK;
     // F-Droid signs it with its own key unless its build matches ours (docs/APP_STORES.md).
-    // "offline" is openGym Offline: the F-Droid build with the INTERNET permission taken out
+    // "offline" is gymBuddy Offline: the F-Droid build with the INTERNET permission taken out
     // (src/offline/AndroidManifest.xml), so the phone itself guarantees it never talks to anyone.
     // Its own applicationId and name, so it sits next to the normal app; the page hides everything
     // that needs a network (lib/build-caps.js: sync, the Coach, YouTube, webhooks, WebDAV...).
@@ -88,7 +88,7 @@ android {
     sourceSets {
         sideload.java.srcDirs += ['src/gms/java', 'src/ciq/java']
         play.java.srcDirs += ['src/gms/java', 'src/ciq/java']
-        // openGym Offline answers "no watch, no Garmin, no packs, no updater" like F-Droid.
+        // gymBuddy Offline answers "no watch, no Garmin, no packs, no updater" like F-Droid.
         offline.java.srcDirs += ['src/fdroid/java']
     }
     // Plan B for Google Play's background-location review (docs/APP_STORES.md): with

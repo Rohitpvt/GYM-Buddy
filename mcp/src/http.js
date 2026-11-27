@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* openGym MCP over HTTPS (#781, #314): the same tools as the stdio server, as a Streamable HTTP
+/* GYM Buddy MCP over HTTPS (#781, #314): the same tools as the stdio server, as a Streamable HTTP
    endpoint for clients that cannot spawn a local process (hosted assistants, a phone, another
    machine). It runs as the optional `mcp` container (docker-compose.yml, profile `mcp`), and the
    web container proxies /mcp to it, so it lives on the app's own origin behind whatever already
@@ -11,7 +11,7 @@
    (api/tokens.js). A paired session's token is not taken here: a full sign-in has no business in
    a hosted client's config. Stateless: no MCP session, a fresh server per request, JSON answers.
 
-   Env: MCP_PORT (3100), OPENGYM_API_URL (http://api:3000, the api inside the compose network),
+   Env: MCP_PORT (3100), GYMBUDDY_API_URL (http://api:3000, the api inside the compose network),
    MCP_PATH (/mcp), MCP_ALLOWED_ORIGINS (browser Origins allowed besides none; default ORIGIN). */
 import http from 'node:http'
 import crypto from 'node:crypto'
@@ -41,7 +41,7 @@ function windowCounter(max, ms, now = Date.now) {
 
 /** The request handler, separate from listening so tests can mount it. */
 export function createMcpHandler({
-  apiUrl = process.env.OPENGYM_API_URL || 'http://api:3000',
+  apiUrl = process.env.GYMBUDDY_API_URL || 'http://api:3000',
   path = process.env.MCP_PATH || '/mcp',
   allowedOrigins = (process.env.MCP_ALLOWED_ORIGINS || process.env.ORIGIN || '').split(',').map(s => s.trim().replace(/\/+$/, '')).filter(Boolean),
   fetchImpl,
@@ -69,7 +69,7 @@ export function createMcpHandler({
   // should ask for when the person picks nothing else: read the training, plan it. Claude
   // requires the 401 (it ignores the header on any other status).
   const unauthorized = (res, why) => rpcError(res, 401, why, {
-    'WWW-Authenticate': 'Bearer realm="openGym", error="invalid_token", error_description="sign in with openGym, or make a token in Settings, API tokens"'
+    'WWW-Authenticate': 'Bearer realm="GYM Buddy", error="invalid_token", error_description="sign in with GYM Buddy, or make a token in Settings, API tokens"'
       + (publicOrigin ? `, resource_metadata="${publicOrigin}${basePath}/.well-known/oauth-protected-resource/mcp", scope="${DEFAULT_SCOPE}"` : ''),
   })
 
@@ -122,7 +122,7 @@ export function createMcpHandler({
     if (!TOKEN_RE.test(token)) {
       const wait = refused.take(who)
       if (wait) return rpcError(res, 429, 'too many refused requests, try again later', { 'Retry-After': String(wait) })
-      return unauthorized(res, token ? 'that is not an openGym API token (ogt_…); a paired session is not taken here' : 'an openGym API token is needed (Authorization: Bearer ogt_…)')
+      return unauthorized(res, token ? 'that is not an GYM Buddy API token (ogt_…); a paired session is not taken here' : 'an GYM Buddy API token is needed (Authorization: Bearer ogt_…)')
     }
 
     let body
@@ -136,10 +136,10 @@ export function createMcpHandler({
       if (e.code === 'EAUTH') {
         const wait = refused.take(who)
         if (wait) return rpcError(res, 429, 'too many refused requests, try again later', { 'Retry-After': String(wait) })
-        return unauthorized(res, 'openGym did not accept this token: revoked, expired, or the profile signed out everywhere')
+        return unauthorized(res, 'GYM Buddy did not accept this token: revoked, expired, or the profile signed out everywhere')
       }
       if (e.code === 'ERATE') return rpcError(res, 429, e.message, { 'Retry-After': '60' })
-      return rpcError(res, 502, 'openGym could not be reached from the MCP server')
+      return rpcError(res, 502, 'GYM Buddy could not be reached from the MCP server')
     }
 
     const server = buildServer({
@@ -155,7 +155,7 @@ export function createMcpHandler({
       await server.connect(transport)
       await transport.handleRequest(req, res, body)
     } catch (e) {
-      console.error('[opengym-mcp] request failed:', e?.message || e)
+      console.error('[gymbuddy-mcp] request failed:', e?.message || e)
       if (!res.headersSent) rpcError(res, 500, 'internal error')
     }
   }
@@ -168,5 +168,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const srv = http.createServer((req, res) => { handle(req, res).catch(e => { console.error(e); if (!res.headersSent) { res.writeHead(500); res.end() } }) })
   srv.requestTimeout = 120000
   srv.headersTimeout = 30000
-  srv.listen(port, () => console.error(`[opengym-mcp] http on :${srv.address().port}${process.env.MCP_PATH || '/mcp'} -> ${process.env.OPENGYM_API_URL || 'http://api:3000'}`))
+  srv.listen(port, () => console.error(`[gymbuddy-mcp] http on :${srv.address().port}${process.env.MCP_PATH || '/mcp'} -> ${process.env.GYMBUDDY_API_URL || 'http://api:3000'}`))
 }

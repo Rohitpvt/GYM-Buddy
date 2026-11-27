@@ -1,5 +1,5 @@
 /* The write tool. log_workout files a session the user describes ("dumbbell curls, 12 kg,
-   12/12/10, last set to failure") into their history, through their own openGym server
+   12/12/10, last set to failure") into their history, through their own GYM Buddy server
    (api-client.js), as if it had been logged on the phone: every device shows it within the
    half minute they poll the revision.
 
@@ -126,7 +126,7 @@ const setSchema = z.object({
 export const logWorkout = {
   name: 'log_workout',
   description: [
-    'Log a workout the user describes into their openGym history (it syncs to all their devices). Turn what they said into exercises and one entry per set:',
+    'Log a workout the user describes into their GYM Buddy history (it syncs to all their devices). Turn what they said into exercises and one entry per set:',
     '"curls, 12 kg, 12/12/10" is three sets of {reps, weight: 12}; "3 sets of 12, except the last was 10" is 12, 12, 10.',
     'Ask instead of assuming when the weight, the number of sets or the reps are unclear.',
     'Exercises are matched against the user\'s library by name or id. A common name resolves to the library\'s default variant ("shoulder press" is the barbell one): when the reply\'s `name` differs from `you_said` and the variant matters (dumbbell vs barbell, machine vs cable), confirm with the user, or pass an id. If a name matches several exercises, or none, nothing is saved and `problems` lists candidates: ask the user which one, then call again with its id.',
@@ -168,12 +168,12 @@ export const logWorkout = {
     const me = await apiFetch(cfg, paths.me, opts)
     const uid = me.body?.user?.id
     // A guard that cannot read whose token this is refuses rather than steps aside.
-    if (typeof uid !== 'string' || !uid) throw fail('EAPI', `the openGym server did not say which profile the token belongs to (GET ${paths.me}); nothing was saved`)
+    if (typeof uid !== 'string' || !uid) throw fail('EAPI', `the GYM Buddy server did not say which profile the token belongs to (GET ${paths.me}); nothing was saved`)
     const local = localUid()
     if (local && local !== uid) {
       // The ids go to the operator on stderr, not into the model's context (state.js ambiguousUid).
-      console.error(`[opengym-mcp] OPENGYM_TOKEN is for profile ${uid}, this server reads ${local}`)
-      throw fail('EPROFILE', 'OPENGYM_TOKEN belongs to another profile than the one this server reads: pair again from the right profile, or set OPENGYM_UID to match (the ids are on the server\'s stderr)')
+      console.error(`[gymbuddy-mcp] GYMBUDDY_TOKEN is for profile ${uid}, this server reads ${local}`)
+      throw fail('EPROFILE', 'GYMBUDDY_TOKEN belongs to another profile than the one this server reads: pair again from the right profile, or set GYMBUDDY_UID to match (the ids are on the server\'s stderr)')
     }
 
     let got = await apiFetch(cfg, paths.data, opts)
@@ -183,7 +183,7 @@ export const logWorkout = {
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       const doc = got.body?.state
       if (!doc || typeof doc !== 'object') {
-        throw fail('ENOSTATE', 'this profile has no synced data on the server yet: open openGym and sign in on a device once, then try again')
+        throw fail('ENOSTATE', 'this profile has no synced data on the server yet: open GYM Buddy and sign in on a device once, then try again')
       }
       // The document exactly as the server sent it, plus the workout: anything else in the PUT —
       // a default filled in here — would be stamped as an edit made now and land on every device.
@@ -224,14 +224,14 @@ export const logWorkout = {
         // The operator's trail (stderr, as the profile guard's): which workout went in, for what
         // day and at which revision. Never the token, and nothing the model sees.
         const sets = added.workout.entries.reduce((n, e) => n + e.sets.length, 0)
-        console.error(`[opengym-mcp] log_workout saved ${added.workout.id} for ${added.workout.d} (${added.workout.entries.length} exercises, ${sets} sets), rev ${put.body?.rev ?? '?'}`)
+        console.error(`[gymbuddy-mcp] log_workout saved ${added.workout.id} for ${added.workout.d} (${added.workout.entries.length} exercises, ${sets} sets), rev ${put.body?.rev ?? '?'}`)
         return { logged: true, ...viewOf(added.workout, S, built, su), revision: put.body?.rev ?? null }
       }
       // Another device wrote in between: the server sent its current document back with the 409,
       // so the workout is built again on top of that one. A 409 without one (a proxy's page) is
       // not something to build on.
       if (!put.body?.state || typeof put.body.state !== 'object' || typeof put.body.rev !== 'number') {
-        throw fail('EAPI', 'the openGym server answered 409 without the current profile; nothing was saved')
+        throw fail('EAPI', 'the GYM Buddy server answered 409 without the current profile; nothing was saved')
       }
       got = { status: 200, body: { state: put.body.state, rev: put.body.rev } }
     }

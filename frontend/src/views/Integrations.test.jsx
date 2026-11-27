@@ -99,7 +99,7 @@ describe('the cards', () => {
     act(() => host.querySelector('.intg-chip').click())
     await showSheet()
     expect(sheetHost.textContent).toContain('Garmin saves to Apple Health on iPhone or Health Connect on Android.')
-    expect(sheetHost.textContent).toContain('Install the openGym app on your phone to use this.')
+    expect(sheetHost.textContent).toContain('Install the GYM Buddy app on your phone to use this.')
     // Screen readers hear the name and the state in one go.
     expect(card('webhook').querySelector('.intg-open').getAttribute('aria-label')).toBe('Webhooks, Needs your server')
   })
@@ -172,13 +172,13 @@ describe('webhooks', () => {
     expect(url.getAttribute('aria-describedby')).toBe(sheetHost.querySelector('[role="alert"]').id)
     expect(url.nextElementSibling.getAttribute('role')).toBe('alert')
     expect(sheetHost.querySelector('label[for="intg-url"]').textContent).toBe('Webhook URL')
-    await type(url, 'https://ha.example.com/api/webhook/opengym-7f3a')
+    await type(url, 'https://ha.example.com/api/webhook/gymbuddy-7f3a')
     await type(name, 'Home Assistant')
     // Records too, on top of the default.
     act(() => [...sheetHost.querySelectorAll('.lrow')].find(r => r.textContent.includes('New personal record')).querySelector('[role="switch"]').click())
     await act(async () => { sheetBtn('Add webhook').click() })
     const sent = mocks.calls.find(c => c[0] === '/api/integrations/connect')[1]
-    expect(sent).toEqual({ provider: 'webhook', url: 'https://ha.example.com/api/webhook/opengym-7f3a', label: 'Home Assistant', events: ['workout.finished', 'workout.pr'] })
+    expect(sent).toEqual({ provider: 'webhook', url: 'https://ha.example.com/api/webhook/gymbuddy-7f3a', label: 'Home Assistant', events: ['workout.finished', 'workout.pr'] })
     expect(sheetHost.querySelector('.intg-secret').textContent).toBe('ogwh_abc123')
     expect(sheetHost.textContent).toContain('You will see it only now')
   })

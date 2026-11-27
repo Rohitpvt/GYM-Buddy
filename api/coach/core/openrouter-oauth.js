@@ -1,16 +1,16 @@
 /* "Sign in with OpenRouter": OpenRouter's official OAuth PKCE flow
- * (https://openrouter.ai/docs/guides/overview/auth/oauth). The person approves openGym on
+ * (https://openrouter.ai/docs/guides/overview/auth/oauth). The person approves GYM Buddy on
  * openrouter.ai and comes back with a one-time code; that code plus the verifier made here buys an
  * API key of their own, billed to their OpenRouter credits. No client secret exists, nothing goes
- * through an openGym server, and the code is worthless without the verifier.
+ * through an GYM Buddy server, and the code is worthless without the verifier.
  *
  * Runtime-neutral (web crypto + an injected fetch): the browser's admin card and the phone use it. */
 export const OPENROUTER_AUTH = 'https://openrouter.ai/auth';
 export const OPENROUTER_KEYS = 'https://openrouter.ai/api/v1/auth/keys';
-// The phone's way back: an https page on opengym.ch hands the code on to opengym://openrouter,
+// The phone's way back: an https page on gymbuddy.ch hands the code on to gymbuddy://openrouter,
 // which the system browser session catches (website/openrouter/index.html).
-export const PHONE_CALLBACK = 'https://opengym.ch/openrouter/';
-export const APP_RETURN = 'opengym://openrouter';
+export const PHONE_CALLBACK = 'https://gymbuddy.ch/openrouter/';
+export const APP_RETURN = 'gymbuddy://openrouter';
 
 const b64u = bytes => {
   let bin = '';
@@ -28,7 +28,7 @@ export async function makePkce(c = globalThis.crypto) {
 
 /** The address to send the person to. Without a callback it is OpenRouter's headless mode: the
  *  code is shown on screen for the person to paste back, and the challenge is required. */
-export function authUrl({ callbackUrl, challenge, state, keyLabel = 'openGym Coach' }) {
+export function authUrl({ callbackUrl, challenge, state, keyLabel = 'GYM Buddy Coach' }) {
   const q = new URLSearchParams();
   if (callbackUrl) q.set('callback_url', callbackUrl);
   q.set('code_challenge', challenge);
@@ -56,7 +56,7 @@ export function readCallback(address, expectedState) {
 export function pastedCode(raw) {
   const s = String(raw || '').trim();
   if (!s) return null;
-  if (/^https?:|^opengym:/i.test(s)) { const r = readCallback(s, null); return r.code || null; }
+  if (/^https?:|^gymbuddy:/i.test(s)) { const r = readCallback(s, null); return r.code || null; }
   return /^[A-Za-z0-9._~-]{8,512}$/.test(s) ? s : null;
 }
 

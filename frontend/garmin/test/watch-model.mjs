@@ -117,7 +117,7 @@ export class GarminWatch {
     this.n = 0
   }
 
-  /** OpenGymApp.onStart: "send me the latest". */
+  /** GymBuddyApp.onStart: "send me the latest". */
   launch () { this.hello(); return this }
 
   // Core.nowMs: milliseconds (Time.now()'s seconds refined by System.getTimer())
@@ -522,7 +522,7 @@ export class GarminWatch {
     this.radio.transmit({ events: ob.slice(from, from + n).map(unpack) }, this.listener(n))
   }
 
-  /** Once a second (OpenGymApp.onTick). */
+  /** Once a second (GymBuddyApp.onTick). */
   second () {
     // Rest.tick: the rest runs out by itself (nothing is sent)
     if (isNum(this.s.rest) && this.s.rest <= this.nowMs()) this.s.rest = null
@@ -560,7 +560,7 @@ export class GarminWatch {
     this.busy = false
   }
 
-  /** OpenGymApp.onPhone: a message from the phone. */
+  /** GymBuddyApp.onPhone: a message from the phone. */
   onPhone (data) {
     if (!dictOf(data)) return
     const ended = this.applySnapshot(data)

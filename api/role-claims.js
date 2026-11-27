@@ -1,9 +1,9 @@
-/* A provider's group claims mapped onto openGym roles, for OIDC sign-in (api/oidc/: accounts.js
+/* A provider's group claims mapped onto GYM Buddy roles, for OIDC sign-in (api/oidc/: accounts.js
  * asks rolesFromGroups, routes.js applyRoles hands studio roles to org-store syncClaimRoles and
  * `admin` to db.users; `access` gates sign-up). Roles given by hand are never taken away by a claim.
  *
  * OIDC_ROLE_MAP, comma separated `role=group` pairs; a studio role names its gym id:
- *   OIDC_ROLE_MAP="access=opengym, admin=opengym-admins, trainer=pt-freelance,
+ *   OIDC_ROLE_MAP="access=gymbuddy, admin=gymbuddy-admins, trainer=pt-freelance,
  *                  lead@g_x1=fitbox-leads, trainer@g_x1=fitbox-staff, member@g_x1=fitbox"
  * `access` is "may have an account at all" (create on first sign-in); `trainer` alone is a free
  * trainer. A group may appear in several pairs. */

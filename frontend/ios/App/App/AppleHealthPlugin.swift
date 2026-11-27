@@ -6,8 +6,8 @@ import UIKit
 /**
  * Apple Health on the iPhone, the same calls as HealthConnectPlugin.java (lib/health-sync.js):
  * finished workouts and weigh-ins go to Apple Health, each with a sync identifier of its own
- * ('opengym-w-<id>', 'opengym-bw-<day>'), so writing one again replaces it and removing finds
- * exactly what openGym wrote. It asks to read the heart rate and the body weight too, for the
+ * ('gymbuddy-w-<id>', 'gymbuddy-bw-<day>'), so writing one again replaces it and removing finds
+ * exactly what gymBuddy wrote. It asks to read the heart rate and the body weight too, for the
  * Apple Watch app's workout session, and keeps the switch where the watch link reads it
  * (App Group "healthEnabled").
  *
@@ -129,7 +129,7 @@ public class AppleHealthPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func setEnabled(_ call: CAPPluginCall) {
-        OpenGymGroup.defaults.set(call.getBool("on") ?? false, forKey: AppleHealthPlugin.enabledKey)
+        GymBuddyGroup.defaults.set(call.getBool("on") ?? false, forKey: AppleHealthPlugin.enabledKey)
         call.resolve()
     }
 
@@ -300,7 +300,7 @@ public class AppleHealthPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
-    /// Workouts since `since` (ms) from any app, openGym's own included (JS skips those by origin,
+    /// Workouts since `since` (ms) from any app, gymBuddy's own included (JS skips those by origin,
     /// lib/activities.js isOwnRecord), as { id, sport, start, end, km?, origin, clientId? }, the
     /// sport named the way lib/activities.js names it (sportName). Not allowed reads nothing.
     @objc func readWorkouts(_ call: CAPPluginCall) {
@@ -439,7 +439,7 @@ public class AppleHealthPlugin: CAPPlugin, CAPBridgedPlugin {
                AppleHealthPlugin.fits(type, from: start, to: end),
                await measuredEnergy(type, from: start, to: end) == nil {
                 var kmeta = syncMetadata(id + "-kcal")
-                kmeta["OpenGymEstimate"] = true
+                kmeta["GymBuddyEstimate"] = true
                 let sample = HKQuantitySample(type: type, quantity: HKQuantity(unit: .kilocalorie(), doubleValue: estimate),
                                               start: start, end: end, device: .local(), metadata: kmeta)
                 try? await store.save(sample)
@@ -455,7 +455,7 @@ public class AppleHealthPlugin: CAPPlugin, CAPBridgedPlugin {
         let builder = HKWorkoutBuilder(healthStore: store, configuration: config, device: .local())
         try await builder.beginCollection(at: start)
         var meta = syncMetadata(id)
-        if let title = s["title"] as? String, !title.isEmpty { meta["OpenGymTitle"] = String(title.prefix(1000)) }
+        if let title = s["title"] as? String, !title.isEmpty { meta["GymBuddyTitle"] = String(title.prefix(1000)) }
         try await builder.addMetadata(meta)
         // The estimated active energy, with a sync identifier of its own so a rewrite replaces it
         // too. The Apple Watch measures its own; this is for a workout the phone logged.
@@ -469,7 +469,7 @@ public class AppleHealthPlugin: CAPPlugin, CAPBridgedPlugin {
             // won't take: that killed the app at every launch (TestFlight 59). Checked first instead.
             if let kcal = HealthWriteCore.kcal(measured ?? estimate) {
                 var kmeta = syncMetadata(id + "-kcal")
-                kmeta["OpenGymEstimate"] = measured == nil
+                kmeta["GymBuddyEstimate"] = measured == nil
                 let sample = HKQuantitySample(type: type, quantity: HKQuantity(unit: .kilocalorie(), doubleValue: kcal),
                                               start: start, end: end, device: .local(), metadata: kmeta)
                 try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in

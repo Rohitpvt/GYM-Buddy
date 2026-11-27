@@ -95,7 +95,7 @@ export function createMediaSync(deps = {}) {
   const accountOf = () => store?.getState().user?.id ?? null
   const ticketFor = () => ({ uid: accountOf(), epoch })
   const current = tk => tk.epoch === epoch && tk.uid != null && accountOf() === tk.uid
-  const forAccount = uid => ({ 'X-OpenGym-Account': String(uid) })
+  const forAccount = uid => ({ 'X-GYM Buddy-Account': String(uid) })
   const Gone = () => Object.assign(new Error('account changed'), { code: 'account-changed' })
   const mismatch = e => e?.code === 'account-mismatch' || e?.data?.code === 'account-mismatch'
 
@@ -253,7 +253,7 @@ export function createMediaSync(deps = {}) {
       return running
     }
     running = (async () => {
-      try { await withLock('opengym-media-sync', () => run(opts)) }
+      try { await withLock('gymbuddy-media-sync', () => run(opts)) }
       catch { /* best effort: the next trigger tries again */ }
       finally {
         running = null
@@ -338,7 +338,7 @@ export function createMediaSync(deps = {}) {
     if (!store.getState().ready) { gcWaiting = true; return false }
     gcWaiting = false
     const tk = ticketFor()
-    await withLock('opengym-media', async () => {
+    await withLock('gymbuddy-media', async () => {
       // Started under another account than the one signed in now: its idea of what is live is
       // not this one's, so nothing is deleted on it.
       const mine = () => tk.epoch === epoch && accountOf() === tk.uid

@@ -1,4 +1,4 @@
-/* openGym project site.
+/* GYM Buddy project site.
    Dark on purpose: the app is pure black with a green accent, and a light site in
    front of it would be a different product. Everything here is hand-written — no
    framework, no build step, one stylesheet for all three pages. */
@@ -142,7 +142,7 @@ nav {
   padding-top: env(safe-area-inset-top);
 }
 .nav-in { display: flex; align-items: center; height: 54px; gap: 16px; }
-/* The logo (assets/logo/opengym-logo-dark.svg): the mark 1.07x the type high and 0.2x the type
+/* The logo (assets/logo/gymbuddy-logo-dark.svg): the mark 1.07x the type high and 0.2x the type
    before the word, its middle 0.36x the type above the baseline; "Gym" and the mark in brand green. */
 .brand {
   display: flex; align-items: center;
@@ -695,7 +695,7 @@ section { padding: var(--sec) 0 0; }
 @media (max-width: 620px) { .spec-cells { grid-template-columns: repeat(2, 1fr); } }
 
 /* ------------------------------------------------------------- the link quad
-   Four places openGym lives, as one block of four. Each pad is the whole link, so
+   Four places GYM Buddy lives, as one block of four. Each pad is the whole link, so
    the target is the card and not the words in it. */
 
 .quad {

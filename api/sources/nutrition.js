@@ -26,7 +26,7 @@ const iso = t => new Date(t).toISOString().slice(0, 10);
 const num = v => (v === null || v === undefined || v === '' ? null : Number.isFinite(+v) ? Math.round(+v * 10) / 10 : null);
 
 /** One day of whatever an outside app answered, in the shape above (unknown fields dropped).
- *  openNutrition's own contract (opennutrition.summary.v1, its docs/integration-opengym.md) names
+ *  openNutrition's own contract (opennutrition.summary.v1, its docs/integration-gymbuddy.md) names
  *  them energy / carbohydrate / targets.energy; both spellings are read, so a linked member's days
  *  are not all nulls (before 1.4.5 only kcal / carbs / target were looked at). */
 export function cleanDay(d) {

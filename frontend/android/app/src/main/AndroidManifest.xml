@@ -24,24 +24,24 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
-            <!-- openGym's own NFC stickers (NfcTagsPlugin, lib/nfc-tags.js): a tap opens the app,
+            <!-- GYM Buddy's own NFC stickers (NfcTagsPlugin, lib/nfc-tags.js): a tap opens the app,
                  closed or not. Only links on our own stickers, nothing else NFC. -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="https" android:host="opengym.ch" android:pathPrefix="/nfc" />
+                <data android:scheme="https" android:host="gymbuddy.ch" android:pathPrefix="/nfc" />
             </intent-filter>
-            <!-- A friend's routine link, https://opengym.ch/r#<routine> (components/RoutineShare.jsx):
-                 straight into the app instead of the page. Verified once opengym.ch serves
+            <!-- A friend's routine link, https://gymbuddy.ch/r#<routine> (components/RoutineShare.jsx):
+                 straight into the app instead of the page. Verified once gymbuddy.ch serves
                  /.well-known/assetlinks.json for this app; until then Android may ask which app. -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="opengym.ch" android:path="/r" />
-                <data android:scheme="https" android:host="opengym.ch" android:path="/r/" />
+                <data android:scheme="https" android:host="gymbuddy.ch" android:path="/r" />
+                <data android:scheme="https" android:host="gymbuddy.ch" android:path="/r/" />
             </intent-filter>
-            <!-- A whole routine from the library, https://opengym.ch/routines/<slug>/ (lib/library-link.js):
+            <!-- A whole routine from the library, https://gymbuddy.ch/routines/<slug>/ (lib/library-link.js):
                  the app fetches its plan file and shows the import sheet. The glob's ".*" stops at the
                  next "/", so this is exactly one path segment plus the slash: never the list itself
                  (/routines/) or a file under it (/routines/plans/x.json, /routines/media/x.webp).
@@ -51,15 +51,15 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="opengym.ch" android:pathPattern="/routines/.*/" />
+                <data android:scheme="https" android:host="gymbuddy.ch" android:pathPattern="/routines/.*/" />
             </intent-filter>
-            <!-- opengym://nfc?... from opengym.ch/nfc, the page a sticker opens in a browser, and
-                 opengym://r#<routine> from opengym.ch/r. -->
+            <!-- gymbuddy://nfc?... from gymbuddy.ch/nfc, the page a sticker opens in a browser, and
+                 gymbuddy://r#<routine> from gymbuddy.ch/r. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="opengym" />
+                <data android:scheme="gymbuddy" />
             </intent-filter>
         </activity>
 
@@ -254,7 +254,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/opengym/event/" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/gymbuddy/event/" />
             </intent-filter>
         </service>
         <service
@@ -314,7 +314,7 @@
              a tap opens the app at that screen. The configure screen picks what it shows; it
              only ever writes this app's own widget settings. -->
         <receiver
-            android:name=".OpenGymWidgetProvider"
+            android:name=".GymBuddyWidgetProvider"
             android:exported="true"
             android:label="@string/widget_name">
             <intent-filter>
@@ -322,10 +322,10 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/opengym_widget_info" />
+                android:resource="@xml/gymbuddy_widget_info" />
         </receiver>
         <activity
-            android:name=".OpenGymWidgetConfigure"
+            android:name=".GymBuddyWidgetConfigure"
             android:exported="true"
             android:excludeFromRecents="true"
             android:theme="@style/WidgetConfigTheme">
@@ -378,7 +378,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- Health Connect (#200): each asked for only when the user turns its switch on in Settings.
-         openGym writes finished workouts and weigh-ins, and since v1.4.3 can read back the heart
+         GYM Buddy writes finished workouts and weigh-ins, and since v1.4.3 can read back the heart
          rate during a workout and weigh-ins from other apps (#544). Foreground only: no
          background read permission. The history one (v1.4.4, idea from #801) is asked for
          together with reading weigh-ins, where Health Connect has it, so the first read can go
@@ -411,7 +411,7 @@
     <!-- Gym reminder (#614), off until switched on in Settings: where the phone is, for "I'm at
          the gym right now" and to watch the gyms the user added with the platform's proximity
          alerts (no Google Play Services). Background location ("Allow all the time") is asked for
-         separately, after an explanation in the app, because the alert has to fire with openGym
+         separately, after an explanation in the app, because the alert has to fire with GYM Buddy
          closed. The places never leave the phone. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

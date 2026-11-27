@@ -222,7 +222,7 @@ test('receiver answers in the outbox\'s words, and the URL is shown masked', () 
   assert.equal(judge({ status: 410 }).gone, true);
   assert.equal(judge(null, Object.assign(new Error('x'), { code: 'EBLOCKED' })).retry, false);
   assert.equal(judge(null, Object.assign(new Error('x'), { code: 'ETIMEDOUT' })).retry, true);
-  assert.equal(maskUrl('https://ha.example.com/api/webhook/opengym-9f8e7d6c5b4a'), 'https://ha.example.com/api/webhook/…5b4a');
+  assert.equal(maskUrl('https://ha.example.com/api/webhook/gymbuddy-9f8e7d6c5b4a'), 'https://ha.example.com/api/webhook/…5b4a');
   assert.equal(maskUrl('https://ntfy.sh/mytopic'), 'https://ntfy.sh/mytopic');
   assert.equal(maskUrl('https://n8n.example.com/webhook/x?token=abc'), 'https://n8n.example.com/webhook/x?…');
 });
@@ -283,7 +283,7 @@ test('connect, deliver signed, fail, retry and disconnect, end to end', async ()
   const r = hubRig();
   assert.throws(() => r.hub.connect('u1', 'webhook', { url: 'https://192.168.1.4/x' }), e => e.status === 400 && e.code === 'url');
   assert.throws(() => r.hub.connect('u1', 'webhook', { url: 'https://hooks.example.com/a', events: ['nope'] }), e => e.code === 'events');
-  const made = r.hub.connect('u1', 'webhook', { url: 'https://hooks.example.com/api/webhook/opengym-1234567890', events: ['workout.finished', 'weighin.logged'] });
+  const made = r.hub.connect('u1', 'webhook', { url: 'https://hooks.example.com/api/webhook/gymbuddy-1234567890', events: ['workout.finished', 'weighin.logged'] });
   const secret = made.reveal.secret;
   assert.match(secret, /^ogwh_/);
   const id = made.connection.id;
@@ -291,7 +291,7 @@ test('connect, deliver signed, fail, retry and disconnect, end to end', async ()
   assert.equal(made.connection.info.url, 'https://hooks.example.com/api/webhook/…7890');
   // Nothing secret on disk in the clear, and the app never gets it back.
   const disk = fs.readFileSync(path.join(r.dataDir, 'integrations', 'u-u1.json'), 'utf8');
-  assert.ok(!disk.includes(secret) && !disk.includes('opengym-1234567890'));
+  assert.ok(!disk.includes(secret) && !disk.includes('gymbuddy-1234567890'));
   assert.ok(!JSON.stringify(r.hub.describe('u1')).includes(secret));
 
   // A finished workout (after the webhook was added) goes out once, signed.
@@ -304,19 +304,19 @@ test('connect, deliver signed, fail, retry and disconnect, end to end', async ()
   await r.hub._outbox().run();
   assert.equal(r.calls.length, 1);
   const c = r.calls[0];
-  assert.equal(c.url, 'https://hooks.example.com/api/webhook/opengym-1234567890');
-  assert.equal(c.headers['X-OpenGym-Event'], 'workout.finished');
-  assert.equal(verifySignature(secret, c.body, c.headers['X-OpenGym-Signature']), true);
+  assert.equal(c.url, 'https://hooks.example.com/api/webhook/gymbuddy-1234567890');
+  assert.equal(c.headers['X-GYM Buddy-Event'], 'workout.finished');
+  assert.equal(verifySignature(secret, c.body, c.headers['X-GYM Buddy-Signature']), true);
   const body = JSON.parse(c.body);
   assert.equal(body.version, 1);
   assert.equal(body.type, 'workout.finished');
-  assert.equal(body.id, c.headers['X-OpenGym-Delivery']);
+  assert.equal(body.id, c.headers['X-GYM Buddy-Delivery']);
   assert.equal(body.data.workout.id, 'w1');
 
   // Not subscribed to records: a PR workout is one delivery, not two.
   r.hub.onStateWrite('u1', { workouts: [w] }, { workouts: [w, W('w2', -2000, { end: NOW + 40000, prs: ['0025'] })] });
   await r.hub._outbox().run();
-  assert.deepEqual(r.calls.map(x => x.headers['X-OpenGym-Event']), ['workout.finished', 'workout.finished']);
+  assert.deepEqual(r.calls.map(x => x.headers['X-GYM Buddy-Event']), ['workout.finished', 'workout.finished']);
 
   // The receiver goes down: logged, retried, and the card says so once it gives up.
   r.setAnswer(() => ({ status: 503, headers: {} }));

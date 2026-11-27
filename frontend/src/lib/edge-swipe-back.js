@@ -28,7 +28,7 @@ const SETTLE_MS = 260
 const PARALLAX = 0.3          // the page underneath starts this far to the left, and slides in
 const SHADE = 0.35            // its dimming at the start of the swipe
 
-export const BACK_PREVIEW_EVENT = 'opengym:back-preview'
+export const BACK_PREVIEW_EVENT = 'gymbuddy:back-preview'
 
 /* ---------- pure decisions ---------- */
 

@@ -89,7 +89,7 @@ export function createIntegrations({ dataDir, secret, env = process.env, now = D
 
   // The OAuth `state`: who asked, for which provider, until when, signed with a key of its own.
   // A nonce is taken once, so a callback link cannot be replayed.
-  const stateKey = secret && String(secret).length >= 16 ? crypto.createHmac('sha256', String(secret)).update('opengym-oauth-state v1').digest() : null;
+  const stateKey = secret && String(secret).length >= 16 ? crypto.createHmac('sha256', String(secret)).update('gymbuddy-oauth-state v1').digest() : null;
   const usedNonces = new Map();
   const signState = o => { const b = Buffer.from(JSON.stringify(o)).toString('base64url'); return b + '.' + crypto.createHmac('sha256', stateKey).update(b).digest('base64url'); };
   const readState = st => {

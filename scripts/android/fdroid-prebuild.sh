@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The web part of the F-Droid build (flavour "fdroid", docs/APP_STORES.md), run by F-Droid's
-# recipe before Gradle (fdroiddata: metadata/ch.duartesantos.opengym.yml, "prebuild"):
+# recipe before Gradle (fdroiddata: metadata/ch.duartesantos.gymbuddy.yml, "prebuild"):
 #   1. installs the frontend's packages exactly as locked and builds the phone bundle, with the
 #      repository's 180 px animations only (no APP_MEDIA_DIR);
 #   2. takes the ML Kit barcode scanner plugin out of the Gradle build. The fdroid flavour never

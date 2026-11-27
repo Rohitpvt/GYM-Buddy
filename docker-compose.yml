@@ -1,10 +1,10 @@
-name: opengym
+name: gymbuddy
 
 services:
   # Passkey auth + per-user data (Node, no framework).
   # image: prebuilt (docker compose pull). build: from source (docker compose up --build).
   api:
-    image: ghcr.io/duartesantos8/opengym-api:latest
+    image: ghcr.io/duartesantos8/gymbuddy-api:latest
     # Default target: no AI runtime, no AI dependency — the image every instance has always had.
     # To opt into the AI Coach, build the other target instead:
     #     API_TARGET=coach docker compose up --build api
@@ -35,7 +35,7 @@ services:
   # Builds the React frontend (multi-stage) and serves it, proxying /api → api
   # and the exercise animations, which are part of the image. Single origin for passkeys.
   web:
-    image: ghcr.io/duartesantos8/opengym-web:latest
+    image: ghcr.io/duartesantos8/gymbuddy-web:latest
     build:
       context: .
       dockerfile: web/Dockerfile
@@ -71,13 +71,13 @@ services:
       - MCP_PORT=${MCP_PORT:-3100}
 
   # Optional: MCP over HTTPS, so an AI assistant that cannot start a local process (a hosted one,
-  # a phone app) can use openGym's tools at https://<your host>/mcp with a scoped token from
+  # a phone app) can use GYM Buddy's tools at https://<your host>/mcp with a scoped token from
   # Settings → API tokens. Off unless asked for: put `COMPOSE_PROFILES=mcp` and `MCP=on` in .env.
   # It holds no data and no secret (no ./data mount): it reads and writes through the api, with
   # each request's own token. docs/MCP_REMOTE.md.
   mcp:
     profiles: [mcp]
-    image: ghcr.io/duartesantos8/opengym-mcp:latest
+    image: ghcr.io/duartesantos8/gymbuddy-mcp:latest
     build:
       context: .
       dockerfile: mcp/Dockerfile
@@ -87,7 +87,7 @@ services:
         condition: service_started
     environment:
       - MCP_PORT=${MCP_PORT:-3100}
-      - OPENGYM_API_URL=http://${BACKEND:-api}:${PORT:-3000}
+      - GYMBUDDY_API_URL=http://${BACKEND:-api}:${PORT:-3000}
       # The app's address, so a browser page from anywhere else is turned away (DNS rebinding).
       - ORIGIN=${ORIGIN:-}
       # The prefix under a subpath deployment, for the sign-in pointer its 401 carries.

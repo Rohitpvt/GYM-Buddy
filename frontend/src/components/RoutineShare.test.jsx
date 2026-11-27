@@ -58,7 +58,7 @@ afterEach(() => {
 })
 
 describe('Share with a friend', () => {
-  it('shares an opengym.ch/r link with a short text, without weights or name by default', async () => {
+  it('shares an gymbuddy.ch/r link with a short text, without weights or name by default', async () => {
     const share = vi.fn(() => Promise.resolve())
     navigator.share = share
     shareRoutineSheet(push)
@@ -68,8 +68,8 @@ describe('Share with a friend', () => {
     // runner: wait for the share sheet. A late one would land in the next test's share mock.
     await vi.waitFor(() => expect(share).toHaveBeenCalledTimes(1), { timeout: 5000 })
     const { url, text } = share.mock.calls[0][0]
-    expect(text).toBe('Here’s my Push Day on openGym 💪')
-    expect(url.startsWith('https://opengym.ch/r#1.')).toBe(true)
+    expect(text).toBe('Here’s my Push Day on GYM Buddy 💪')
+    expect(url.startsWith('https://gymbuddy.ch/r#1.')).toBe(true)
     const data = await decodePayload(routinePayloadFromUrl(url))
     expect(data.routines[0].ex[0].weight).toBeUndefined()
     expect(data.from).toBeUndefined()
@@ -138,18 +138,18 @@ describe('an incoming routine link', () => {
     expect(await openRoutinePayload('1.j.bm9wZQ')).toBe(false)
     expect(m.toasts.at(-1)).toBe('This routine link is broken or cut off.')
     expect(await openRoutinePayload('9.d.abc')).toBe(false)
-    expect(m.toasts.at(-1)).toMatch(/newer openGym/)
+    expect(m.toasts.at(-1)).toMatch(/newer GYM Buddy/)
     expect(m.sheets).toHaveLength(0)
   })
 })
 
 describe('links that open the app', () => {
   it('tells a friend’s routine from a whole library routine', () => {
-    expect(incomingLink('https://opengym.ch/r#1.j.e30')).toEqual({ payload: '1.j.e30' })
-    expect(incomingLink('https://opengym.ch/routines/bar-and-floor/')).toMatchObject({ link: { kind: 'routine', slug: 'bar-and-floor' } })
-    expect(incomingLink('https://opengym.ch/routines/submit/')).toMatchObject({ link: { kind: 'page', browserUrl: 'https://opengym.ch/routines/submit/index.html' } })
+    expect(incomingLink('https://gymbuddy.ch/r#1.j.e30')).toEqual({ payload: '1.j.e30' })
+    expect(incomingLink('https://gymbuddy.ch/routines/bar-and-floor/')).toMatchObject({ link: { kind: 'routine', slug: 'bar-and-floor' } })
+    expect(incomingLink('https://gymbuddy.ch/routines/submit/')).toMatchObject({ link: { kind: 'page', browserUrl: 'https://gymbuddy.ch/routines/submit/index.html' } })
     expect(incomingLink('https://lib.example/routines/a/')).toBe(null)
     expect(incomingLink('https://lib.example/routines/a/', 'https://lib.example/routines/index.json')).toMatchObject({ link: { slug: 'a' } })
-    expect(incomingLink('https://opengym.ch/nfc?do=start')).toBe(null)
+    expect(incomingLink('https://gymbuddy.ch/nfc?do=start')).toBe(null)
   })
 })

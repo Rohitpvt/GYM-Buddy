@@ -90,8 +90,8 @@ export function buildIcs(S, { uid = 'u', now = Date.now(), tz = S?.reminder?.tz,
   const today = dayIn(now, tz);
   const routines = new Map(list(S?.routines).map(r => [r.id, r]));
   const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//openGym//Calendar feed//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-    'X-WR-CALNAME:' + icsText(name ? `openGym · ${name}` : 'openGym'),
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//GYM Buddy//Calendar feed//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'X-WR-CALNAME:' + icsText(name ? `GYM Buddy · ${name}` : 'GYM Buddy'),
     'X-PUBLISHED-TTL:PT1H', 'REFRESH-INTERVAL;VALUE=DURATION:PT1H',
   ];
   let n = 0;
@@ -111,12 +111,12 @@ export function buildIcs(S, { uid = 'u', now = Date.now(), tz = S?.reminder?.tz,
       const sets = list(w.entries).reduce((a, e) => a + list(e.sets).filter(s => s.done === true || s.sides?.L?.done || s.sides?.R?.done).length, 0);
       if (typeof w.d === 'string') doneDays.add(w.d.slice(0, 10));
       event([
-        'UID:' + icsText(`done-${String(w.id).slice(0, 60)}-${uid}@opengym`),
+        'UID:' + icsText(`done-${String(w.id).slice(0, 60)}-${uid}@gymbuddy`),
         'DTSTAMP:' + stamp(now),
         'DTSTART:' + stamp(start), 'DTEND:' + stamp(end),
         'SUMMARY:' + icsText('✓ ' + (String(w.name || '').slice(0, NAME_MAX) || 'Workout')),
         'DESCRIPTION:' + icsText([`${sets} ${sets === 1 ? 'set' : 'sets'}`, ...names].join('\n')),
-        'CATEGORIES:openGym,Workout', 'TRANSP:TRANSPARENT',
+        'CATEGORIES:GYM Buddy,Workout', 'TRANSP:TRANSPARENT',
       ]);
     }
   }
@@ -129,12 +129,12 @@ export function buildIcs(S, { uid = 'u', now = Date.now(), tz = S?.reminder?.tz,
       if (!r) continue;
       const exNames = list(r.ex).map(e => exerciseName(e.id, S)).slice(0, 40);
       event([
-        'UID:' + icsText(`plan-${iso}-${String(id).slice(0, 60)}-${uid}@opengym`),
+        'UID:' + icsText(`plan-${iso}-${String(id).slice(0, 60)}-${uid}@gymbuddy`),
         'DTSTAMP:' + stamp(now),
         'DTSTART;VALUE=DATE:' + dateValue(iso), 'DTEND;VALUE=DATE:' + dateValue(addDays(iso, 1)),
         'SUMMARY:' + icsText([r.emoji, String(r.name || 'Workout').slice(0, NAME_MAX)].filter(Boolean).join(' ')),
         ...(exNames.length ? ['DESCRIPTION:' + icsText(exNames.join('\n'))] : []),
-        'CATEGORIES:openGym,Plan', 'TRANSP:TRANSPARENT',
+        'CATEGORIES:GYM Buddy,Plan', 'TRANSP:TRANSPARENT',
       ]);
     }
   }

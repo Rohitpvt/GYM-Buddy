@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["234L56UV8V.ch.opengym.app"],
+        "appIDs": ["234L56UV8V.ch.gymbuddy.app"],
         "components": [
           { "/": "/nfc", "comment": "NFC stickers" },
           { "/": "/nfc/*" },

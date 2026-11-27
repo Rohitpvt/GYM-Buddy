@@ -1,7 +1,7 @@
 // Backup to WebDAV (#582, idea by @Mahaveer1013): the JSON backup of Settings → Data & backup,
 // written to a folder on a WebDAV server of your own (Nextcloud, ownCloud, a NAS, Apache or nginx
 // with WebDAV, Koofr, …) once a day and whenever you tap Back up now, and read back from there
-// on a new phone. No account with anyone, no server of openGym's in between: this device talks to
+// on a new phone. No account with anyone, no server of GYM Buddy's in between: this device talks to
 // your WebDAV server directly.
 //
 // What is kept where:
@@ -23,13 +23,13 @@
 
 export const CONFIG_KEY = 'gym_webdav_v1'
 export const SECRET_KEY = 'webdav.password'
-export const INDEX_NAME = 'opengym-backups.json'
+export const INDEX_NAME = 'gymbuddy-backups.json'
 export const KEEP = 14
 export const DAY_MS = 86400000
 // A daily backup is due once the last good one is this old (a little under a day, so one taken at
 // 08:10 is due again at 08:00 the next morning).
 export const DUE_MS = 20 * 3600000
-export const NAME_RE = /^opengym-backup-\d{4}-\d{2}-\d{2}\.json$/
+export const NAME_RE = /^gymbuddy-backup-\d{4}-\d{2}-\d{2}\.json$/
 
 const store = () => { try { return typeof localStorage === 'undefined' ? null : localStorage } catch { return null } }
 
@@ -113,7 +113,7 @@ export function basicAuth(user, pass) {
 export const backupName = (day = new Date()) => {
   const d = day instanceof Date ? day : new Date(day)
   const p = n => String(n).padStart(2, '0')
-  return `opengym-backup-${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}.json`
+  return `gymbuddy-backup-${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}.json`
 }
 
 /** An index as stored: our file names only, newest first, no repeats. */
@@ -142,12 +142,12 @@ export class DavError extends Error {
 export function errorText(e) {
   switch (e?.code) {
     case 'auth': return 'The server did not take that name and password. An app password usually works best.'
-    case 'missing': return 'That folder is not there, and openGym could not make it. Make it on the server first.'
+    case 'missing': return 'That folder is not there, and GYM Buddy could not make it. Make it on the server first.'
     case 'forbidden': return 'The server says this account may not write there.'
     case 'full': return 'The server is out of space for this account.'
     case 'network': return 'Could not reach the server. In a browser it also has to allow this site (CORS), see the guide.'
     case 'no-password': return 'Type the password again: this device does not have it.'
-    case 'not-backup': return 'That file is not an openGym backup.'
+    case 'not-backup': return 'That file is not an GYM Buddy backup.'
     case 'empty': return 'Nothing to back up yet: log a workout first.'
     case 'foreign': return 'This backup belongs to another account'
     default: return 'The server answered with an error.'
@@ -216,7 +216,7 @@ export async function backupTo(client, S, { now = Date.now() } = {}) {
   const name = backupName(new Date(now))
   await client.put(name, text)
   const { list, drop } = nextIndex(await client.index(), { name, at: now, size: text.length, workouts: countOf(S) })
-  await client.put(INDEX_NAME, JSON.stringify({ v: 1, app: 'openGym', backups: list }, null, 1))
+  await client.put(INDEX_NAME, JSON.stringify({ v: 1, app: 'GYM Buddy', backups: list }, null, 1))
   for (const old of drop) { try { await client.del(old) } catch { /* next time */ } }
   return { name, size: text.length, at: now }
 }

@@ -12,7 +12,7 @@ TestFlight beta) on an iPhone, the APK on Android. Then read
 |---|---|---|
 | **iPhone and iPad** | The [App Store](https://apps.apple.com/app/id6822275400). To test the next version early: the [public TestFlight beta](https://testflight.apple.com/join/RKATb61k) | the App Store or TestFlight |
 | **Apple Watch** | Comes with the iPhone app | with the iPhone app |
-| **Android, APK** | [GitHub release](https://github.com/DuarteSantos8/openGym/releases/latest) or [opengym.ch](https://opengym.ch). From v1.4.2 in three sizes: Standard (animations at 180 px), Plus (240 px) and HD (360 px, the biggest download) | the app itself, each size to its own kind |
+| **Android, APK** | [GitHub release](https://github.com/DuarteSantos8/GYM Buddy/releases/latest) or [gymbuddy.ch](https://gymbuddy.ch). From v1.4.2 in three sizes: Standard (animations at 180 px), Plus (240 px) and HD (360 px, the biggest download) | the app itself, each size to its own kind |
 | **Android, Google Play** | Coming: the account has to run a closed test first | Google Play, sharper animations as downloads |
 
 The APK and the Google Play app are signed with the same key, so a phone can move from one to
@@ -21,7 +21,7 @@ released is in [APP_STORES.md](APP_STORES.md).
 
 ## How the phone app works
 
-openGym ships in two flavors from the same codebase:
+GYM Buddy ships in two flavors from the same codebase:
 
 | | **Self-hosted** (this repo's default) | **Mobile app** (`VITE_MOBILE=1`) |
 |---|---|---|
@@ -32,7 +32,7 @@ openGym ships in two flavors from the same codebase:
 | Exercise media | served by your server (`exercise-media/`) | packed into the app (`exercise-media/`) |
 
 The mobile flavor never talks to a backend by default: no sign-in screen, no sync, no
-telemetry. State is mirrored from `localStorage` into `opengym-state.json` in the app's
+telemetry. State is mirrored from `localStorage` into `gymbuddy-state.json` in the app's
 private data directory on every change (iOS is allowed to evict WebView storage under
 pressure; the file mirror is the durable copy and is restored on launch). Backups go out
 through the OS share sheet instead of a browser download.
@@ -40,7 +40,7 @@ through the OS share sheet instead of a browser download.
 ### Connecting the app to your own server
 
 On first launch the app asks how you want to use it. Alongside the fully local mode above,
-you can instead **connect it to a self-hosted openGym server**: your data then lives there,
+you can instead **connect it to a self-hosted GYM Buddy server**: your data then lives there,
 synced the same way the browser PWA does, instead of only on the phone. This is a mode of the
 same app, not a different build or download.
 
@@ -61,10 +61,10 @@ or Settings → Account → **"Connect to my server"** later) to finish. Notes:
   you that http is not encrypted, so keep it to your own network. Your browser still needs a
   password to sign in there and make the code: passkeys only work over https (or `localhost`).
 - Pairing says your server "refused the app's request (CORS)", or that "a login page or proxy
-  rule replied instead of openGym", or fails with "Failed to fetch" on an older version, while
-  the browser works? Something in front of openGym is answering the app instead: a reverse proxy
+  rule replied instead of GYM Buddy", or fails with "Failed to fetch" on an older version, while
+  the browser works? Something in front of GYM Buddy is answering the app instead: a reverse proxy
   handling the CORS preflight itself, adding a second `Access-Control-Allow-Origin`, or SSO /
-  forward-auth on `/api/`. openGym answers the preflight and does its own sign-in; see
+  forward-auth on `/api/`. GYM Buddy answers the preflight and does its own sign-in; see
   [Phone app and CORS](SELF_HOSTING.md#phone-app-and-cors) for the fixes and a `curl` self-check.
 - The token lasts `SESSION_DAYS` (90 by default, see `docs/SELF_HOSTING.md`) and renews
   itself: every time the app starts, a token past half its life is swapped for a fresh one.
@@ -89,12 +89,12 @@ If your server sits behind [Cloudflare Access](https://developers.cloudflare.com
 
 1. In Zero Trust → Access → Service Auth, create a service token and note its Client ID and
    Client Secret.
-2. In the Access application for your openGym host, add a policy with the **Service Auth**
+2. In the Access application for your GYM Buddy host, add a policy with the **Service Auth**
    action that includes that token.
 3. In the application's **CORS settings**, enable **Bypass OPTIONS requests to origin**. The
    app runs on its own origin, so every request is preceded by a CORS preflight, and a
    preflight never carries the token. Without the bypass, Access refuses it and nothing
-   gets through. The openGym API answers the preflight itself and allows both headers.
+   gets through. The GYM Buddy API answers the preflight itself and allows both headers.
 4. In the app, before connecting: first-launch screen → **Connection settings** (or the
    **Cloudflare Access** button in the Connect sheet), enter your server's address and the two
    values, then pair as usual. They can be changed later under Settings → **Server & sync** →
@@ -117,7 +117,7 @@ status bar says so on every screen, and stays until the condition is gone:
 |---|---|---|
 | *Offline. Your changes are saved on this device…* | No answer at all: no network, the server is down, or it did not answer within 20 s (60 s for an upload). | Nothing, it syncs by itself once the server is reachable. **Try again** checks at once. |
 | *Your server answered with an error (HTTP 502)…* | The server (or the proxy in front of it) answered with an error. The code is the one the server sent. | Check the server and its proxy logs; **Try again** once it is back. A 413 means the proxy's upload limit is too small (`client_max_body_size`). |
-| *Your server's address answered with something other than openGym (HTTP 200)…* | Something else answered in the server's place, typically a proxy's sign-in page or a catch-all that serves the web app for `/api/*`. | Let `/api/*` through to the openGym API unchanged, including the `Authorization` header. |
+| *Your server's address answered with something other than GYM Buddy (HTTP 200)…* | Something else answered in the server's place, typically a proxy's sign-in page or a catch-all that serves the web app for `/api/*`. | Let `/api/*` through to the GYM Buddy API unchanged, including the `Authorization` header. |
 | *Your server no longer accepts this phone…* | The server refused the phone's token (401): "sign out everywhere", the account disabled, a `data/secret` that was replaced, a token older than `SESSION_DAYS`, or a proxy with its own login that rejects `Authorization: Bearer`. | **Pair again**: in a signed-in browser open Settings → "Pair the mobile app" and enter the new code. The address is already filled in. |
 | *This phone is no longer paired with your server…* | A phone that an earlier version of the app unpaired by itself after its token was refused. The address is gone. | **Pair again**, typing the address. |
 | *On this phone only, not connected to a server* | Local mode, chosen at first launch or after Disconnect. Said quietly. | Nothing, or **Connect** to pair with a server. |
@@ -136,13 +136,13 @@ account's unsent changes aside on the phone until that account comes back.
 
 Where the phone keeps things, in case you ever need them by hand:
 
-- `opengym-state.json` in the app's private data directory: the durable copy of everything
+- `gymbuddy-state.json` in the app's private data directory: the durable copy of everything
   on the phone, written after every change (not reachable without a rooted phone or `adb`
-  on a debug build). `opengym-state-owner.json` beside it says which account that copy
+  on a debug build). `gymbuddy-state-owner.json` beside it says which account that copy
   belongs to: a paired phone only ever takes the file back for that account.
-- `opengym-stash.json`, same directory: changes kept by "Disconnect anyway" or by another
+- `gymbuddy-stash.json`, same directory: changes kept by "Disconnect anyway" or by another
   account pairing, waiting for their server and account.
-- `Documents/openGym/opengym-backup-YYYY-MM-DD.json`: only with Settings → Data & backup → **Auto-backup on
+- `Documents/GYM Buddy/gymbuddy-backup-YYYY-MM-DD.json`: only with Settings → Data & backup → **Auto-backup on
   changes** switched on: a dated copy after every finished workout or edited routine, in a
   folder of its own under the phone's Documents folder, where a file manager or a sync app
   (Syncthing, a cloud folder) can reach it without taking the rest of Documents along. One
@@ -154,7 +154,7 @@ Where the phone keeps things, in case you ever need them by hand:
   system folder picker (a sync app's folder, an SD card) and the copies go there instead,
   pruned to the same 14. The choice belongs to this phone and does not sync. If the folder
   stops accepting copies (the permission revoked, the folder deleted), they go to
-  `Documents/openGym` again and Settings says so until you choose the folder again or tap
+  `Documents/GYM Buddy` again and Settings says so until you choose the folder again or tap
   **Use default folder**.
 
 ### Photos and videos of your own exercises
@@ -166,7 +166,7 @@ survive), a GIF loses its comment and metadata blocks, and an MP4/MOV keeps its 
 sound while its metadata and any GPS or sensor track are zeroed. The original file name is
 never stored.
 
-- **Where it lives:** `Library/opengym-media/` in the app's own storage (iOS's Library folder,
+- **Where it lives:** `Library/gymbuddy-media/` in the app's own storage (iOS's Library folder,
   Android's files directory), one file per photo or video named by its SHA-256, plus a small
   `index.json`. The state keeps only a reference of a few hundred bytes. A MOV is stored with
   an `.mp4` name so the WebView plays it.
@@ -177,7 +177,7 @@ never stored.
   with the phone's token into the same folder, so they show offline too. A file that has not
   reached the server yet is owed like an unsynced change: **Disconnect** says so and keeps it.
   Big files wait for Wi-Fi unless you tap Settings → Data & backup → **Photos & videos**.
-- **Backups:** Android's cloud backup leaves `opengym-media/` out
+- **Backups:** Android's cloud backup leaves `gymbuddy-media/` out
   (`res/xml/backup_rules.xml`, `res/xml/data_extraction_rules.xml`): Auto Backup drops an
   app's whole backup past 25 MB, and a few videos would take the state file down with them. A
   device-to-device transfer keeps it. iOS includes Library in iCloud and computer backups.
@@ -198,7 +198,7 @@ uses the same file input, ingest, folder and sync as the photos above; what is p
   `MediaStore.ACTION_VIDEO_CAPTURE` to the camera app, which needs the `<queries>` entry for that
   action in the manifest since Android 11 (without it the button opens the file picker). On
   Android the camera app may also keep its own copy in the gallery; that copy is the camera
-  app's, not openGym's.
+  app's, not GYM Buddy's.
 - **Length and size:** the server's `videoSec` and `videoMB` from `/api/config`, or 60 s and
   100 MB in local mode. A longer video is refused before it is kept. A big one is first made
   smaller on the device (lib/video-shrink.js, v1.4.5): it plays once, unseen, onto a canvas at
@@ -209,7 +209,7 @@ uses the same file input, ingest, folder and sync as the photos above; what is p
   everywhere. A clip that cannot be shrunk (no recorder, no length) is kept as filmed, and one
   still over the cap after shrinking is refused with a line saying a shorter clip will fit.
 - **Where it lives:** on the set, `set.media = [ref]`, one per set and at most 24 per workout. In
-  local mode only in `opengym-media/`. Paired, it goes up with the workout once it is saved,
+  local mode only in `gymbuddy-media/`. Paired, it goes up with the workout once it is saved,
   unless **Keep videos on this phone only** was on when it was filmed (the ref then says
   `local: true`): the sync never sends it, Settings counts it as kept on this phone, and other
   devices show "On the phone that filmed it". A sign-out still treats it as owed and keeps it
@@ -237,7 +237,7 @@ that.
   (strength training as soon as one exercise is not cardio; walking, running, stationary bike,
   elliptical or stair machine for a cardio-only workout on a catalogue machine; "other" otherwise).
   Each weigh-in as a weight record, in kilograms, at its own time: a day from before (one weigh-in,
-  no time) keeps the id `opengym-bw-<day>`, every other weigh-in is `opengym-bw-<day>-<id>`. Removing
+  no time) keeps the id `gymbuddy-bw-<day>`, every other weigh-in is `gymbuddy-bw-<day>-<id>`. Removing
   one weigh-in removes its record; removing a day removes all of them. A workout without a real start and end is left
   out rather than given made-up times. `src/lib/health-connect.js` works this out; its tests
   pin it.
@@ -247,24 +247,24 @@ that.
 - **Permissions.** The manifest declares `WRITE_EXERCISE`, `WRITE_WEIGHT` and, since v1.4.3,
   `READ_HEART_RATE` and `READ_WEIGHT` (see "Reading back" below), and since v1.4.5 `READ_BODY_FAT`,
   `READ_LEAN_BODY_MASS`, `READ_BONE_MASS`, `READ_BODY_WATER_MASS` (#1014) and `READ_BASAL_METABOLIC_RATE` for the body-composition
-  switch, shown under Body measurements and kept in `opengym-health.json` only (on the iPhone: body
+  switch, shown under Body measurements and kept in `gymbuddy-health.json` only (on the iPhone: body
   fat and lean body mass from Apple Health). Also since v1.4.5 `READ_SLEEP`, `READ_RESTING_HEART_RATE`,
   `READ_HEART_RATE_VARIABILITY` and `READ_STEPS` for the vitals switch (`readVitals`, lib/vitals.js:
-  the Daily form card in Stats and the check-in's sleep), kept in `opengym-health.json` only; on the
+  the Daily form card in Stats and the check-in's sleep), kept in `gymbuddy-health.json` only; on the
   iPhone sleep analysis, resting heart rate, HRV (SDNN) and step count from Apple Health. Each is
   asked for only when its switch is turned on, after an explanation in the app.
   No background permission.
-- **No duplicates.** Every record carries openGym's own id as its `clientRecordId`
-  (`opengym-w-<workout id>`, `opengym-bw-<day>`), so writing it again replaces it. An edited workout
+- **No duplicates.** Every record carries GYM Buddy's own id as its `clientRecordId`
+  (`gymbuddy-w-<workout id>`, `gymbuddy-bw-<day>`), so writing it again replaces it. An edited workout
   or weigh-in is written again; a deleted one is removed from Health Connect.
 - **This phone only.** Whether it is on, and a fingerprint of each record already written, live in
-  `opengym-health.json` in the app's data directory, never in the synced state: it does not travel
+  `gymbuddy-health.json` in the app's data directory, never in the synced state: it does not travel
   to a server, into a backup export, or to a second phone. It works the same in local mode and
   paired with a server, because the writing happens on the phone.
 - **When it writes:** after each save (finishing a workout, a weigh-in, an edit), when the app comes
   back to the foreground, and once at launch. While it is off, a save costs nothing: the file is
   read once at launch and kept in memory.
-- **Turning it off** asks whether to keep what openGym wrote in Health Connect, as the user's own
+- **Turning it off** asks whether to keep what GYM Buddy wrote in Health Connect, as the user's own
   data, or to remove exactly those records.
 - **Where it shows:** Android 14 and later have Health Connect built in. On Android 9–13 it is an
   app of its own, and the card offers its store page until it is installed. Below Android 9 (the
@@ -275,12 +275,12 @@ that.
   `tools:overrideLibrary` keeps the app at 24 (Android 7.0) and the plugin checks the version
   before touching it.
 - **Privacy link.** Health Connect's "why does this app ask?" link opens the app through the two
-  activity-aliases in the manifest; `MainActivity` then opens https://opengym.ch/privacy, the same
+  activity-aliases in the manifest; `MainActivity` then opens https://gymbuddy.ch/privacy, the same
   policy the Play listing names (Play requires that).
 
 Worth checking on a real device after changes here: turning it on shows Health Connect's own
 permission screen; a finished workout appears in Health Connect within a few seconds; deleting it
-in openGym removes it there; turning it off with "remove" leaves no openGym record behind.
+in GYM Buddy removes it there; turning it off with "remove" leaves no GYM Buddy record behind.
 
 #### Reading back: heart rate and weigh-ins (v1.4.3, #544, #127)
 
@@ -303,14 +303,14 @@ default, each independent of writing and of the other:
   permission), afterwards from the newest seen minus two days. `lib/health-read.js` `mergeWeighIns`
   keeps every sample with its time as a weigh-in of its day (#859, `lib/weigh-ins.js`), under an id
   made from the hub's own record id, so two phones reading the same sample add it once. It skips
-  openGym's own records (`clientRecordId` `opengym-*`, origin `ch.duartesantos.opengym*`), a sample
-  at a minute the day already has a weigh-in for (typed in, or read before), one removed in openGym
-  (the day's `gone`), and a whole day deleted in openGym after it was measured, and converts to lb
+  GYM Buddy's own records (`clientRecordId` `gymbuddy-*`, origin `ch.duartesantos.gymbuddy*`), a sample
+  at a minute the day already has a weigh-in for (typed in, or read before), one removed in GYM Buddy
+  (the day's `gone`), and a whole day deleted in GYM Buddy after it was measured, and converts to lb
   for an lb profile. Imported weigh-ins carry `src` and are never written back (`healthRecords`
   leaves them out); typed ones stand beside them, and the daily-value setting picks the day's number.
 - **Foreground only.** Reads run at launch, on resume and after saves, never in the background.
   No `READ_HEALTH_DATA_IN_BACKGROUND`, no `READ_HEALTH_DATA_HISTORY`; old workouts are not filled in.
-- **Device-local state** in `opengym-health.json`: `readHr`, `readWeight`, `wCursor`, `seen` (what
+- **Device-local state** in `gymbuddy-health.json`: `readHr`, `readWeight`, `wCursor`, `seen` (what
   was imported, per hub sample), `hrTried` (when each recent workout was last read), `readError`.
 - **iPhone:** `AppleHealthPlugin.swift` `readHeartRate` / `readWeights` through `HKSampleQuery`;
   the plain-value conversion is `WatchCore/Sources/WatchCore/HealthReadCore.swift` (compiled into
@@ -343,8 +343,8 @@ iPhone runs one, the same `HKWorkoutSession` + `HKLiveWorkoutBuilder` the Apple 
   only into sets without a reading, so merge and display are unchanged. The page may sleep in
   between; the sets are worked out when it wakes.
 - **Live readout:** a small "♥ 128" in the workout header while a reading is under a minute old.
-- **Apple Health:** finishing saves the live workout (`finishWorkout`, sync id `opengym-w-<id>`,
-  version 1, the workout's name as `OpenGymTitle`). `AppleHealthPlugin.saveSession` asks
+- **Apple Health:** finishing saves the live workout (`finishWorkout`, sync id `gymbuddy-w-<id>`,
+  version 1, the workout's name as `GymBuddyTitle`). `AppleHealthPlugin.saveSession` asks
   `PhoneWorkoutLedger` and skips its post-hoc write for it, as it does for the watch's copy (it waits
   up to 20 s for a save still in flight). Discarding drops it (`discardWorkout`).
 - **AirPods out:** readings stop, the session keeps going, they resume when the buds go back in.
@@ -404,12 +404,12 @@ and **Delete**.
   `ios/App/AnimationPacksDownloader` (a `StoreDownloaderExtension`), added and embedded by
   `ios/ci/add-asset-downloader.rb` (run once and commit the project; CI runs it until then), the
   Info.plist keys `BAAppGroupID`, `BAHasManagedAssetPacks`, `BAUsesAppleHosting`, and the App
-  Group `group.ch.opengym.app` on the app and the extension. `scripts/ios/finish-ipa.sh` signs the
+  Group `group.ch.gymbuddy.app` on the app and the extension. `scripts/ios/finish-ipa.sh` signs the
   extension with its own profile (`EXT_PROFILE`).
 - **Android:** in the `play` flavour the same interface goes through Play Asset Delivery (status,
   download with progress, Wi-Fi only with Play's own prompt for mobile data, remove) for the packs
   its `assets/anim-packs.json` lists, and serves their files to the page at
-  `https://localhost/_opengym_pack/<packId>/<drawing>.webp`, never a file path. Nothing downloads
+  `https://localhost/_gymbuddy_pack/<packId>/<drawing>.webp`, never a file path. Nothing downloads
   unasked there: at the first start on an unmetered network with the pack's size plus 1 GB free
   (the plugin's `network()`), a one-time sheet offers the quality Auto picks, with Later; a pick in
   Settings is a yes too (`lib/anim-packs.js` offerFor, needsConsent). The pack modules
@@ -418,9 +418,9 @@ and **Delete**.
   built-in animations: 180 px in the Standard APK, 240 px in Plus, 360 px in HD. Each APK's updater
   stays with its own kind (`pickApk` in `lib/update.js`, told by `VITE_APK_VARIANT`).
 
-App Store Connect, once: the App Group `group.ch.opengym.app`; the bundle id
-`ch.opengym.app.AnimationPacksDownloader` (an app extension); the App Groups capability on
-`ch.opengym.app` and on the extension, both with that group; an App Store provisioning profile
+App Store Connect, once: the App Group `group.ch.gymbuddy.app`; the bundle id
+`ch.gymbuddy.app.AnimationPacksDownloader` (an app extension); the App Groups capability on
+`ch.gymbuddy.app` and on the extension, both with that group; an App Store provisioning profile
 for each; then the ten packs uploaded as Apple-hosted background assets for the app.
 
 Worth checking on a device: picking 720 px starts a download that shows its progress; the
@@ -486,7 +486,7 @@ opens the Start screen (or the running workout).
   with `GymReminder.server` (`lib/gym-reminder.js` `pushGymServer`); Android keeps them encrypted
   with the app's Keystore key (`NudgeCheck.seal`), iOS in the Keychain (this device only).
 - **Locations stay on the phone.** The gyms live only in the native side's own storage: Android
-  `shared_prefs/opengym_gym_reminder.xml`, left out of cloud backup and device transfer
+  `shared_prefs/gymbuddy_gym_reminder.xml`, left out of cloud backup and device transfer
   (`res/xml/*_rules.xml`); iOS `Application Support/gym-reminder.json`, excluded from backups. The
   WebView's storage keeps only an on/off flag (it is part of phone backups), the synced profile
   and backup files never see any of it.
@@ -512,7 +512,7 @@ opens the Start screen (or the running workout).
   goes away with the check (Android holds a new foreground-service notification back for up to
   10 s, so a check that ends quickly may never show one). Catch: Android 12+ lets a background app start a foreground service
   only with an exemption, and a proximity alert is not one (checked on the emulator:
-  `ForegroundServiceStartNotAllowedException`). It works with openGym's battery use on
+  `ForegroundServiceStartNotAllowedException`). It works with GYM Buddy's battery use on
   **Unrestricted** (started directly) or with "Alarms & reminders" allowed (an exact alarm half a
   second later starts it); the gym page shows this as "Quick arrival check" and leads to the app's
   settings. Without either, the gym's own alert still fires on the system's schedule. Trade-offs
@@ -548,11 +548,11 @@ quiet; a black-holed server: posts after the 3 s bound; no server: posts).
 
 A routine (Plan → a routine → **Share with a friend**) or a past workout (History → the workout →
 Workout options → **Share with a friend**, sent as the routine Save as routine would make) goes out
-as `https://opengym.ch/r#<payload>` through the share sheet (`components/RoutineShare.jsx`,
+as `https://gymbuddy.ch/r#<payload>` through the share sheet (`components/RoutineShare.jsx`,
 `src/lib/routine-link.js`). The payload is `1.d.<base64url>`: link format 1, a plan file holding
-that one routine (same `opengym_plan` version, read by the same `parsePlan`/`mergePlan` as an
+that one routine (same `gymbuddy_plan` version, read by the same `parsePlan`/`mergePlan` as an
 imported file), deflate-raw through `CompressionStream` (`j` = plain JSON where there is none).
-It sits in the URL **fragment**, which browsers never send, so opengym.ch only serves the page. The
+It sits in the URL **fragment**, which browsers never send, so gymbuddy.ch only serves the page. The
 sender's weights ride along only with **Include my weights**, their name only with **Your name**
 (both off by default). Over 2000 characters the share falls back to a plan file of that routine.
 
@@ -562,19 +562,19 @@ created like a plan file's. A newer link format than the app reads asks for an u
 
 | Where | Link | |
 | --- | --- | --- |
-| Website | `https://opengym.ch/r#P` | `website/r/index.html` (served at /r/): the routine by name and sets, Open in openGym, Get the app, Open in the web app (your server or the demo) |
-| Android | same link | VIEW filter on `MainActivity` (https, opengym.ch, path `/r` and `/r/`, `autoVerify`), so it opens the app directly once opengym.ch serves `/.well-known/assetlinks.json` with the app's signing certificates (Play and sideload). Until then Android may show the page or ask |
-| App | `opengym://r#P` | the website's Open in openGym; the `opengym` scheme is already registered (CFBundleURLTypes, the VIEW filter for `opengym:`). Read through `@capacitor/app`'s `appUrlOpen` and `getLaunchUrl` (`useRoutineLinks`, waits until the app is set up) |
+| Website | `https://gymbuddy.ch/r#P` | `website/r/index.html` (served at /r/): the routine by name and sets, Open in GYM Buddy, Get the app, Open in the web app (your server or the demo) |
+| Android | same link | VIEW filter on `MainActivity` (https, gymbuddy.ch, path `/r` and `/r/`, `autoVerify`), so it opens the app directly once gymbuddy.ch serves `/.well-known/assetlinks.json` with the app's signing certificates (Play and sideload). Until then Android may show the page or ask |
+| App | `gymbuddy://r#P` | the website's Open in GYM Buddy; the `gymbuddy` scheme is already registered (CFBundleURLTypes, the VIEW filter for `gymbuddy:`). Read through `@capacitor/app`'s `appUrlOpen` and `getLaunchUrl` (`useRoutineLinks`, waits until the app is set up) |
 | Web app | `<server>/#/r/P` | read before the router sends the unknown route to /home, then the address goes back to `#/plan` |
 
 iPhone: without associated domains the https link opens the page in Safari, one more tap to the
-app. Adding `applinks:opengym.ch` (see the NFC notes below) would cover `/r*` too.
+app. Adding `applinks:gymbuddy.ch` (see the NFC notes below) would cover `/r*` too.
 
 ### Library routines and Plan → Scan a QR code (v1.4.5)
 
 A whole routine from the library (docs/ROUTINES_LIBRARY.md) opens the app like a Spotify link:
-`https://opengym.ch/routines/<slug>/`, tapped or scanned with the phone camera, starts openGym,
-which fetches `/routines/plans/<slug>.opengym-plan.json` natively (`nativeFetch`, so no CORS in the
+`https://gymbuddy.ch/routines/<slug>/`, tapped or scanned with the phone camera, starts GYM Buddy,
+which fetches `/routines/plans/<slug>.gymbuddy-plan.json` natively (`nativeFetch`, so no CORS in the
 apps), reads it with `parsePlan` and shows the Plan import sheet with **From <author>** (the plan
 file's `from`, or the index entry for older files). Offline, a missing routine or a broken file:
 a sheet with **Open in browser**, which opens `.../<slug>/index.html`, a path neither phone
@@ -584,15 +584,15 @@ claims, so it cannot bounce back into the app (`src/lib/library-link.js`,
 
 | Where | Claimed | |
 | --- | --- | --- |
-| iPhone | `website/.well-known/apple-app-site-association` | `/routines/*`, after excludes for `/routines/`, `index.html`, `submit/*`, `api/*`, `media/*`, `plans/*`, `assets/*`, `covers/*`, `*.json`, `*.xml` and `*/index.html` (first match wins). Must be served as `application/json` at `https://opengym.ch/.well-known/apple-app-site-association`; Apple's CDN caches it, so a change can take a day to reach phones |
+| iPhone | `website/.well-known/apple-app-site-association` | `/routines/*`, after excludes for `/routines/`, `index.html`, `submit/*`, `api/*`, `media/*`, `plans/*`, `assets/*`, `covers/*`, `*.json`, `*.xml` and `*/index.html` (first match wins). Must be served as `application/json` at `https://gymbuddy.ch/.well-known/apple-app-site-association`; Apple's CDN caches it, so a change can take a day to reach phones |
 | Android | `pathPattern="/routines/.*/"`, `autoVerify` | the glob's `.*` stops at the next `/`, so one segment plus the slash. An intent filter has no "except": `/routines/submit/` arrives in the app, which opens `/routines/submit/index.html` in the browser |
 
 **Plan → Scan a QR code** (`components/ScanCode.jsx`) reuses the gym check-in scanner: ML Kit in
 the Play/sideload and iPhone apps, `CameraScan.jsx` with jsQR (or the browser's
 `BarcodeDetector`) on the web and in the F-Droid build, which has no ML Kit (`webScanner()`).
-What it read goes where a tap would (`src/lib/scan-route.js`): `opengym.ch/r#…` to the routine
-preview, a library page to the import sheet, a sticker link (`opengym.ch/nfc?…`, `opengym://…`)
-to the sticker's action, anything else is shown back in a toast ("That's not an openGym code").
+What it read goes where a tap would (`src/lib/scan-route.js`): `gymbuddy.ch/r#…` to the routine
+preview, a library page to the import sheet, a sticker link (`gymbuddy.ch/nfc?…`, `gymbuddy://…`)
+to the sticker's action, anything else is shown back in a toast ("That's not an GYM Buddy code").
 `src/lib/app-links.test.js` matches the manifest's filters (a port of Android's simple glob) and
 the AASA components against the paths the app handles.
 
@@ -604,26 +604,26 @@ the link is under 110 bytes) with one NDEF URI record. Two kinds, chosen in the 
 
 | Sticker | Link | A tap |
 | --- | --- | --- |
-| Start | `https://opengym.ch/nfc?do=start` | starts today's planned session through the usual Start (weigh-in first, if on); a running workout opens instead, never a second one; nothing planned: the Start screen |
-| Check in | `https://opengym.ch/nfc?do=checkin&card=<id>` | the membership code screen (`#/checkin`) on that card; offered only when a code is saved |
-| Machine | `https://opengym.ch/nfc?ex=<exercise id>` | during a workout: jumps to the exercise (`active.cur`), or asks before adding it after the current one; outside: the exercise's details. An exercise the profile lacks: a short toast |
+| Start | `https://gymbuddy.ch/nfc?do=start` | starts today's planned session through the usual Start (weigh-in first, if on); a running workout opens instead, never a second one; nothing planned: the Start screen |
+| Check in | `https://gymbuddy.ch/nfc?do=checkin&card=<id>` | the membership code screen (`#/checkin`) on that card; offered only when a code is saved |
+| Machine | `https://gymbuddy.ch/nfc?ex=<exercise id>` | during a workout: jumps to the exercise (`active.cur`), or asks before adding it after the current one; outside: the exercise's details. An exercise the profile lacks: a short toast |
 
 The same tap within 4 s, or any tap within 1.2 s of the last, is dropped (`tagDebouncer`). A link
 that opens the app before it is set up (cold start, sign-in) waits until it is (`useNfcTagLinks`).
-`opengym://nfc?...`, `opengym://checkin`, `opengym://start` and `opengym://exercise/<id>` are read
+`gymbuddy://nfc?...`, `gymbuddy://checkin`, `gymbuddy://start` and `gymbuddy://exercise/<id>` are read
 too. Machine stickers come from an exercise's details → **Write NFC sticker for this exercise**.
 
 - **Why an https link:** that is what a phone reads with the app closed. Android routes it to the
-  app by the `NDEF_DISCOVERED` filter on `MainActivity` (scheme https, host opengym.ch, path
+  app by the `NDEF_DISCOVERED` filter on `MainActivity` (scheme https, host gymbuddy.ch, path
   `/nfc`), no App Links verification needed; `NfcTagsPlugin.java` passes it on as its `open`
   event (kept until the page listens). iOS background tag reading (iPhone XS and newer) only routes
   web links and universal links, never custom schemes. The app has **no associated domains yet**,
-  so on an iPhone the tap shows a banner that opens `opengym.ch/nfc` in Safari, and that page
-  (`website/nfc/index.html`, served at /nfc) hands the query to the app as `opengym://nfc?...` (CFBundleURLTypes in
-  Info.plist, delivered through `@capacitor/app`'s `appUrlOpen`). A phone without openGym lands on
+  so on an iPhone the tap shows a banner that opens `gymbuddy.ch/nfc` in Safari, and that page
+  (`website/nfc/index.html`, served at /nfc) hands the query to the app as `gymbuddy://nfc?...` (CFBundleURLTypes in
+  Info.plist, delivered through `@capacitor/app`'s `appUrlOpen`). A phone without GYM Buddy lands on
   the same page. To make it one tap on iPhone later: enable Associated Domains on the app id, add
-  `applinks:opengym.ch` to `App.entitlements`, and serve `/.well-known/apple-app-site-association`
-  for `/nfc*` on opengym.ch.
+  `applinks:gymbuddy.ch` to `App.entitlements`, and serve `/.well-known/apple-app-site-association`
+  for `/nfc*` on gymbuddy.ch.
 - **Writing, Android:** `NfcAdapter.enableReaderMode` while the sheet waits (so the system's tag
   dispatch stays out of it), `Ndef.writeNdefMessage`, or `NdefFormatable.format` for an
   unformatted sticker. `android.permission.NFC` (normal, no prompt) and
@@ -653,12 +653,12 @@ show up in Siri, Spotlight and the Shortcuts app with no setup:
 
 | Phrase | Intent | What happens |
 | --- | --- | --- |
-| "Start my workout in openGym" | `StartWorkoutIntent` (opens the app) | hands `opengym://start?today=1` to Capacitor like any link: today's plan through the widget's Start path (`lib/widget-links.js`, weigh-in step included), the running workout if there is one, Home on a rest day |
-| "Log my weight in openGym" | `LogWeightIntent` (stays closed) | asks for the number, in the profile's unit from the widget snapshot, 20 to 700 kg or 44 to 1500 lb; writes `{ id, w, unit, at, d }` to `voice.pendingWeighIns` in the App Group's defaults and says "Logged 78.2 kg" |
-| "What's my workout today in openGym" | `TodayWorkoutIntent` (stays closed) | answers from `widget.json` (the widget snapshot, `lib/widgets.js`): the running workout, today's plan, done, or the rest day and what's next |
-| "How's my streak in openGym" | `StreakIntent` (stays closed) | the week streak and whether this week counts yet, from the same snapshot |
+| "Start my workout in GYM Buddy" | `StartWorkoutIntent` (opens the app) | hands `gymbuddy://start?today=1` to Capacitor like any link: today's plan through the widget's Start path (`lib/widget-links.js`, weigh-in step included), the running workout if there is one, Home on a rest day |
+| "Log my weight in GYM Buddy" | `LogWeightIntent` (stays closed) | asks for the number, in the profile's unit from the widget snapshot, 20 to 700 kg or 44 to 1500 lb; writes `{ id, w, unit, at, d }` to `voice.pendingWeighIns` in the App Group's defaults and says "Logged 78.2 kg" |
+| "What's my workout today in GYM Buddy" | `TodayWorkoutIntent` (stays closed) | answers from `widget.json` (the widget snapshot, `lib/widgets.js`): the running workout, today's plan, done, or the rest day and what's next |
+| "How's my streak in GYM Buddy" | `StreakIntent` (stays closed) | the week streak and whether this week counts yet, from the same snapshot |
 
-Before the app has written a snapshot (never opened) the closed ones say "Open openGym once, then
+Before the app has written a snapshot (never opened) the closed ones say "Open GYM Buddy once, then
 ask me again" and log nothing: without the profile's unit a number means nothing.
 
 The page brings pending weigh-ins in when it starts and whenever it comes back to the foreground,
@@ -678,14 +678,14 @@ same phrases appear in Settings from `src/locales`; `src/lib/voice-strings.test.
 Swift source, the generated files and the page's packs in step.
 
 **Android** (`res/xml/shortcuts.xml`, labels in `values*/voice_strings.xml` from the same script).
-Touch and hold the icon: **Start workout** (`opengym://start?today=1`), **Log weight**
-(`opengym://weigh-in`) and **Stats** (`opengym://stats`), plain VIEW intents the app already
+Touch and hold the icon: **Start workout** (`gymbuddy://start?today=1`), **Log weight**
+(`gymbuddy://weigh-in`) and **Stats** (`gymbuddy://stats`), plain VIEW intents the app already
 follows. The file is declared with `android.app.shortcuts` on every launcher alias in
 `AndroidManifest.xml` (the launcher reads the enabled one); **a new app icon alias needs that
 meta-data too** (the test checks). The same file holds Google Assistant App Actions:
 `actions.intent.START_EXERCISE` opens today's plan, and the custom
 `custom.actions.intent.LOG_WEIGHT` (English query patterns in `values/voice_actions.xml`) opens
-`opengym://weigh-in?w=<number>`: the weigh-in sheet with the number in, saved by a tap. Assistant
+`gymbuddy://weigh-in?w=<number>`: the weigh-in sheet with the number in, saved by a tap. Assistant
 never logs anything by itself. App Actions only reach users after the app is published on Play
 with them; until then the long-press shortcuts are what Android users get.
 
@@ -745,19 +745,19 @@ needs its activity-alias in `AndroidManifest.xml`, its name in `AppIcons.java` a
 
 ## Distributing your own build
 
-The signed APK stays the way to get openGym on Android without a store, and it updates itself.
+The signed APK stays the way to get GYM Buddy on Android without a store, and it updates itself.
 The [App Store app](https://apps.apple.com/app/id6822275400) and the
 Google Play build come from the same code; how they are built and uploaded is in
 [APP_STORES.md](APP_STORES.md).
 
 ### Android: sideload the APK
 
-Every release has three signed APKs on [the GitHub release](https://github.com/DuarteSantos8/openGym/releases),
-each with its `.sha256` beside it, and [opengym.ch](https://opengym.ch) links to all three:
+Every release has three signed APKs on [the GitHub release](https://github.com/DuarteSantos8/GYM Buddy/releases),
+each with its `.sha256` beside it, and [gymbuddy.ch](https://gymbuddy.ch) links to all three:
 
-- **`openGym-X.Y.Z.apk` (Standard):** the exercise animations built in at 180 px, about 315 MB.
-- **`openGym-Plus-X.Y.Z.apk` (Plus):** the same app with 240 px animations, about 424 MB.
-- **`openGym-HD-X.Y.Z.apk` (HD):** the same app with 360 px animations, about 760 MB.
+- **`GYM Buddy-X.Y.Z.apk` (Standard):** the exercise animations built in at 180 px, about 315 MB.
+- **`GYM Buddy-Plus-X.Y.Z.apk` (Plus):** the same app with 240 px animations, about 424 MB.
+- **`GYM Buddy-HD-X.Y.Z.apk` (HD):** the same app with 360 px animations, about 760 MB.
 
 Same app id, same key: install one over another and the data stays. The in-app updater keeps
 each on its own kind. Android asks you to allow installs from the browser the first time; that's
@@ -783,11 +783,11 @@ cd android && ./gradlew assembleSideloadRelease    # → app/build/outputs/apk/s
 
 # one-time: create a keystore. KEEP IT: updates must be signed with the same key,
 # or Android refuses to install the new version over the old one.
-keytool -genkeypair -keystore my.keystore -alias opengym -keyalg RSA -validity 10950
+keytool -genkeypair -keystore my.keystore -alias gymbuddy -keyalg RSA -validity 10950
 
 # align + sign (zipalign/apksigner ship with the Android SDK build-tools)
 zipalign -f -p 4 app-sideload-release-unsigned.apk aligned.apk
-apksigner sign --ks my.keystore --ks-key-alias opengym --out openGym.apk aligned.apk
+apksigner sign --ks my.keystore --ks-key-alias gymbuddy --out GYM Buddy.apk aligned.apk
 ```
 
 ### iPhone: build it yourself
@@ -813,7 +813,7 @@ web assets; `scripts/ios/finish-ipa.sh` adds them and signs it on the release ma
   `build.gradle` disagree. The full release list is in [APP_STORES.md](APP_STORES.md).
 - Don't push a version tag you don't mean to release: the published release is what builds the
   images (`docker-publish.yml`).
-- **License:** openGym is AGPL-3.0, which by itself sits badly with app-store terms of
+- **License:** GYM Buddy is AGPL-3.0, which by itself sits badly with app-store terms of
   service. `NOTICE.md` carries an app-store exception (an additional permission under
   AGPL §7) granted by the copyright holder, and the [CLA](../CLA.md) covers contributions.
 - The app requests notification permission when the workout-day reminder is switched on,

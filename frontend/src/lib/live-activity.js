@@ -1,6 +1,6 @@
 // The running workout on the iPhone's Lock Screen and in the Dynamic Island (a Live Activity), the
 // page's side (native: ios/App/App/LiveActivityPlugin.swift and WorkoutActivity.swift, the views in
-// ios/App/OpenGymWidgets). An Apple Watch shows the same activity in its Smart Stack.
+// ios/App/GymBuddyWidgets). An Apple Watch shows the same activity in its Smart Stack.
 //
 // Page → activity: while a workout runs, its state as the Lock Screen shows it (the set to do now
 // and the few after it, the rest's end, how far along the session is) whenever that changes. The
@@ -346,7 +346,7 @@ export function buildLiveActivity (S, timer = null, hold = {}, ctx = {}) {
         nextExercise: t('Next exercise'),
         skipRest: t('Skip rest'),
         // Sets are left, but the activity ran past the ones it carries (many taps, page asleep).
-        openApp: t('Open openGym for the next set'),
+        openApp: t('Open GYM Buddy for the next set'),
         hold: t('Hold'),
         getReady: t('Get ready'),
         stopAuto: t('Stop auto'),

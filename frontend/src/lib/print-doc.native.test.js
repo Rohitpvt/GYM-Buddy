@@ -27,7 +27,7 @@ describe('printing on the phone (#991)', () => {
     expect(h.toasts).toEqual([])
   })
   it('the plugin catches what used to crash the app', () => {
-    const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/opengym/PrintPlugin.java', import.meta.url), 'utf8')
+    const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/gymbuddy/PrintPlugin.java', import.meta.url), 'utf8')
     expect(java).toMatch(/catch \(ActivityNotFoundException e\)[\s\S]*?"no-service"/)
     expect(java).toMatch(/runOnUiThread\(\(\) -> \{[\s\S]*?try \{[\s\S]*?new WebView\(ctx\)[\s\S]*?catch \(Throwable e\)/)
   })

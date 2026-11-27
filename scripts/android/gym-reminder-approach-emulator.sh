@@ -22,8 +22,8 @@ set -uo pipefail
 APK=${1:?debug apk}
 ADB=${ADB:-/opt/android-sdk/platform-tools/adb}
 CDP=${CDP:-/root/homelab/scripts/android-repro/cdp.mjs}
-PKG=${PKG:-ch.duartesantos.opengym.test}
-PREFS=shared_prefs/opengym_gym_reminder.xml
+PKG=${PKG:-ch.duartesantos.gymbuddy.test}
+PREFS=shared_prefs/gymbuddy_gym_reminder.xml
 PORT=${PORT:-47731}
 EXEMPT=${EXEMPT:-battery}
 LAT=47.3769; LNG=8.5417          # the gym (Zurich), radius 100 m, approach zone 800 m
@@ -39,7 +39,7 @@ count() { $ADB shell dumpsys notification --noredact | grep -c "android.title=St
 checking() { $ADB shell dumpsys notification --noredact | grep -c "android.title=String (Checking if you made it"; }
 note() { $ADB exec-out run-as "$PKG" cat "$PREFS" 2>/dev/null | grep -o '<string name="lastNote">[^<]*' | sed 's/.*>//'; }
 foreground() {
-  $ADB shell am start -n "$PKG/ch.duartesantos.opengym.MainActivity" >/dev/null 2>&1
+  $ADB shell am start -n "$PKG/ch.duartesantos.gymbuddy.MainActivity" >/dev/null 2>&1
   for i in $(seq 1 60); do
     $ADB shell cat /proc/net/unix | grep -q "webview_devtools_remote_$($ADB shell pidof $PKG | tr -d '\r')" && break
     sleep 3
@@ -125,7 +125,7 @@ waited=$(( $(date +%s) - t0 ))
 [ $started -eq 1 ] && echo "   Android noticed the approach zone after ${waited} s in it: $(note)" || { echo "   approach zone never noticed in ${waited} s"; FAIL=1; }
 echo "   silent check notification showing: $(checking)"
 $ADB shell dumpsys location | grep -A1 -i "$PKG" | grep -i "interval\|Request\|@" | head -3 | sed 's/^ */   location request: /'
-[ "$EXEMPT" = none ] && { echo "   (no exemption: refused as expected)"; [ $started -eq 0 ] && FAIL=0; $ADB logcat -d -s OpenGymGym | tail -3 | sed 's/^/   log: /'; exit $FAIL; }
+[ "$EXEMPT" = none ] && { echo "   (no exemption: refused as expected)"; [ $started -eq 0 ] && FAIL=0; $ADB logcat -d -s GymBuddyGym | tail -3 | sed 's/^/   log: /'; exit $FAIL; }
 if [ $started -eq 1 ]; then
   lat=$RING_LAT; tin=0; t1=$(date +%s); posted=0
   for i in $(seq 1 200); do                 # 7 m every 5 s = 1.4 m/s, 650 m in ~7.7 min
@@ -139,10 +139,10 @@ if [ $started -eq 1 ]; then
   if [ $posted -eq 1 ]; then echo "   NOTIFIED $(( $(date +%s) - tin )) s after crossing into the gym"; else echo "   no notification"; FAIL=1; fi
   sleep 3
   echo "   last note: $(note)"
-  np=$($ADB logcat -d -s OpenGymGym | grep -c ': posted'); echo "   posted: $np time(s) (the gym's own alert and the check can both see the arrival)"; [ "$np" -eq 1 ] || FAIL=1
+  np=$($ADB logcat -d -s GymBuddyGym | grep -c ': posted'); echo "   posted: $np time(s) (the gym's own alert and the check can both see the arrival)"; [ "$np" -eq 1 ] || FAIL=1
   echo "   silent check notification still showing: $(checking)"; [ "$(checking)" -eq 0 ] || FAIL=1
 fi
-$ADB logcat -d -s OpenGymGym | tail -8 | sed 's/^/   log: /'
+$ADB logcat -d -s GymBuddyGym | tail -8 | sed 's/^/   log: /'
 
 echo "== 2.-4. server check (throttle lowered to 15 s for these only)"
 $ADB shell settings put global location_background_throttle_proximity_alert_interval_ms 15000
@@ -155,7 +155,7 @@ grep -q "Bearer emu" "$TMP/server.log" && echo "   server saw the pairing header
 echo "-- 3. the server never answers (black-holed address): posts after the 3 s bound"
 echo false > "$TMP/done"; new_day "http://10.255.255.1:9"; walk_in_fast
 n=$(count); echo "   notifications: $n"; [ "$n" -ge 1 ] || FAIL=1
-$ADB logcat -d -s OpenGymGym | grep "server check" | tail -1 | sed 's/^/   log: /'
+$ADB logcat -d -s GymBuddyGym | grep "server check" | tail -1 | sed 's/^/   log: /'
 
 echo "-- 4. no server (local only): posts"
 new_day ''; walk_in_fast

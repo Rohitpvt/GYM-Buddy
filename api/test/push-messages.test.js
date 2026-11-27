@@ -9,7 +9,7 @@ test('localizes every server-generated notification in pt-BR', () => {
     tag: 'rest-timer',
   });
   assert.deepEqual(testPush('pt-BR'), {
-    title: 'openGym',
+    title: 'GYM Buddy',
     body: 'Notificação de teste ✅ É assim que os alertas aparecem.',
     tag: 'test',
   });
@@ -27,7 +27,7 @@ test('localizes every server-generated notification in id', () => {
     tag: 'rest-timer',
   });
   assert.deepEqual(testPush('id'), {
-    title: 'openGym',
+    title: 'GYM Buddy',
     body: 'Notifikasi uji coba ✅ Begini tampilan notifikasinya.',
     tag: 'test',
   });

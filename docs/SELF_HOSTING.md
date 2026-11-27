@@ -1,6 +1,6 @@
-# Self-hosting openGym
+# Self-hosting GYM Buddy
 
-openGym is two small containers (a web server and an API) plus a folder of your data.
+GYM Buddy is two small containers (a web server and an API) plus a folder of your data.
 This guide takes you from "just cloned it" to "using it from my phone over the internet".
 
 **On this page**
@@ -20,16 +20,16 @@ This guide takes you from "just cloned it" to "using it from my phone over the i
 HTTPS on a LAN without a public domain has [its own guide](SELF_HOSTING_HTTPS.md), and so do
 [a Mac at home with Tailscale](SELF_HOSTING_MAC.md) and [Kubernetes](SELF_HOSTING_KUBERNETES.md). Short answers to common questions are in the [FAQ](FAQ.md).
 
-> **Rather not run a server?** [ElfHosted](https://store.elfhosted.com/product/opengym/?utm_source=opengym&utm_medium=docs&utm_campaign=opengym-sponsor) runs your own private openGym for you, and your data stays yours. There's no Docker or HTTPS to set up, the AI coach is included with no API key needed, and updates and daily backups are handled for you. Try it with a $1, 7-day trial.
-> ElfHosted sponsors openGym. Everything below is for running it yourself, which stays free and fully supported.
+> **Rather not run a server?** [ElfHosted](https://store.elfhosted.com/product/gymbuddy/?utm_source=gymbuddy&utm_medium=docs&utm_campaign=gymbuddy-sponsor) runs your own private GYM Buddy for you, and your data stays yours. There's no Docker or HTTPS to set up, the AI coach is included with no API key needed, and updates and daily backups are handled for you. Try it with a $1, 7-day trial.
+> ElfHosted sponsors GYM Buddy. Everything below is for running it yourself, which stays free and fully supported.
 
 ## 1. Run it locally (5 minutes)
 
 Requirements: [Docker](https://docs.docker.com/get-docker/) with the Compose plugin.
 
 ```bash
-git clone https://github.com/DuarteSantos8/openGym   # or https://gitlab.com/DuarteSantos8/opengym — same repo
-cd openGym
+git clone https://github.com/DuarteSantos8/GYM Buddy   # or https://gitlab.com/DuarteSantos8/gymbuddy — same repo
+cd GYM Buddy
 cp .env.example .env
 docker compose pull   # prebuilt images from ghcr.io (amd64 + arm64; the same images are on GitLab's registry) — or skip and build from source
 docker compose up -d
@@ -51,14 +51,14 @@ Logs: `docker compose logs -f`. Stop: `docker compose down`.
 
 ## 2. Understand the passkey requirement (important)
 
-openGym signs you in with **passkeys** (WebAuthn). Browsers enforce two rules:
+GYM Buddy signs you in with **passkeys** (WebAuthn). Browsers enforce two rules:
 
 1. Passkeys are bound to an exact **hostname** (`RP_ID`).
 2. They only work over **HTTPS** — with one exception: `http://localhost`.
 
 So `http://localhost:8080` works on the machine running Docker, but **another device (your
 phone) cannot use `http://<your-LAN-ip>:8080`** — that's neither localhost nor HTTPS, so the
-passkey prompt won't appear. To use openGym from your phone you need a real HTTPS hostname.
+passkey prompt won't appear. To use GYM Buddy from your phone you need a real HTTPS hostname.
 
 (You can still open it over LAN in **guest mode**, which stores data only in that browser — or
 turn on **password sign-in**, see [§4](#password-sign-in-optional).)
@@ -90,7 +90,7 @@ you're poking at the API directly:
 
 > Want HTTPS **without** exposing anything to the internet — a valid certificate on a LAN-only address? See [SELF_HOSTING_HTTPS.md](./SELF_HOSTING_HTTPS.md) (wildcard cert via a DNS challenge, Caddy in front).
 
-Put openGym behind something that terminates TLS for a hostname you control, then point it at
+Put GYM Buddy behind something that terminates TLS for a hostname you control, then point it at
 the `web` container. Pick whichever you already run:
 
 ### Option A — Cloudflare Tunnel (no open ports)
@@ -109,7 +109,7 @@ gym.example.com {
 ### Option C — Traefik / nginx / Nginx Proxy Manager
 
 Route `gym.example.com` (HTTPS) → `web:80` (or `<docker-host>:8080`). Any reverse proxy works —
-openGym only needs the browser to reach it over `https://gym.example.com`. If that proxy caps
+GYM Buddy only needs the browser to reach it over `https://gym.example.com`. If that proxy caps
 request bodies (nginx does, at 1 MiB by default), allow at least 5 MiB on `/api/` — the app syncs
 its whole history in one PUT; the bundled web image already allows 5 MiB, matching the API. The
 photos and videos people attach to their own exercises need more room and more time on
@@ -136,8 +136,8 @@ certificate. No domain to buy, no open ports, and nothing reachable from the int
    `ORIGIN=https://myhost.tail1234.ts.net`). Since Tailscale is the only way in, you can also set
    `WEB_PORT=127.0.0.1:8080` so the container isn't reachable from the rest of your LAN.
 
-Phones need the Tailscale app connected to open openGym. The address comes from the machine's
-name in your tailnet, so renaming the host or moving openGym to another machine changes it, and
+Phones need the Tailscale app connected to open GYM Buddy. The address comes from the machine's
+name in your tailnet, so renaming the host or moving GYM Buddy to another machine changes it, and
 with it `RP_ID` (see the note on passkeys below).
 
 Then set your domain in `.env` and restart:
@@ -147,7 +147,7 @@ Then set your domain in `.env` and restart:
 RP_ID=gym.example.com
 ORIGIN=https://gym.example.com
 WEB_PORT=8080
-RP_NAME=openGym
+RP_NAME=GYM Buddy
 ```
 
 ```bash
@@ -166,23 +166,23 @@ The browser app is served from your domain, so it never makes a cross-origin req
 [phone app](MOBILE.md#connecting-the-app-to-your-own-server) does: its WebView runs at
 `https://localhost` (Android) or `capacitor://localhost` (iOS), and the browser engine asks your
 server first (a CORS preflight, `OPTIONS`) before every request with a JSON body or a token.
-**openGym answers that preflight itself**: it allows the requesting origin, the methods
+**GYM Buddy answers that preflight itself**: it allows the requesting origin, the methods
 `GET, POST, PUT, DELETE, OPTIONS` and the headers `Content-Type, Authorization` — so the proxy only
 has to pass it through unchanged.
 
-Don't put a CORS middleware on the openGym route. A Traefik `headers` middleware with
+Don't put a CORS middleware on the GYM Buddy route. A Traefik `headers` middleware with
 `accessControlAllowOriginList` (or nginx `add_header Access-Control-*` with an `if
 ($request_method = OPTIONS) { return 204; }`) answers the preflight on its own and never forwards
 it; when the app's origin is not on its list, the phone refuses to send the real request and
-pairing fails while the openGym containers log nothing. In Traefik's access log the preflight then
+pairing fails while the GYM Buddy containers log nothing. In Traefik's access log the preflight then
 looks like this:
 
 ```
-"OPTIONS /api/pair/redeem HTTP/2.0" 200 0 "https://localhost/" "Mozilla/5.0 (Linux; Android 10; K; wv) ..." 16011 "websecure-opengym_rtr@file" "-" 0ms
+"OPTIONS /api/pair/redeem HTTP/2.0" 200 0 "https://localhost/" "Mozilla/5.0 (Linux; Android 10; K; wv) ..." 16011 "websecure-gymbuddy_rtr@file" "-" 0ms
 ```
 
 The signature is status `200` with backend `"-"` and `0ms`: the router matched, but no service
-was asked and no time was spent. When openGym answers it, you see `204`, the openGym service
+was asked and no time was spent. When GYM Buddy answers it, you see `204`, the GYM Buddy service
 name and a few milliseconds. If the middleware has to stay (it is shared with other routes), add
 `https://localhost` and `capacitor://localhost` to the allowed origins, the methods and headers
 above to its lists, and don't set allow-credentials (the app authenticates with a bearer token,
@@ -190,17 +190,17 @@ never a cookie).
 
 The same thing breaks in other shapes:
 
-- **A second `Access-Control-Allow-Origin`.** openGym already sends one. A proxy that adds its
+- **A second `Access-Control-Allow-Origin`.** GYM Buddy already sends one. A proxy that adds its
   own (Nginx Proxy Manager's "Advanced" tab or a custom location with `add_header
   Access-Control-Allow-Origin ...`, a Caddy `header` line, a Traefik middleware) makes it two,
   and the browser engine refuses a response with two, even when both say the same origin.
   Remove the proxy's copy.
 - **A rewritten or stripped header.** A proxy that sets the header to a fixed origin (your
   domain, or `*` together with credentials) or drops the `Access-Control-*` headers from
-  openGym's answer refuses the app just the same. Pass them through untouched.
+  GYM Buddy's answer refuses the app just the same. Pass them through untouched.
 - **SSO or forward-auth in front of `/api/`.** Authelia, Authentik, oauth2-proxy, Cloudflare
   Access or basic auth answer the app with a redirect to a login page or a `401`, and the
-  preflight never carries cookies, so it can't log in. openGym has its own sign-in (passkeys,
+  preflight never carries cookies, so it can't log in. GYM Buddy has its own sign-in (passkeys,
   passwords and the app's bearer token), so exclude `/api/` from proxy auth. Keep the auth on the
   rest of the site if you like; the phone app only talks to `/api/`.
 
@@ -219,7 +219,7 @@ https://localhost` line. A `200` with no CORS headers, a `30x` or `401`, an HTML
 
 The app tells these cases apart since v1.3.10: when the server is reachable but the request is
 refused, pairing says so instead of "Failed to fetch", and when a login page or proxy rule
-answered in openGym's place, it says that too. Since v1.3.11 the Android app also pairs with a
+answered in GYM Buddy's place, it says that too. Since v1.3.11 the Android app also pairs with a
 plain `http://` address on your LAN (type the `http://`; #428). Sign in on the web with a password
 to make the code, since passkeys need https. Over http the code and the app's token cross your
 network unencrypted, so keep it to a network you trust.
@@ -283,7 +283,7 @@ The sign-in and create-profile screens open in that language, and so does every 
 has never picked one in **Settings → Units & language → Language**. Anyone's own choice there always wins, and
 profiles that existed before this setting keep the language they have — the app cannot tell an
 old profile that chose English from one that never looked, so it leaves them alone. Without
-`DEFAULT_LANG`, a new visitor starts in their browser's language when openGym has it, else
+`DEFAULT_LANG`, a new visitor starts in their browser's language when GYM Buddy has it, else
 English. A code the app has no translation for is ignored. The phone app in local mode has no
 server to ask and is unaffected.
 
@@ -382,7 +382,7 @@ dashboard marks every profile that has a password.
 **Signing in with an e-mail.** Settings → Account also gets a **Sign-in e-mail** row, right under
 the password, and **Create new profile** with a password has an optional e-mail field. Whoever
 adds an address can type it at **Sign in with password** instead of their profile name (case and
-spaces do not matter). openGym has no mail server and **never sends anything** to it: there is no
+spaces do not matter). GYM Buddy has no mail server and **never sends anything** to it: there is no
 verification mail and no reset mail — a forgotten password is still reset with the admin's code
 below, which can be redeemed with the name or the e-mail. So the address is not proven to belong
 to anyone; it is only a second name that points at the account, and the password still opens it.
@@ -479,19 +479,19 @@ from Settings → Account → "Pair the mobile app", as with a passkey.
 ### Sign in with your identity provider (OIDC, optional)
 
 Already running Authentik, Authelia, Keycloak, voidAuth or Pocket ID for the rest of your
-homelab? openGym can sign people in through it, next to passkeys (not instead of them). Off
+homelab? GYM Buddy can sign people in through it, next to passkeys (not instead of them). Off
 until you set an issuer and a client:
 
 ```bash
-OIDC_ISSUER=https://auth.example.com/application/o/opengym   # whatever the provider calls its issuer
-OIDC_CLIENT_ID=opengym
+OIDC_ISSUER=https://auth.example.com/application/o/gymbuddy   # whatever the provider calls its issuer
+OIDC_CLIENT_ID=gymbuddy
 OIDC_CLIENT_SECRET=...            # leave out for a public client (PKCE only)
 OIDC_LABEL=Authentik              # the name on the button: "Sign in with Authentik"
 ```
 
 At the provider, make a client with the **authorization code** flow and register exactly one
 redirect URI: `<ORIGIN>/api/oidc/callback`, e.g. `https://gym.example.com/api/oidc/callback`
-(on a subpath install, set `OIDC_REDIRECT_URI` to the full callback address). openGym reads
+(on a subpath install, set `OIDC_REDIRECT_URI` to the full callback address). GYM Buddy reads
 `<OIDC_ISSUER>/.well-known/openid-configuration` at the first sign-in and every hour after, so
 the issuer you set must be the one that document names.
 
@@ -502,7 +502,7 @@ What it does:
   passkey sign-up: the very first profile on an empty instance becomes its admin and owner.
 - The phone app finds the button on its "Connect to my server" sheet as soon as the address is
   typed. It opens the provider in the system browser (Safari's sign-in sheet on iPhone, a Custom Tab
-  on Android) and comes back on `opengym://oidc`. Nothing to register for that: the app's way back
+  on Android) and comes back on `gymbuddy://oidc`. Nothing to register for that: the app's way back
   is a one-time code the server hands out itself, and it only works with a secret that never
   leaves the phone.
 - A passkey profile can link the provider in Settings → Account → **Sign in with {label}**
@@ -514,12 +514,12 @@ What it does:
   how many signing keys it loaded, and the last error. **Check now** asks again without a restart.
 
 **Who gets in.** With no group settings, anyone your provider signs in gets a profile. To let
-in only a group (the "being in the openGym group is the invite" setup):
+in only a group (the "being in the GYM Buddy group is the invite" setup):
 
 ```bash
 OIDC_SCOPES=openid profile email groups     # add whatever scope makes your provider send groups
 OIDC_GROUPS_CLAIM=groups                    # the claim name; a dotted path works (realm_access.roles)
-OIDC_ALLOWED_GROUPS=opengym                 # comma separated; one of them is enough
+OIDC_ALLOWED_GROUPS=gymbuddy                 # comma separated; one of them is enough
 ```
 
 Groups are read from the ID token, or from userinfo when the ID token has none. Someone taken out of
@@ -527,12 +527,12 @@ the group is refused at their next provider sign-in, and every session their pro
 ends right then. With `INVITE_ONLY=1` and no groups set, provider sign-in only works for profiles
 that already exist (linked in Settings); with groups set, the group is the invite.
 
-**Roles from groups.** `OIDC_ROLE_MAP` maps groups onto openGym roles, `role=group` pairs, comma
+**Roles from groups.** `OIDC_ROLE_MAP` maps groups onto GYM Buddy roles, `role=group` pairs, comma
 separated. `access` lets a group in, `admin` makes its members admins, `trainer` free trainers,
 and with `TRAINERS=on` a studio role names its gym id:
 
 ```bash
-OIDC_ROLE_MAP="access=opengym, admin=opengym-admins, trainer=pt-freelance, lead@g_x1=fitbox-leads, trainer@g_x1=fitbox-staff, member@g_x1=fitbox"
+OIDC_ROLE_MAP="access=gymbuddy, admin=gymbuddy-admins, trainer=pt-freelance, lead@g_x1=fitbox-leads, trainer@g_x1=fitbox-staff, member@g_x1=fitbox"
 ```
 
 A role the map gave is taken away again when the group goes; a role an admin gave by hand never is,
@@ -572,21 +572,21 @@ whatever carries groups.
 
 **Authentik.** Applications → Create with provider → OAuth2/OpenID Provider. Client type
 confidential, redirect URI as above, signing key set (any certificate; without one Authentik signs
-with HS256, which openGym refuses). The default `profile` scope mapping sends `groups`.
+with HS256, which GYM Buddy refuses). The default `profile` scope mapping sends `groups`.
 
 ```bash
-OIDC_ISSUER=https://authentik.example.com/application/o/opengym/
+OIDC_ISSUER=https://authentik.example.com/application/o/gymbuddy/
 OIDC_CLIENT_ID=<client id>
 OIDC_CLIENT_SECRET=<client secret>
 OIDC_LABEL=Authentik
-OIDC_ALLOWED_GROUPS=opengym
+OIDC_ALLOWED_GROUPS=gymbuddy
 ```
 
 **Authelia.** In `configuration.yml`, under `identity_providers.oidc.clients`:
 
 ```yaml
-- client_id: opengym
-  client_name: openGym
+- client_id: gymbuddy
+  client_name: GYM Buddy
   client_secret: '$pbkdf2-sha512$...'   # authelia crypto hash generate
   authorization_policy: one_factor
   require_pkce: true
@@ -598,14 +598,14 @@ OIDC_ALLOWED_GROUPS=opengym
 
 ```bash
 OIDC_ISSUER=https://auth.example.com
-OIDC_CLIENT_ID=opengym
+OIDC_CLIENT_ID=gymbuddy
 OIDC_CLIENT_SECRET=<the secret before hashing>
 OIDC_SCOPES=openid profile email groups
 OIDC_LABEL=Authelia
-OIDC_ALLOWED_GROUPS=opengym
+OIDC_ALLOWED_GROUPS=gymbuddy
 ```
 
-Authelia sends groups from userinfo, which openGym reads by itself.
+Authelia sends groups from userinfo, which GYM Buddy reads by itself.
 
 **Keycloak.** Clients → Create client, OpenID Connect, client authentication on, standard flow
 on, valid redirect URI as above, Advanced → PKCE method S256. For groups add a mapper (Client
@@ -614,10 +614,10 @@ group path off), or use realm roles:
 
 ```bash
 OIDC_ISSUER=https://keycloak.example.com/realms/home
-OIDC_CLIENT_ID=opengym
+OIDC_CLIENT_ID=gymbuddy
 OIDC_CLIENT_SECRET=<credentials tab>
 OIDC_LABEL=Keycloak
-OIDC_ALLOWED_GROUPS=opengym          # with the group mapper
+OIDC_ALLOWED_GROUPS=gymbuddy          # with the group mapper
 # or: OIDC_GROUPS_CLAIM=realm_access.roles and a realm role
 OIDC_LOGOUT=1                        # Keycloak has an end_session_endpoint
 ```
@@ -628,11 +628,11 @@ from the discovery address voidAuth shows for the app (the part before `/.well-k
 
 ```bash
 OIDC_ISSUER=https://voidauth.example.com/oidc
-OIDC_CLIENT_ID=opengym
+OIDC_CLIENT_ID=gymbuddy
 OIDC_CLIENT_SECRET=<client secret>
 OIDC_SCOPES=openid profile email groups
 OIDC_LABEL=voidAuth
-OIDC_ALLOWED_GROUPS=opengym
+OIDC_ALLOWED_GROUPS=gymbuddy
 ```
 
 **Pocket ID.** OIDC Clients → Add, callback URL as above. Pocket ID clients can be public (PKCE
@@ -644,7 +644,7 @@ OIDC_ISSUER=https://id.example.com
 OIDC_CLIENT_ID=<client id>
 OIDC_SCOPES=openid profile email groups
 OIDC_LABEL=Pocket ID
-OIDC_ALLOWED_GROUPS=opengym
+OIDC_ALLOWED_GROUPS=gymbuddy
 ```
 
 **If it does not work.** Admin → Identity provider says whether the discovery document and the
@@ -661,7 +661,7 @@ the start, often a redirect URI pointing at another host name than the one you o
 Running Kubernetes? Example manifests (Deployment, PVCs, Service, Gateway API route) are in
 `kubernetes/`, described in [SELF_HOSTING_KUBERNETES.md](SELF_HOSTING_KUBERNETES.md).
 
-The defaults assume openGym is the only thing here: a service called `api` on port 3000, and nginx
+The defaults assume GYM Buddy is the only thing here: a service called `api` on port 3000, and nginx
 on port 80 inside its container. If you are merging this into a compose file that already has an
 `api`, or you put the web container behind your own reverse proxy on a different port, four
 settings in `.env` move those without editing any config file:
@@ -672,7 +672,7 @@ NGINX_PORT=80              # port the web container listens on, inside the conta
 BACKEND=api                # name of the API service that /api is proxied to
 PORT=3000                  # port the API listens on; web proxies to the same value
 RESOLVER=127.0.0.11        # DNS nginx resolves BACKEND with — Docker's, unless you are not on Docker
-BASE_PATH=                 # subpath openGym is served under, e.g. /gym — see below; empty = site root
+BASE_PATH=                 # subpath GYM Buddy is served under, e.g. /gym — see below; empty = site root
 SESSION_DAYS=90            # how long a sign-in lasts
 ```
 
@@ -713,10 +713,10 @@ nothing to an image you pulled.
 
 ### On a NAS (Synology, QNAP, Unraid, TrueNAS)
 
-A NAS runs openGym like any other Docker host. What trips people up is the NAS's own compose UI,
+A NAS runs GYM Buddy like any other Docker host. What trips people up is the NAS's own compose UI,
 which is not quite `docker compose` in a folder you chose. Four things to get right:
 
-**1. Both services, every time.** openGym is `api` *and* `web`. A stack with only `web` still
+**1. Both services, every time.** GYM Buddy is `api` *and* `web`. A stack with only `web` still
 loads, but every sign-in fails and the only way in that works is **Continue without account**:
 you are a guest, your data lives in that one browser, and nothing reaches the NAS. If the
 sign-in screen never accepts anything, check that `docker ps` shows both containers.
@@ -726,20 +726,20 @@ in a folder of their own, so `./data` and `env_file: .env` resolve somewhere you
 them. Spell them out (here for QNAP; use your share's path):
 
 ```yaml
-name: opengym
+name: gymbuddy
 services:
   api:
-    image: ghcr.io/duartesantos8/opengym-api:latest
+    image: ghcr.io/duartesantos8/gymbuddy-api:latest
     restart: unless-stopped
-    env_file: /share/Container/opengym/.env
+    env_file: /share/Container/gymbuddy/.env
     environment:
       - PORT=3000
       - DATA_DIR=/data
       - TRUST_PROXY=1
     volumes:
-      - /share/Container/opengym/data:/data
+      - /share/Container/gymbuddy/data:/data
   web:
-    image: ghcr.io/duartesantos8/opengym-web:latest
+    image: ghcr.io/duartesantos8/gymbuddy-web:latest
     restart: unless-stopped
     depends_on: [api]
     ports:
@@ -749,8 +749,8 @@ services:
       - PORT=3000
 ```
 
-Typical roots: Synology `/volume1/docker/opengym`, QNAP `/share/Container/opengym`, Unraid
-`/mnt/user/appdata/opengym`, TrueNAS SCALE a dataset such as `/mnt/tank/apps/opengym`. Create the
+Typical roots: Synology `/volume1/docker/gymbuddy`, QNAP `/share/Container/gymbuddy`, Unraid
+`/mnt/user/appdata/gymbuddy`, TrueNAS SCALE a dataset such as `/mnt/tank/apps/gymbuddy`. Create the
 `data` folder and the `.env` file there first. On TrueNAS SCALE 24.10 and later this file goes in
 **Apps → Discover Apps → ⋮ → Install via YAML**; on Synology in **Container Manager →
 Project → Create**; on Unraid in the Compose Manager plugin. Unraid's single-container templates
@@ -774,7 +774,7 @@ so for a first look either add `PASSWORD_LOGIN=1` ([password sign-in](#password-
 or keep going to step 4.
 
 **4. HTTPS through the NAS's reverse proxy.** For passkeys, the iPhone web app and
-notifications, give openGym a hostname with a certificate and point the proxy at the `web`
+notifications, give GYM Buddy a hostname with a certificate and point the proxy at the `web`
 port: Synology **Control Panel → Login Portal → Advanced → Reverse Proxy** (certificate under
 **Security → Certificate**), QNAP **Network & File Services → Network Access → Reverse Proxy**,
 Unraid and TrueNAS with Nginx Proxy Manager, Caddy or SWAG, or a Cloudflare Tunnel or Tailscale
@@ -789,9 +789,9 @@ API log says `EACCES` or `EPERM`. Give the dataset to root, or run `api` with `u
 work either way; only the in-container CLI runtimes (`API_TARGET=coach`) need root. Your backup
 job reads `data/` as root, or as that user.
 
-### Serving openGym under a subpath
+### Serving GYM Buddy under a subpath
 
-openGym can live at `https://example.com/gym/` rather than on a host of its own. Which of the two
+GYM Buddy can live at `https://example.com/gym/` rather than on a host of its own. Which of the two
 setups below you need depends on one thing: whether your reverse proxy strips the prefix before
 the container sees the request.
 
@@ -802,7 +802,7 @@ and it asks its own address for the API, so everything stays inside the prefix o
 ```caddy
 example.com {
     handle_path /gym/* {
-        reverse_proxy opengym-web:80
+        reverse_proxy gymbuddy-web:80
     }
 }
 ```
@@ -815,7 +815,7 @@ BASE_PATH=/gym
 ```
 
 That is a start-up setting like the others above, so it works on a prebuilt image. Forward only
-the prefix to the container — openGym does not serve itself at the site root as well, and a copy
+the prefix to the container — GYM Buddy does not serve itself at the site root as well, and a copy
 reached there would look for an API that is not on that path.
 
 Either way, keep `ORIGIN` and `RP_ID` pointing at the address in the browser's bar
@@ -956,7 +956,7 @@ are not encrypted at rest — whoever can read that folder can see them.
 Everything is in `./data`:
 
 ```bash
-tar czf opengym-backup-$(date +%F).tar.gz data/
+tar czf gymbuddy-backup-$(date +%F).tar.gz data/
 ```
 
 That archive contains all profiles, passkeys and workout history — and, if the activity log is
@@ -968,12 +968,12 @@ The photos and videos of custom exercises are in `data/uploads/`, and they are m
 the archive large. To leave them out:
 
 ```bash
-tar czf opengym-backup-$(date +%F).tar.gz --exclude=data/uploads data/
+tar czf gymbuddy-backup-$(date +%F).tar.gz --exclude=data/uploads data/
 ```
 
 Restored without them, every profile is intact, and an exercise whose file is gone shows a
 placeholder until one of its owner's devices — each keeps its own copy — uploads it again. When
-you move openGym to another server, copy the whole `data/`, `uploads/` and `shared/` included; each person can
+you move GYM Buddy to another server, copy the whole `data/`, `uploads/` and `shared/` included; each person can
 also carry their own through Settings → Data & backup → *Export with photos & videos* and import it there.
 
 If you enabled the AI Coach with the Codex provider, note what this archive deliberately does
@@ -993,7 +993,7 @@ in this archive — and unreadable without the secret next to them, like everyth
 
 ## 7. Notifications
 
-openGym can push two kinds of alert to your phone/desktop, even when the app isn't open:
+GYM Buddy can push two kinds of alert to your phone/desktop, even when the app isn't open:
 rest-timer-over, and a reminder on days you have a workout planned but haven't logged one yet.
 Turn it on per-profile in **Settings → Reminders** (requires a signed-in passkey profile and
 HTTPS — see section 3).
@@ -1026,7 +1026,7 @@ instance the switch shows as unsupported. Nothing to configure server-side eithe
 refuses the lock while the phone is in Low Power Mode.
 
 Push services like a contact address for whoever runs the server, in case they ever need to reach
-you about your pushes. openGym sends your `ORIGIN` by default; set `VAPID_SUBJECT=mailto:you@example.com`
+you about your pushes. GYM Buddy sends your `ORIGIN` by default; set `VAPID_SUBJECT=mailto:you@example.com`
 in `.env` if you would rather they had an inbox.
 
 ### Push endpoints on private addresses (`ALLOWED_PRIVATE_IPS`)
@@ -1225,15 +1225,15 @@ everybody registers again — which is why it pays to settle the domain before o
 
 ## Which passkey providers work
 
-openGym asks for a passkey and nothing more specific: no particular kind of device, no platform
+GYM Buddy asks for a passkey and nothing more specific: no particular kind of device, no platform
 authenticator, no attestation, and sign-in lets the browser offer any passkey it can find for
 your hostname. So whatever stores passkeys on your device works, and which one you get is
-decided by your operating system and browser, not by openGym. The common questions:
+decided by your operating system and browser, not by GYM Buddy. The common questions:
 
 **Can I keep my passkey in Bitwarden, 1Password, Proton Pass or another password manager on
 Android?** Yes, on Android 14 or later. Switch the app on as a passkey provider in the system
 settings (*Passwords, passkeys & accounts*, or *Passwords & accounts*; the name varies by
-manufacturer). The system then offers that app when openGym asks to create or use a passkey. If
+manufacturer). The system then offers that app when GYM Buddy asks to create or use a passkey. If
 Chrome keeps offering only Google Password Manager, look under *Autofill services* in Chrome's
 own settings for the option to use another service. On Android 13 and earlier, passkeys can only
 be stored in Google Password Manager. (#101)
@@ -1247,7 +1247,7 @@ of its own (Windows Hello works in Firefox) with a code from your phone, below. 
 **Can one profile have more than one passkey?** Yes. **Settings → Account → Passkeys** lists
 them — a name, when each was added and last used — and adds, renames or removes one. Adding one
 from there is for anything this browser can reach: another password manager, a security key, or
-your phone through the browser's own QR prompt. For a second device that can open openGym itself
+your phone through the browser's own QR prompt. For a second device that can open GYM Buddy itself
 (a phone, a work laptop), use **Settings → Account → Add another device**: it shows a code of 12
 characters and a QR code of a link that carries it. Scan it with the other device, or type the
 code there under **Use a code from your other device** on the sign-in screen; the other device
@@ -1350,7 +1350,7 @@ browser (see section 2).
 | Under a subpath: the page loads but no profile can be created, or you sign up and are "not signed in" | `BASE_PATH` doesn't match what the proxy does, or `proxy_cookie_path` rewrote the session cookie. See [nginx under /gym](#nginx-under-gym-both-ways). |
 | Want to reset a stuck login | Delete the cookie in your browser; sessions are just signed cookies. |
 | The app says "Your server no longer accepts this phone" (or "this browser") | The server answered 401. Usual causes: "sign out everywhere" was used, the account was disabled, `data/secret` was lost or replaced when the stack was moved (every session and pairing dies with it), or a proxy with its own login rejects requests that carry `Authorization: Bearer`. Nothing on the device is lost: pair the phone again (browser: Settings → "Pair the mobile app"), or sign in again in the browser, and what the device kept is merged into the account. |
-| The app says the server "answered with something other than openGym (HTTP 200)" | Something other than the API answered `/api/*` with a success page — an auth proxy's sign-in page, or a catch-all route serving `index.html`. Every API answer is JSON; forward `/api/*` to the API unchanged. |
+| The app says the server "answered with something other than GYM Buddy (HTTP 200)" | Something other than the API answered `/api/*` with a success page — an auth proxy's sign-in page, or a catch-all route serving `index.html`. Every API answer is JSON; forward `/api/*` to the API unchanged. |
 | The app says "Your server answered with an error (HTTP …)" | The code is what the server or its proxy sent: 502/504 usually means the API container is down or unreachable from `web`, 413 that the proxy's upload limit is too small. Changes stay on the device and go through once the server answers. |
 | `docker compose pull` fails with "denied" / "unauthorized" | The prebuilt images aren't published yet, or need to be, or the GHCR package is still private — build from source instead (`docker compose up -d --build`). |
 | Exercise images/GIFs blank when a routine is open | Fixed in current images (issue #79). On an older build, see the note below. |

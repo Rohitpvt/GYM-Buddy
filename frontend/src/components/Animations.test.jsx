@@ -101,7 +101,7 @@ describe('the setting', () => {
     expect(rowTitles()).toEqual(['Still only', 'Built in (180 px)'])
     expect(host.textContent).toContain('Sharper animations aren’t available on this device yet.')
   })
-  it('on the APK from GitHub or opengym.ch, it says they come only through a store (#863)', async () => {
+  it('on the APK from GitHub or gymbuddy.ch, it says they come only through a store (#863)', async () => {
     Object.assign(mocks, { available: false, channel: 'sideload' })
     await packs.refresh()
     await mount(<AnimationQualitySheet close={() => {}} />)

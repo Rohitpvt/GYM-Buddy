@@ -34,7 +34,7 @@ set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 garmin=$(dirname "$here")
 CIQ_SDK=${CIQ_SDK:-/mnt/build-fast/from-hdd/build-cache/connectiq/sdk-9.2.0}
-CIQ_KEY=${CIQ_KEY:-/root/.config/opengym/garmin/developer_key.der}
+CIQ_KEY=${CIQ_KEY:-/root/.config/gymbuddy/garmin/developer_key.der}
 SIM_LIBS=${SIM_LIBS:-/mnt/build-fast/from-hdd/build-cache/connectiq/simlibs}
 SIM_FONTS=${SIM_FONTS:-/mnt/build-fast/from-hdd/build-cache/connectiq/fonts}
 SIM_OUT=${SIM_OUT:-$garmin/bin/sim}

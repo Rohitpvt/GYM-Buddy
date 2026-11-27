@@ -1,4 +1,4 @@
-// The community routines library (opengym.ch/routines): one place that knows what a routine file
+// The community routines library (gymbuddy.ch/routines): one place that knows what a routine file
 // is. The validator (validate.mjs), the site build (build.mjs) and the submit service
 // (service/server.mjs) all call checkRoutine() here, so a routine the service accepts is exactly a
 // routine CI accepts. No dependencies beyond Node itself.
@@ -10,7 +10,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import zlib from 'node:zlib'
 
-export const SOURCES = ['starter', 'opengym', 'community']
+export const SOURCES = ['starter', 'gymbuddy', 'community']
 export const GOALS = ['strength', 'muscle', 'general', 'fatloss', 'endurance']
 export const LEVELS = ['beginner', 'intermediate', 'advanced']
 export const SPLITS = ['full-body', 'upper-lower', 'ppl', 'push-pull', 'bro-split', 'other']
@@ -224,7 +224,7 @@ export function checkRoutine(raw, { slug, source, cat, starters = {}, coverInfo 
     if (s.length > max) say(`"${field}" is too long (${s.length} of ${max} characters)`)
     if (CTRL.test(s)) say(`"${field}" has control characters in it`)
     if (!links && LINKISH.test(s)) say(`"${field}" can't hold links (put yours in author.url)`)
-    if (ours && s.includes('—')) say(`"${field}": no em dashes in openGym's own copy`)
+    if (ours && s.includes('—')) say(`"${field}": no em dashes in GYM Buddy's own copy`)
     return s
   }
 
@@ -299,7 +299,7 @@ export function checkRoutine(raw, { slug, source, cat, starters = {}, coverInfo 
         if (!isMap(x)) { say(`${at}: must be { "id", "sets", "reps" }`); return }
         for (const k of Object.keys(x)) if (!EX_KEYS.includes(k)) say(`${at}: unknown field "${k}"`)
         const e = cat?.has(x.id) ? cat.get(x.id) : null
-        if (!e) { say(`${at}: "${x.id}" is not in the openGym catalogue (catalogue/exercises/)`); return }
+        if (!e) { say(`${at}: "${x.id}" is not in the GYM Buddy catalogue (catalogue/exercises/)`); return }
         const label = `${at} (${e.n})`
         if (!intIn(x.sets, LIMITS.sets)) say(`${label}: "sets" is ${LIMITS.sets[0]} to ${LIMITS.sets[1]}`)
         const hasReps = x.reps != null, hasSec = x.sec != null
@@ -454,7 +454,7 @@ export function planFile(r, cat) {
   ;(r.schedule || []).forEach(([d, i]) => { (week[d] ||= []).push('r' + i) })
   // `from`: the author, which the app shows on the import sheet when the page's link opens it
   // (frontend/src/lib/library-link.js); an app that does not know it simply ignores it.
-  return { opengym_plan: 1, exported: r.added, name: r.title.slice(0, 60), unit: 'kg', week, routines: r.sessions.map((s, i) => routineOf(s, i, cat)), customEx: [], from: r.author.name.slice(0, 40) }
+  return { gymbuddy_plan: 1, exported: r.added, name: r.title.slice(0, 60), unit: 'kg', week, routines: r.sessions.map((s, i) => routineOf(s, i, cat)), customEx: [], from: r.author.name.slice(0, 40) }
 }
 
 /** One day as a routine link bundle (frontend/src/lib/routine-link.js routineLinkBundle). */
@@ -462,13 +462,13 @@ export function linkBundle(r, i, cat) {
   const s = r.sessions[i]
   const names = {}
   s.exercises.forEach(x => { const e = cat.get(x.id); if (e?.n) names[x.id] = e.n })
-  return { opengym_plan: 1, name: s.name, unit: 'kg', routines: [routineOf(s, i, cat)], names, from: r.author.name.slice(0, 40) }
+  return { gymbuddy_plan: 1, name: s.name, unit: 'kg', routines: [routineOf(s, i, cat)], names, from: r.author.name.slice(0, 40) }
 }
 
 export const toBase64Url = buf => Buffer.from(buf).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 /** A bundle as a link payload, `1.d.<deflate-raw, base64url>`, what CompressionStream makes in the app. */
 export const encodePayload = bundle => '1.d.' + toBase64Url(zlib.deflateRawSync(Buffer.from(JSON.stringify(bundle)), { level: 9 }))
-export const LINK_BASE = 'https://opengym.ch/r'
+export const LINK_BASE = 'https://gymbuddy.ch/r'
 export const MAX_LINK = 2000
 
 /** The day's https link, or null when it would be too long for a link (the plan file still works). */
@@ -485,18 +485,18 @@ const MAX_JSON = 256 * 1024
 /** A routine link's payload back to its bundle (Node side of routine-link.js decodePayload). */
 export function decodePayload(p) {
   const m = /^(\d{1,4})\.([a-z])\.([A-Za-z0-9_-]+)$/.exec(String(p || '').trim())
-  if (!m || p.length > MAX_PAYLOAD || m[1] !== '1') throw new Error('That link is not an openGym routine link, or it is cut off.')
+  if (!m || p.length > MAX_PAYLOAD || m[1] !== '1') throw new Error('That link is not an GYM Buddy routine link, or it is cut off.')
   let bytes = Buffer.from(m[3].replace(/-/g, '+').replace(/_/g, '/'), 'base64')
   if (m[2] === 'd') {
     try { bytes = zlib.inflateRawSync(bytes, { maxOutputLength: MAX_JSON }) } catch { throw new Error('That link is cut off or garbled.') }
-  } else if (m[2] !== 'j') throw new Error('That link is from a newer openGym than this page knows.')
+  } else if (m[2] !== 'j') throw new Error('That link is from a newer GYM Buddy than this page knows.')
   try { return JSON.parse(bytes.toString('utf8')) } catch { throw new Error('That link is cut off or garbled.') }
 }
 
-/** The payload of an https://opengym.ch/r#… or opengym://r#… link, or null. */
+/** The payload of an https://gymbuddy.ch/r#… or gymbuddy://r#… link, or null. */
 export function payloadFromLink(s) {
   const t = String(s || '').trim()
-  const m = /^(?:https:\/\/(?:www\.)?opengym\.ch\/r\/?|opengym:\/\/r\/?)#(\d{1,4}\.[a-z]\.[A-Za-z0-9_-]+)$/.exec(t) || /#\/r\/(\d{1,4}\.[a-z]\.[A-Za-z0-9_-]+)$/.exec(t)
+  const m = /^(?:https:\/\/(?:www\.)?gymbuddy\.ch\/r\/?|gymbuddy:\/\/r\/?)#(\d{1,4}\.[a-z]\.[A-Za-z0-9_-]+)$/.exec(t) || /#\/r\/(\d{1,4}\.[a-z]\.[A-Za-z0-9_-]+)$/.exec(t)
   return m ? m[1] : null
 }
 
@@ -505,7 +505,7 @@ export function payloadFromLink(s) {
  * Throws an Error with a sentence for people when it can't be one (custom exercises, not a plan).
  */
 export function sessionsFromPlan(data, cat) {
-  if (!isMap(data) || !data.opengym_plan || !Array.isArray(data.routines)) throw new Error('That is not an openGym plan file or routine link.')
+  if (!isMap(data) || !data.gymbuddy_plan || !Array.isArray(data.routines)) throw new Error('That is not an GYM Buddy plan file or routine link.')
   const customs = new Map((Array.isArray(data.customEx) ? data.customEx : []).filter(isMap).map(c => [c.id, c.n || 'a custom exercise']))
   const routines = data.routines.filter(r => isMap(r) && Array.isArray(r.ex) && r.ex.length).slice(0, LIMITS.sessions)
   if (!routines.length) throw new Error('That plan has no routines with exercises in it.')
@@ -514,7 +514,7 @@ export function sessionsFromPlan(data, cat) {
     name: (typeof r.name === 'string' && r.name.trim() ? r.name.trim() : `Day ${i + 1}`).slice(0, LIMITS.sessionName),
     exercises: r.ex.slice(0, LIMITS.exercises).map(e => {
       if (!isMap(e)) throw new Error('One of the exercises in that plan is broken.')
-      if (customs.has(e.id) || !cat.has(e.id)) throw new Error(`"${customs.get(e.id) || e.id}" is a custom exercise. Swap it for one from the openGym list, then share again.`)
+      if (customs.has(e.id) || !cat.has(e.id)) throw new Error(`"${customs.get(e.id) || e.id}" is a custom exercise. Swap it for one from the GYM Buddy list, then share again.`)
       const sets = Math.min(10, Math.max(1, Number.isInteger(e.sets) ? e.sets : 3))
       const rest = Number.isInteger(e.restSec) && e.restSec > 0 ? Math.min(600, e.restSec) : null
       const note = typeof e.note === 'string' && e.note.trim() ? e.note.trim().slice(0, LIMITS.exNote) : null

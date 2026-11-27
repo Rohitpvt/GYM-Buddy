@@ -33,7 +33,7 @@ class MainViewController: CAPBridgeViewController {
     /// The page's copy of it; `event`: also tell a page that is already running (a change in Settings).
     static func textScaleScript(event: Bool) -> String {
         let set = "window.__ogTextScale=\(textScale());"
-        return event ? set + "window.dispatchEvent(new Event('opengym:text-scale'));" : set
+        return event ? set + "window.dispatchEvent(new Event('gymbuddy:text-scale'));" : set
     }
 
     @objc private func textSizeChanged() {
@@ -74,7 +74,7 @@ class MainViewController: CAPBridgeViewController {
      * is what iOS really has pending, not what the page meant to schedule. Never shown otherwise:
      * nothing but XCUIApplication.launchArguments passes the argument.
      */
-    static let pendingProbeArgument = "-OpenGymUITestPending"
+    static let pendingProbeArgument = "-GymBuddyUITestPending"
 
     private func showPendingProbe() {
         // On the window, not inside the web view: what a WKWebView holds is its page as far as

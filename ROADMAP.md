@@ -1,6 +1,6 @@
 # Roadmap
 
-Where openGym is going, in the order it is likely to land. The next two releases are planned in
+Where GYM Buddy is going, in the order it is likely to land. The next two releases are planned in
 detail; everything after that is a list in rough order, and any date on it is a guess. The GitHub
 milestones and the issues in them are the working plan, this file is the readable summary.
 
@@ -11,7 +11,7 @@ Version numbers follow the release rule, not the size of the change: the next re
 published one plus one patch (1.4.2 → 1.4.3), and a minor bump is saved for a step as big as the
 new exercise database (v1.4.0).
 
-- Milestones: https://github.com/DuarteSantos8/openGym/milestones
+- Milestones: https://github.com/DuarteSantos8/GYM Buddy/milestones
 - Next, in order: Google Play for everyone, F-Droid, Wear OS out of beta, the set menu on the watches
   and routine folders (v1.4.6) →
   the rest of the progression engine → the list after that
@@ -111,7 +111,7 @@ pencilled in for v1.3.11, and a sync rework so no device loses data again. See t
 the full list.
 
 - A rotation beside the fixed week: the next session is the next one you haven't done, whatever
-  the weekday, with an editor in Plan (#158, #69; PR #167 and kurktchiev/openGym#1)
+  the weekday, with an editor in Plan (#158, #69; PR #167 and kurktchiev/GYM Buddy#1)
 - A calmer app: Settings on one screen with search, Plan as Schedule and Routines, a workout screen
   without the tab bar, a docked rest bar and a rest-time wheel up to 15:00, one icon per idea
 - Swipe actions on sets, routines and the loop, with Undo; a colour of your own as the accent
@@ -154,7 +154,7 @@ server.
 
 The animations come back as WebP, and the Android update check reads GitHub.
 
-## v1.4.2: openGym in the App Store  (released 2026-10-23)
+## v1.4.2: GYM Buddy in the App Store  (released 2026-10-23)
 
 - The iPhone app in the App Store, with an Apple Watch app, widgets, a Live Activity and Apple
   Health (#90, #125 on iOS)
@@ -170,7 +170,7 @@ the changelog; the headlines:
 
 - A Halloween costume until 1 November (spiders, bats, a witch, a skeleton on Stats), and nine
   app icons to pick from on iPhone, a Halloween one included
-- openGym starts again on iOS 15.5 to 16.3, where 1.4.2 sat on the splash screen forever
+- GYM Buddy starts again on iOS 15.5 to 16.3, where 1.4.2 sat on the splash screen forever
 - Gym reminder: a nudge when you walk into your gym, gyms stay on the phone (#614)
 - A tiny muscle map on every routine and in the workout (#670); volume while you lift (#774)
 - CSV export and GymMane import (#647); keep an exercise you added mid-workout (#592)
@@ -190,7 +190,7 @@ Shipped:
   per week, deloads included, and three starter programmes (#159, #679)
 - **A tour and four tutorials**: a 1-minute walk around the app after setup, then build your first
   plan, create your own exercise, edit your data, export and import
-- **openGym's own date picker** everywhere, no more sheets that scroll sideways (#809)
+- **GYM Buddy's own date picker** everywhere, no more sheets that scroll sideways (#809)
 - **AirPods Pro 3 heart rate** on iPhone with iOS 26, no watch needed (#818)
 - **Pictures on the printed plan** (#817), barcode gym cards next to QR codes (#550)
 - **kg or lb per exercise**, also on the Apple Watch (#657); body weight in pull-up and dip volume
@@ -220,7 +220,7 @@ The biggest release so far. Everything is in [CHANGELOG.md](CHANGELOG.md); the h
   Android 16) and the Home Screen widget follow the exercise and the moment, Log set included
   (#760, #874, #299)
 - **A Coach that acts**: set up in a few taps, routines, swaps and plan changes on request with a
-  preview, and Claude or ChatGPT as a connector to your openGym
+  preview, and Claude or ChatGPT as a connector to your GYM Buddy
 - **Trainers and gyms** (#119), **sign-in with OIDC** (#130, #391) and a **community library** on
   your own server (#441)
 - **Integrations**: Strava (#478), WebDAV backup (#582), a calendar feed, MCP over HTTPS with API
@@ -234,8 +234,8 @@ The biggest release so far. Everything is in [CHANGELOG.md](CHANGELOG.md); the h
 ## v1.4.6: Stores & polish  (planned for December)
 
 - **Google Play for everyone.** The closed test runs since v1.4.4 (join:
-  https://groups.google.com/g/opengym-testers/about, then
-  https://play.google.com/apps/testing/ch.duartesantos.opengym). Production access opens once
+  https://groups.google.com/g/gymbuddy-testers/about, then
+  https://play.google.com/apps/testing/ch.duartesantos.gymbuddy). Production access opens once
   12 testers have had it for 14 days; until then the signed APK on GitHub is the Android app
 - **F-Droid** (#325): the recipe goes in after the v1.4.5 tag, and their review can take a few weeks
 - **The Wear OS app out of beta**, fixing what real wrists find (#673), and the rest timer in

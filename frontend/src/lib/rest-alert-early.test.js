@@ -5,7 +5,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 
-const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/opengym/RestAlert.java', import.meta.url), 'utf8')
+const java = readFileSync(new URL('../../android/app/src/main/java/ch/duartesantos/gymbuddy/RestAlert.java', import.meta.url), 'utf8')
 const fire = java.slice(java.indexOf('public static void fire('), java.indexOf('private static void rebook('))
 
 describe('an early rest alarm on Android (#995)', () => {

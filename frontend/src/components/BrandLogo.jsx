@@ -1,4 +1,4 @@
-// The openGym logo, as in assets/logo: the mark (five plain rectangles on a 352×174 grid, square
+// The GYM Buddy logo, as in assets/logo: the mark (five plain rectangles on a 352×174 grid, square
 // corners, brand green) and the lockup (mark, then "open" plus "Gym" in brand green). Brand colours,
 // not the accent: the accent is the user's, the logo is not. Never mirrored in RTL.
 
@@ -16,7 +16,7 @@ export function BrandMark({ height = 24, color = '#a3e635', className, style }) 
 
 /**
  * The lockup at `size` px type: mark 1.07× the type high, a gap of 0.2×, the mark's middle at
- * 0.36× above the baseline (opengym-logo-dark.svg). "open" follows the theme (index.css .brand-lockup).
+ * 0.36× above the baseline (gymbuddy-logo-dark.svg). "open" follows the theme (index.css .brand-lockup).
  */
 export default function BrandLogo({ size = 34, as: Tag = 'span', className = '', style }) {
   return (

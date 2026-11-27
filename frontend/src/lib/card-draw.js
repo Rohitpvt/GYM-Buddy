@@ -1,4 +1,4 @@
-// What every shared picture of openGym has in common: the two formats, the light and dark looks
+// What every shared picture of GYM Buddy has in common: the two formats, the light and dark looks
 // and the logo in the corner. Pure drawing, no DOM: the workout card (lib/workout-card.js, after a
 // workout and in History) and Your year (lib/wrapped-cards.js) both paint with it, and
 // lib/share-image.js gets the picture out of the app. No exercise picture or clip is ever drawn
@@ -10,7 +10,7 @@ import { inkIn } from './accent.js'
 export const FORMATS = { story: { width: 1080, height: 1920 }, square: { width: 1080, height: 1080 } }
 export const FORMAT_IDS = Object.keys(FORMATS)
 export const STYLE_IDS = ['dark', 'light']
-export const SITE = 'opengym.ch'
+export const SITE = 'gymbuddy.ch'
 
 /**
  * The colours of a card, the app's own (index.css) in a fixed light or dark look, whatever the
@@ -63,7 +63,7 @@ export function cardPalette(style, acc = BRAND.green) {
     : { bg: '#000000', surface: '#1c1c1e', tile: '#2c2c2e', label: '#ffffff', label2: '#98989f', acc: a, accText: a, sep: '#38383a', light: false }
 }
 
-// The brand mark (assets/logo/opengym-mark.svg) on its own 352×174 grid, centred on 0,0. Square
+// The brand mark (assets/logo/gymbuddy-mark.svg) on its own 352×174 grid, centred on 0,0. Square
 // corners and these exact proportions: the logo is not ours to restyle per card.
 const MARK = [[-176, -14, 352, 28], [-176, -57, 36, 114], [-125, -87, 47, 174], [78, -87, 47, 174], [140, -57, 36, 114]]
 export const MARK_ASPECT = 352 / 174
@@ -113,7 +113,7 @@ export function brandNeedsBadge(bg) {
 // own: a photo behind it, or a see-through PNG laid over one later (TestFlight 11-08: the logo
 // on a photo read as see-through). The badge is solid BRAND.ink, never a tint.
 export function drawBrand(ctx, { x, y, width, colors, family, size = 40, badge: forceBadge = false }) {
-  // Proportions of assets/logo/opengym-logo-dark.svg: the mark 1.07× the type, a gap of 0.2×.
+  // Proportions of assets/logo/gymbuddy-logo-dark.svg: the mark 1.07× the type, a gap of 0.2×.
   const markH = size * 1.07
   const gap = size * 0.2
   const badge = forceBadge || !colors.bg || brandNeedsBadge(colors.bg)
@@ -122,7 +122,7 @@ export function drawBrand(ctx, { x, y, width, colors, family, size = 40, badge: 
   ctx.textAlign = 'left'
   ctx.font = `700 ${size}px ${family}`
   if ('letterSpacing' in ctx) ctx.letterSpacing = `${(-size * 0.036).toFixed(2)}px`
-  const textW = ctx.measureText('openGym').width
+  const textW = ctx.measureText('GYM Buddy').width
   const lockW = markH * MARK_ASPECT + gap + textW
   let lx = x
   if (badge) {

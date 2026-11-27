@@ -104,7 +104,7 @@ describe('the Christmas icon', () => {
   it('a lime dumbbell in a Santa hat, wrapped with a red ribbon, on a dark winter night', () => {
     const shapes = scene(read(v.art))
     const at = (x, y) => shapes.find(s => s.hit(x, y)).color(x, y).map(Math.round)
-    expect(at(256, 256)).toEqual([163, 230, 53])    // the bar, openGym lime
+    expect(at(256, 256)).toEqual([163, 230, 53])    // the bar, GYM Buddy lime
     expect(at(165, 140)).toEqual([230, 57, 70])     // the hat
     expect(at(357, 300)).toEqual([230, 57, 70])     // the ribbon
     expect(at(150, 164)).toEqual([248, 249, 250])   // the hat's brim
@@ -149,12 +149,12 @@ describe('Android launcher aliases', () => {
   })
 
   it('the plugin knows the same aliases and is registered', () => {
-    const java = read('android/app/src/main/java/ch/duartesantos/opengym/AppIcons.java')
+    const java = read('android/app/src/main/java/ch/duartesantos/gymbuddy/AppIcons.java')
     const list = name => JSON.parse('[' + java.match(new RegExp(`${name} = \\{([^}]*)\\}`))[1] + ']')
     expect(list('IDS')).toEqual(APP_ICON_VARIANTS.map(v => v.id))
     expect(list('ALIASES')).toEqual(APP_ICON_VARIANTS.map(v => v.android))
     // In main, not in FlavorPlugins: the sideload and the Play build both have it.
-    expect(read('android/app/src/main/java/ch/duartesantos/opengym/MainActivity.java')).toContain('registerPlugin(AppIconPlugin.class);')
+    expect(read('android/app/src/main/java/ch/duartesantos/gymbuddy/MainActivity.java')).toContain('registerPlugin(AppIconPlugin.class);')
   })
 })
 

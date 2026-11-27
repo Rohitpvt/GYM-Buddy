@@ -217,7 +217,7 @@ export function trainerRoutes({ json, readBody, readSession, requireAdmin, userB
     // Art. 15/20: everything the server keeps about this member's sharing, in one file.
     'GET /api/sharing/export': guard('sharing.read', async (req, res, user) => {
       json(res, 200, { exported: Date.now(), server: origin, ...org.memberRecord(user.id), log: log.all(user.id), inbox: log.inbox(user.id), undo: log.undos(user.id) },
-        { 'Content-Disposition': 'attachment; filename="opengym-sharing.json"' });
+        { 'Content-Disposition': 'attachment; filename="gymbuddy-sharing.json"' });
     }),
 
     /* ---------- the trainer ---------- */

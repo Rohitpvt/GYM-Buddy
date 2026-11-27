@@ -336,7 +336,7 @@ jobs:
       - name: The community library blocks every catalogue file (licence, by checksum)
         run: node scripts/catalogue/media-hashes.mjs --check
 
-  # The community routines (opengym.ch/routines): every file checked the way the submit service
+  # The community routines (gymbuddy.ch/routines): every file checked the way the submit service
   # checks a submission, the site built once, and the tests of the build, filters and service.
   # Seconds, no npm install.
   routines:
@@ -378,7 +378,7 @@ jobs:
           context: ./api
           target: default
           load: true
-          tags: opengym-api:default
+          tags: gymbuddy-api:default
           cache-from: type=gha,scope=ci-api
           cache-to: type=gha,mode=max,scope=ci-api
       - name: api, coach target
@@ -388,7 +388,7 @@ jobs:
           context: ./api
           target: coach
           load: true
-          tags: opengym-api:coach
+          tags: gymbuddy-api:coach
           cache-from: type=gha,scope=ci-api-coach
           cache-to: type=gha,mode=max,scope=ci-api-coach
       # No target, exactly like docker-publish.yml: what that workflow ships is whatever stage
@@ -399,7 +399,7 @@ jobs:
           pull: true
           context: ./api
           load: true
-          tags: opengym-api:published
+          tags: gymbuddy-api:published
           cache-from: type=gha,scope=ci-api
       - name: web
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
@@ -408,7 +408,7 @@ jobs:
           context: .
           file: ./web/Dockerfile
           load: true
-          tags: opengym-web:ci
+          tags: gymbuddy-web:ci
           cache-from: type=gha,scope=ci-web
           cache-to: type=gha,mode=max,scope=ci-web
       - name: mcp
@@ -417,34 +417,34 @@ jobs:
           context: .
           file: ./mcp/Dockerfile
           load: true
-          tags: opengym-mcp:ci
+          tags: gymbuddy-mcp:ci
           cache-from: type=gha,scope=ci-mcp
           cache-to: type=gha,mode=max,scope=ci-mcp
 
       - name: the image published as :latest has no AI runtime either
         run: |
-          docker run --rm opengym-api:published node -e \
+          docker run --rm gymbuddy-api:published node -e \
             'import("@anthropic-ai/claude-agent-sdk").then(()=>{console.error("AI runtime present in the published image -- the last Dockerfile stage is no longer the runtime-free one");process.exit(1)},()=>process.exit(0))'
-          ! docker run --rm opengym-api:published codex --version
-          ! docker run --rm opengym-api:published bwrap --version
+          ! docker run --rm gymbuddy-api:published codex --version
+          ! docker run --rm gymbuddy-api:published bwrap --version
 
       - name: the default image boots and serves, with no AI runtime in it
         run: |
           docker network create og
-          docker run -d --name api-default --network og --network-alias api -e DATA_DIR=/data -p 3000:3000 opengym-api:default
+          docker run -d --name api-default --network og --network-alias api -e DATA_DIR=/data -p 3000:3000 gymbuddy-api:default
           for i in $(seq 1 30); do
             curl -fsS http://localhost:3000/api/config >/dev/null 2>&1 && break
             sleep 1
           done
           curl -fsS http://localhost:3000/api/config | tee /dev/stderr | grep -q '"invite_only"'
-          docker run --rm opengym-api:default node -e \
+          docker run --rm gymbuddy-api:default node -e \
             'import("@anthropic-ai/claude-agent-sdk").then(()=>{console.error("AI runtime present in the default image");process.exit(1)},()=>process.exit(0))'
 
       # The stack the way docker-compose.yml wires it: nginx in the web image proxies /api to
       # the api container. A green api image and a green web image can still not talk.
       - name: the web image serves the app and reaches the api through nginx
         run: |
-          docker run -d --name web --network og -p 8080:80 opengym-web:ci
+          docker run -d --name web --network og -p 8080:80 gymbuddy-web:ci
           for i in $(seq 1 30); do curl -fsS http://localhost:8080/ >/dev/null 2>&1 && break; sleep 1; done
           curl -fsS http://localhost:8080/ | grep -q 'id="root"'
           curl -fsS http://localhost:8080/api/config | grep -q '"invite_only"'
@@ -456,7 +456,7 @@ jobs:
       # answer without a token is its own 401 with a Bearer challenge.
       - name: the mcp image boots and is reached through nginx at /mcp
         run: |
-          docker run -d --name mcp --network og --network-alias mcp -e OPENGYM_API_URL=http://api:3000 opengym-mcp:ci
+          docker run -d --name mcp --network og --network-alias mcp -e GYMBUDDY_API_URL=http://api:3000 gymbuddy-mcp:ci
           for i in $(seq 1 30); do docker exec mcp wget -q -O- http://127.0.0.1:3100/mcp/health >/dev/null 2>&1 && break; sleep 1; done
           docker exec mcp wget -q -O- http://127.0.0.1:3100/mcp/health | grep -q '"ok":true'
           code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' http://localhost:8080/mcp)
@@ -466,7 +466,7 @@ jobs:
 
       - name: the coach image carries a runnable Agent SDK
         run: |
-          docker run --rm opengym-api:coach node --input-type=module -e '
+          docker run --rm gymbuddy-api:coach node --input-type=module -e '
             const { adapterFor } = await import("./coach/adapters/index.js");
             const r = await adapterFor("claude").check();
             if (!r.ok) { console.error(r.error); process.exit(1); }
@@ -475,22 +475,22 @@ jobs:
 
       - name: the coach image carries the Codex runtime and its sandbox
         run: |
-          docker run --rm opengym-api:coach codex --version
-          docker run --rm opengym-api:coach bwrap --version
+          docker run --rm gymbuddy-api:coach codex --version
+          docker run --rm gymbuddy-api:coach bwrap --version
           # Owned by the user jobs drop to, and 0700: a credential cache readable by anything
           # else in the container would undo the point of dropping privileges at all.
-          test "$(docker run --rm opengym-api:coach stat -c '%U %a' /coach-auth)" = "coach 700"
+          test "$(docker run --rm gymbuddy-api:coach stat -c '%U %a' /coach-auth)" = "coach 700"
 
       - name: neither Codex nor its sandbox is in the default image
         run: |
-          ! docker run --rm opengym-api:default codex --version 2>/dev/null
-          ! docker run --rm opengym-api:default bwrap --version 2>/dev/null
+          ! docker run --rm gymbuddy-api:default codex --version 2>/dev/null
+          ! docker run --rm gymbuddy-api:default bwrap --version 2>/dev/null
 
       - name: the privilege drop can actually be performed in the image
         run: |
           # canDropPrivileges() fails closed, so a missing `coach` user disables every job,
           # including the fixture provider.
-          docker run --rm opengym-api:default id coach
+          docker run --rm gymbuddy-api:default id coach
 
   # The Android app compiles, its JVM unit tests pass, and the phone bundle inside it is the
   # mobile flavour (check-mobile-bundle runs inside build:mobile). Debug and unsigned: signing
@@ -525,21 +525,21 @@ jobs:
         working-directory: frontend
       # The Wear OS watch app too (wear/, docs/WEAR_OS.md): its JVM tests (the sync protocol, the
       # codec contract with the phone, the redesign's rules) and a release compile.
-      - name: JVM unit tests, sideload APK, play flavour compiles, F-Droid APK, openGym Offline APK, Wear OS
+      - name: JVM unit tests, sideload APK, play flavour compiles, F-Droid APK, GYM Buddy Offline APK, Wear OS
         working-directory: frontend/android
         run: ./gradlew --no-daemon testSideloadDebugUnitTest assembleSideloadDebug compilePlayDebugJavaWithJavac assembleFdroidRelease assembleOfflineDebug :wear:testDebugUnitTest :wear:compileReleaseKotlin
       # The build F-Droid makes from this source (unsigned here, as on F-Droid's server): nothing
       # from Google Play services, Firebase or ML Kit in it.
       - name: F-Droid build is free of Google Play services
         run: scripts/android/check-fdroid.sh
-      # openGym Offline (flavour "offline"): no INTERNET permission, no network SDK, no Google.
-      - name: openGym Offline has no network
+      # GYM Buddy Offline (flavour "offline"): no INTERNET permission, no network SDK, no Google.
+      - name: GYM Buddy Offline has no network
         run: scripts/android/check-offline.sh
-      # For trying it on a phone: a debug build (its own package, ch.duartesantos.opengym.offline.test),
+      # For trying it on a phone: a debug build (its own package, ch.duartesantos.gymbuddy.offline.test),
       # with the repository's 180 px animations only, kept a week.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
-          name: opengym-offline-debug-apk
+          name: gymbuddy-offline-debug-apk
           path: frontend/android/app/build/outputs/apk/offline/debug/*.apk
           retention-days: 7
           if-no-files-found: error
@@ -556,7 +556,7 @@ jobs:
               [ -f "$a" ] && echo "- F-Droid APK (unsigned): $(numfmt --to=iec "$(stat -c %s "$a")") ($(basename "$a"))"
             done
             for a in app/build/outputs/apk/offline/debug/*.apk; do
-              [ -f "$a" ] && echo "- openGym Offline debug APK: $(numfmt --to=iec "$(stat -c %s "$a")") ($(basename "$a"))"
+              [ -f "$a" ] && echo "- GYM Buddy Offline debug APK: $(numfmt --to=iec "$(stat -c %s "$a")") ($(basename "$a"))"
             done
             cat app/build/test-results/testSideloadDebugUnitTest/*.xml wear/build/test-results/testDebugUnitTest/*.xml 2>/dev/null \
               | grep -o '<testsuite [^>]*' | sed -E 's/.*name="([^"]*)".*tests="([0-9]+)".*failures="([0-9]+)".*/- JVM: \1: \2 tests, \3 failed/' || true

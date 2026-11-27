@@ -157,7 +157,7 @@ test('removeUser: a member leaves no trace, a trainer leaves ended grants and th
 test('OIDC claims: the role map, and syncing only what claims gave', () => {
   const org = createOrgStore({ file: null });
   const g = org.createGym({ name: 'FitBox' });
-  const rules = parseRoleMap(`access=opengym, admin=ops, trainer=pt, lead@${g.id}=fb-leads, trainer@${g.id}=fb-staff, member@${g.id}=fb, lead=bad, member=bad, wizard@x=bad, junk`);
+  const rules = parseRoleMap(`access=gymbuddy, admin=ops, trainer=pt, lead@${g.id}=fb-leads, trainer@${g.id}=fb-staff, member@${g.id}=fb, lead=bad, member=bad, wizard@x=bad, junk`);
   assert.equal(rules.length, 6);
   const r = rolesFromGroups(['fb-staff', 'fb', 'pt'], rules);
   assert.deepEqual(r, { access: true, admin: false, freeTrainer: true, staff: [{ gymId: g.id, role: 'trainer' }], memberOf: [g.id] });

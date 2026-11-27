@@ -1,14 +1,14 @@
-# openGym in Google Play and the App Store
+# GYM Buddy in Google Play and the App Store
 
-openGym ships to phones three ways, and to watches two more, all from the same code and the same version number:
+GYM Buddy ships to phones three ways, and to watches two more, all from the same code and the same version number:
 
 | | Where | Who installs updates | Built where |
 |---|---|---|---|
-| Android APK | GitHub release, opengym.ch | the app itself (Settings → About) | release machine |
+| Android APK | GitHub release, gymbuddy.ch | the app itself (Settings → About) | release machine |
 | Android, Google Play | Play Store | Google Play | release machine |
 | iPhone (+ Apple Watch) | App Store, TestFlight beta | the App Store | Mac runner (compile) + release machine (finish, sign, upload) |
-| Wear OS watch | Play Store (Wear OS closed test), `openGym-Wear-X.Y.Z.apk` on the GitHub release | Google Play, or by hand for the APK | release machine (`scripts/android/build-wear.sh`) |
-| Garmin watch | [Connect IQ Store](https://apps.garmin.com/apps/62e66310-66de-4bdd-8e40-5d2c0d853a08) | Garmin Connect | release machine (`openGym.iq`, uploaded by hand, see GARMIN.md) |
+| Wear OS watch | Play Store (Wear OS closed test), `GYM Buddy-Wear-X.Y.Z.apk` on the GitHub release | Google Play, or by hand for the APK | release machine (`scripts/android/build-wear.sh`) |
+| Garmin watch | [Connect IQ Store](https://apps.garmin.com/apps/62e66310-66de-4bdd-8e40-5d2c0d853a08) | Garmin Connect | release machine (`GYM Buddy.iq`, uploaded by hand, see GARMIN.md) |
 
 The two Android builds are flavours of one Gradle project (`frontend/android/app/build.gradle`):
 `sideload` keeps the updater (InstallPlugin, `REQUEST_INSTALL_PACKAGES`), `play` leaves both out,
@@ -52,18 +52,18 @@ app take both numbers from the app target.
 ```sh
 cd gym-app        # the release checkout, at the release tag
 export ANDROID_HOME=/opt/android-sdk
-K=/root/.config/opengym
-scripts/android/build-release.sh $K/opengym-release.keystore $K/keystore.pass $K/key.alias ~/release
-#  → openGym-X.Y.Z.apk, openGym-Plus-X.Y.Z.apk, openGym-HD-X.Y.Z.apk (each + .sha256, and
+K=/root/.config/gymbuddy
+scripts/android/build-release.sh $K/gymbuddy-release.keystore $K/keystore.pass $K/key.alias ~/release
+#  → GYM Buddy-X.Y.Z.apk, GYM Buddy-Plus-X.Y.Z.apk, GYM Buddy-HD-X.Y.Z.apk (each + .sha256, and
 #    SHA256SUMS) for the GitHub release (APK_ONLY=1: only these),
-#    openGym-X.Y.Z.aab for Google Play
+#    GYM Buddy-X.Y.Z.aab for Google Play
 ```
 
 Each is built from its own phone build: the **Standard** APK with the box-free 180 px animations
 built in (`quality/180`, about 315 MB), the **Plus** APK with 240 px (`quality/240`, about
 424 MB; `PLUS_PX=0` none), the **HD** APK with 360 px (`quality/360`, about 760 MB; `HD_PX=0`
 none), the bundle with 180 px (`quality/180`, like the App Store app) and an asset
-pack for every quality above 180 that has a folder in `/mnt/backup-hdd/opengym-media/quality/`
+pack for every quality above 180 that has a folder in `/mnt/backup-hdd/gymbuddy-media/quality/`
 (`scripts/android/make-asset-packs.mjs`, the same drawings per pack as the iPhone's); the pack
 modules are generated into `frontend/android/` for the build and removed after, never committed.
 To try packs on an emulator: `make-asset-packs.mjs --px 240 --builtin 180 --limit 30`, then
@@ -75,14 +75,14 @@ with the release notes from the changelog.
 ### F-Droid
 
 F-Droid builds the `fdroid` flavour itself from the release tag (fdroiddata recipe
-`metadata/ch.duartesantos.opengym.yml`): the Wear OS module deleted, then
+`metadata/ch.duartesantos.gymbuddy.yml`): the Wear OS module deleted, then
 `scripts/android/fdroid-prebuild.sh` (`npm ci`, the phone bundle with the repo's 180 px media,
 the ML Kit plugin out of the Gradle build), then `assembleFdroidRelease`. The build is
 reproducible, so F-Droid ships it with our signature when we give it a matching signed copy:
 
 ```sh
-scripts/android/build-fdroid-reference.sh $K/opengym-release.keystore $K/keystore.pass $K/key.alias ~/release vX.Y.Z
-#  → openGym-FDroid-X.Y.Z.apk (+ .sha256): attach it to the GitHub release of vX.Y.Z
+scripts/android/build-fdroid-reference.sh $K/gymbuddy-release.keystore $K/keystore.pass $K/key.alias ~/release vX.Y.Z
+#  → GYM Buddy-FDroid-X.Y.Z.apk (+ .sha256): attach it to the GitHub release of vX.Y.Z
 ```
 
 It builds in a fresh clone of the tag with JDK 21 and a clean environment, and signs without
@@ -93,7 +93,7 @@ makes F-Droid's copied signature fail. Without the file F-Droid's build of that 
 ### iPhone
 
 The IPA carries the app, the asset pack downloader extension (`AnimationPacksDownloader`), the
-widget extension (`OpenGymWidgets`: widgets and the Live Activity) and the Apple Watch app with its
+widget extension (`GymBuddyWidgets`: widgets and the Live Activity) and the Apple Watch app with its
 own widget. Each is a separate bundle id with its own App Store provisioning profile.
 
 1. **Compile (CI).** The `iOS` workflow (`.github/workflows/ios.yml`, job `device-archive`) runs
@@ -106,7 +106,7 @@ own widget. Each is a separate bundle id with its own App Store provisioning pro
    ```sh
    EXT_PROFILE=downloader.mobileprovision WIDGETS_PROFILE=widgets.mobileprovision \
    WATCH_PROFILE=watch.mobileprovision WATCH_WIDGET_PROFILE=watch-widget.mobileprovision \
-   scripts/ios/finish-ipa.sh App-unsigned.ipa dist.p12 dist.pass openGym_AppStore.mobileprovision
+   scripts/ios/finish-ipa.sh App-unsigned.ipa dist.p12 dist.pass gymBuddy_AppStore.mobileprovision
    ```
    It puts the phone bundle into the app, signs every bundle with its own profile's entitlements
    (App Group, HealthKit where the profile and the app ask for it), and refuses an IPA from
@@ -156,7 +156,7 @@ The full-quality files only ever travel from the release machine to Apple, like 
    run a closed test with at least 12 testers for 14 days in a row before it can publish to
    production; the Discord community is the obvious tester pool. An *organisation* account
    (needs a D-U-N-S number) skips that.
-2. Create the app: name openGym, default language English, free, no ads.
+2. Create the app: name GYM Buddy, default language English, free, no ads.
 3. **App signing:** choose to use your own key ("Use existing app signing key", Play's PEPK
    tool exports it encrypted). Then Play signs with the same key as the APK and people can
    switch from the APK to Play keeping their data. With a key Google generates, the two are
@@ -182,22 +182,22 @@ on the phone (Settings → Reset, or uninstall).
 
 1. Apple Developer Program (99 USD a year, as an individual; the seller name shown is your
    legal name).
-2. App Store Connect → new app "openGym: Workout Tracker" (plain "openGym" is taken as an App
-   Store name; the home screen still says openGym), bundle id `ch.opengym.app`. The iPhone app
-   has its own bundle id because `ch.duartesantos.opengym` is held by another Apple team (an
-   Xcode build of the public code reserves it); Android keeps `ch.duartesantos.opengym`.
+2. App Store Connect → new app "GYM Buddy: Workout Tracker" (plain "GYM Buddy" is taken as an App
+   Store name; the home screen still says GYM Buddy), bundle id `ch.gymbuddy.app`. The iPhone app
+   has its own bundle id because `ch.duartesantos.gymbuddy` is held by another Apple team (an
+   Xcode build of the public code reserves it); Android keeps `ch.duartesantos.gymbuddy`.
 3. Signing material, all doable from Linux:
    - `openssl req -new -newkey rsa:2048 -nodes -keyout dist.key -out dist.csr -subj "/CN=Duarte Santos/emailAddress=…"`,
      upload the CSR under Certificates → Apple Distribution, download `distribution.cer`, then
      `openssl x509 -inform der -in distribution.cer -out dist.pem && openssl pkcs12 -export -legacy -inkey dist.key -in dist.pem -out dist.p12`.
-   - Profiles → an App Store Connect profile for `ch.opengym.app` → `openGym_AppStore.mobileprovision`,
-     and one each for `ch.opengym.app.AnimationPacksDownloader`, `ch.opengym.app.widgets`,
-     `ch.opengym.app.watchkitapp` and `ch.opengym.app.watchkitapp.widgets`. The app, the downloader,
-     the widgets and the watch widget share the App Group `group.ch.opengym.app`; the app and the
+   - Profiles → an App Store Connect profile for `ch.gymbuddy.app` → `gymBuddy_AppStore.mobileprovision`,
+     and one each for `ch.gymbuddy.app.AnimationPacksDownloader`, `ch.gymbuddy.app.widgets`,
+     `ch.gymbuddy.app.watchkitapp` and `ch.gymbuddy.app.watchkitapp.widgets`. The app, the downloader,
+     the widgets and the watch widget share the App Group `group.ch.gymbuddy.app`; the app and the
      watch app have HealthKit.
    - Users and Access → Integrations → App Store Connect API key (Admin) for uploads; with it the
      bundle id, certificate and profile can also be created through the API instead of the portal.
-   - Keep all of it next to the Android keystore (`/root/.config/opengym/`, never in a repo).
+   - Keep all of it next to the Android keystore (`/root/.config/gymbuddy/`, never in a repo).
 4. App Privacy: "Data Not Collected". Age rating: 4+. Category: Health & Fitness.
 5. Review notes: no sign-in needed ("Use on this device"). The Coach is optional and needs the
    user's own AI provider key; give the reviewer a key with a small spending limit, or say so.

@@ -32,7 +32,7 @@ enum RestTone {
 
     /**
      * A sound of the user's own (v1.4.5, lib/user-sounds.js): "u:" and the sha-256 of its file,
-     * which the page keeps as a 16-bit WAV of at most 30 s in Library/opengym-media
+     * which the page keeps as a 16-bit WAV of at most 30 s in Library/gymbuddy-media
      * (lib/media-store-fs.js, lib/sound-ingest.js). Nil for anything else.
      */
     static func userHash(_ kind: String) -> String? {
@@ -147,7 +147,7 @@ enum RestTone {
         // notification looks for it. Its name is its hash, so a copy is never stale. Nil (and the
         // chime) while the page has not got the file onto this phone.
         if let h = userHash(k) {
-            let src = lib.appendingPathComponent("opengym-media", isDirectory: true).appendingPathComponent("\(h).wav")
+            let src = lib.appendingPathComponent("gymbuddy-media", isDirectory: true).appendingPathComponent("\(h).wav")
             guard FileManager.default.fileExists(atPath: src.path) else { return nil }
             do {
                 try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)

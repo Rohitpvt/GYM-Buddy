@@ -9,7 +9,7 @@ import WidgetKit
  * The running workout's Live Activity: what it carries, and its buttons (Log set, and Next exercise
  * or Skip rest beside it). Compiled into both
  * the app and the widget extension (ios/ci/add-widgets.rb): the extension draws it
- * (OpenGymWidgets/LiveActivityWidget.swift), the app starts and updates it for the page
+ * (GymBuddyWidgets/LiveActivityWidget.swift), the app starts and updates it for the page
  * (LiveActivityPlugin.swift, lib/live-activity.js) and runs the buttons' intents.
  *
  * The page sends both halves as JSON; the field names are lib/live-activity.js buildLiveActivity's.
@@ -17,8 +17,8 @@ import WidgetKit
  */
 
 /// The App Group the app, the widget extension and the asset pack downloader share.
-enum OpenGymGroup {
-    static let id = "group.ch.opengym.app"
+enum GymBuddyGroup {
+    static let id = "group.ch.gymbuddy.app"
     static var defaults: UserDefaults { UserDefaults(suiteName: id) ?? .standard }
     static var container: URL? { FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: id) }
 }
@@ -199,12 +199,12 @@ struct WorkoutActivityAttributes: ActivityAttributes {
  */
 enum LiveActivityQueue {
     static let key = "liveActivityEvents"
-    static let didChange = Notification.Name("OpenGymLiveActivityEvent")
+    static let didChange = Notification.Name("GymBuddyLiveActivityEvent")
     /// Skip rest was tapped: RestAlertPlugin forgets the alert it would post on leaving the front.
-    static let restSkipped = Notification.Name("OpenGymLiveActivityRestSkipped")
+    static let restSkipped = Notification.Name("GymBuddyLiveActivityRestSkipped")
     /// Stop auto was tapped, or a set logged that changes the chain's timing: RestAlertPlugin drops
     /// the alerts of the chain of holds after the one booked now (the page books again when it wakes).
-    static let autoStopped = Notification.Name("OpenGymLiveActivityAutoStopped")
+    static let autoStopped = Notification.Name("GymBuddyLiveActivityAutoStopped")
     private static let lock = NSLock()
 
     static func all() -> [[String: Any]] {
@@ -234,14 +234,14 @@ enum LiveActivityQueue {
     }
 
     private static func read() -> [[String: Any]] {
-        guard let data = OpenGymGroup.defaults.data(forKey: key),
+        guard let data = GymBuddyGroup.defaults.data(forKey: key),
               let list = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return [] }
         return list
     }
 
     private static func write(_ list: [[String: Any]]) {
         if JSONSerialization.isValidJSONObject(list), let data = try? JSONSerialization.data(withJSONObject: list) {
-            OpenGymGroup.defaults.set(data, forKey: key)
+            GymBuddyGroup.defaults.set(data, forKey: key)
         }
     }
 }
@@ -303,7 +303,7 @@ enum LiveAnswer {
 
 /**
  * Where a tap's time goes (1.4.5). One line per button of the Live Activity, for Console.app:
- * subsystem "ch.opengym.app", category "live". Numbers and fixed words only, never a workout's
+ * subsystem "ch.gymbuddy.app", category "live". Numbers and fixed words only, never a workout's
  * name, an exercise or a weight.
  *
  *   tap log age=41250ms scene=1 pre=3ms update=38ms total=41ms page=-
@@ -318,7 +318,7 @@ enum LiveAnswer {
  * activity for its workout.
  */
 enum LiveLog {
-    static let logger = Logger(subsystem: "ch.opengym.app", category: "live")
+    static let logger = Logger(subsystem: "ch.gymbuddy.app", category: "live")
     private static let lock = NSLock()
     private static var scene = false
 
@@ -572,7 +572,7 @@ struct LiveQueueIntent: LiveActivityIntent {
 
 @available(iOS 17.0, *)
 enum LiveActivityTick {
-    static let restRequestId = "opengym.rest"   // RestAlertPlugin.requestId: the page's own replaces it
+    static let restRequestId = "gymbuddy.rest"   // RestAlertPlugin.requestId: the page's own replaces it
 
     /// A tap for the page to apply, except on Settings' "Try it" preview (attributes `pv`): its
     /// buttons move the preview along right here and never reach the history.
@@ -869,12 +869,12 @@ enum WidgetLogger {
     static let stateKey = "widgetLoggerState"
     static let eventsKey = "widgetEvents"
     static let eventsMax = 200
-    static let didChange = Notification.Name("OpenGymWidgetEvent")
-    /// The widgets that can draw the set (OpenGymWidgets.swift): Today, and the one you pick, which
+    static let didChange = Notification.Name("GymBuddyWidgetEvent")
+    /// The widgets that can draw the set (GymBuddyWidgets.swift): Today, and the one you pick, which
     /// shows it in its small and medium size while a workout runs (WidgetViews.swift KindWidgetView).
     /// Both share one copy of the set, so both are drawn again: one left behind would log a set
     /// other than the one it shows. The streak circle never shows it and is left alone.
-    static let widgetKinds = ["OpenGymToday", "OpenGymPick"]
+    static let widgetKinds = ["GymBuddyToday", "GymBuddyPick"]
 
     static func reloadWidgets() {
         widgetKinds.forEach { WidgetCenter.shared.reloadTimelines(ofKind: $0) }
@@ -899,7 +899,7 @@ enum WidgetLogger {
     }
 
     static func logger() -> [String: Any]? {
-        guard let url = OpenGymGroup.container?.appendingPathComponent("widget.json"),
+        guard let url = GymBuddyGroup.container?.appendingPathComponent("widget.json"),
               let data = try? Data(contentsOf: url),
               let snap = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let lg = snap["logger"] as? [String: Any], lg["sets"] is [Any] else { return nil }
@@ -943,7 +943,7 @@ enum WidgetLogger {
     }
 
     static func storedState() -> [String: Any]? {
-        guard let data = OpenGymGroup.defaults.data(forKey: stateKey) else { return nil }
+        guard let data = GymBuddyGroup.defaults.data(forKey: stateKey) else { return nil }
         return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
     }
 
@@ -1018,18 +1018,18 @@ enum WidgetLogger {
         default:
             break
         }
-        if JSONSerialization.isValidJSONObject(st), let data = try? JSONSerialization.data(withJSONObject: st) { OpenGymGroup.defaults.set(data, forKey: stateKey) }
+        if JSONSerialization.isValidJSONObject(st), let data = try? JSONSerialization.data(withJSONObject: st) { GymBuddyGroup.defaults.set(data, forKey: stateKey) }
         return event
     }
 
     static func events() -> [[String: Any]] {
-        guard let data = OpenGymGroup.defaults.data(forKey: eventsKey),
+        guard let data = GymBuddyGroup.defaults.data(forKey: eventsKey),
               let list = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return [] }
         return list
     }
 
     private static func writeEvents(_ list: [[String: Any]]) {
-        if JSONSerialization.isValidJSONObject(list), let data = try? JSONSerialization.data(withJSONObject: list) { OpenGymGroup.defaults.set(data, forKey: eventsKey) }
+        if JSONSerialization.isValidJSONObject(list), let data = try? JSONSerialization.data(withJSONObject: list) { GymBuddyGroup.defaults.set(data, forKey: eventsKey) }
     }
 
     static func remove(ids: Set<String>) {

@@ -103,7 +103,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
     /// Sets logged here that have not reached the phone yet (OutboxCore.waitingSets).
     @Published private(set) var unsentSets = 0
     /// Whether a snapshot from the phone ever arrived on this watch. The phone sends only while
-    /// openGym runs there, so until then the start screen says to open it once.
+    /// gymBuddy runs there, so until then the start screen says to open it once.
     @Published private(set) var heardFromPhone = UserDefaults.standard.bool(forKey: SessionStore.heardKey)
     private static let heardKey = "heardFromPhone"
     @Published private(set) var restEndsAt: Date?
@@ -152,16 +152,16 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
     /// The rest-over taps again once if nobody reacts to the first ones within a few seconds.
     private var restOverRepeat: DispatchWorkItem?
     private static let stateKey = "sessionState"
-    private static let restNotificationId = "opengym.rest"
+    private static let restNotificationId = "gymbuddy.rest"
     private static var clipDir: URL {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("clips")
     }
 
-    static let demoArgument = "-OpenGymWatchDemo"
-    /// CI screenshots: "-OpenGymWatchScreen rest" opens the demo on that screen.
-    static var demoScreen: String? { argument("-OpenGymWatchScreen") }
+    static let demoArgument = "-GymBuddyWatchDemo"
+    /// CI screenshots: "-GymBuddyWatchScreen rest" opens the demo on that screen.
+    static var demoScreen: String? { argument("-GymBuddyWatchScreen") }
     /// CI: a synthetic clip (not exercise media) shown on the demo's first exercise.
-    static var demoClip: String? { argument("-OpenGymWatchDemoClip") }
+    static var demoClip: String? { argument("-GymBuddyWatchDemoClip") }
     static func argument(_ name: String) -> String? {
         let a = ProcessInfo.processInfo.arguments
         guard let i = a.firstIndex(of: name), i + 1 < a.count else { return nil }
@@ -966,7 +966,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
         homeLock.lock(at: Date())
     }
 
-    /* ---------- workouts deleted in openGym, out of Apple Health ---------- */
+    /* ---------- workouts deleted in gymBuddy, out of Apple Health ---------- */
 
     private static let healthDeletedKey = "healthDeleted"
     private var healthDeleting = false
@@ -977,7 +977,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
         recentWorkouts = Array((recentWorkouts.filter { $0 != wid } + [wid]).suffix(3))
     }
 
-    /// The copies this watch saved of workouts deleted in openGym: taken out once (the ids settled
+    /// The copies this watch saved of workouts deleted in gymBuddy: taken out once (the ids settled
     /// are remembered), and the phone told, so it stops retrying what it could not delete itself.
     private func removeDeletedFromHealth(_ gone: [String]?) {
         guard !isDemo, !healthDeleting else { return }
@@ -985,7 +985,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
         let todo = SessionCore.healthToDelete(gone: gone, done: done)
         guard !todo.isEmpty else { return }
         healthDeleting = true
-        let recent = Set(recentWorkouts.map { "opengym-w-\($0)" })
+        let recent = Set(recentWorkouts.map { "gymbuddy-w-\($0)" })
         health.deleteWorkouts(syncIds: todo, keepTrying: recent) { [weak self] settled in
             guard let self = self else { return }
             self.healthDeleting = false
@@ -1633,10 +1633,10 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
 
     /* ---------- the demo the CI screenshots show (text only; a synthetic clip at most) ---------- */
 
-    /// CI: the screens at an accessibility text size (OpenGymWatchApp reads it too).
-    static var demoAX: Bool { ProcessInfo.processInfo.arguments.contains("-OpenGymWatchAX") }
+    /// CI: the screens at an accessibility text size (GymBuddyWatchApp reads it too).
+    static var demoAX: Bool { ProcessInfo.processInfo.arguments.contains("-GymBuddyWatchAX") }
     /// CI: as in Always On (wrist down), for what it costs to keep the screen up to date.
-    static var demoAOD: Bool { ProcessInfo.processInfo.arguments.contains("-OpenGymWatchAOD") }
+    static var demoAOD: Bool { ProcessInfo.processInfo.arguments.contains("-GymBuddyWatchAOD") }
 
     /// CI: the part of the Metrics stack the demo opens on ("metrics-pulse", "metrics-effort").
     static var demoMetricsPart: MetricsStack.Part {
@@ -1685,7 +1685,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
                                "hip-flexors": "Сгибатели бедра", "lats": "Широчайшие", "biceps": "Бицепс", "upper-back": "Верх спины",
                                "rear-delts": "Задние дельты", "side-delts": "Средние дельты"],
                     ]
-                    w.muscleNames = names[SessionStore.argument("-OpenGymWatchLang") ?? ""] ?? [
+                    w.muscleNames = names[SessionStore.argument("-GymBuddyWatchLang") ?? ""] ?? [
                         "chest": "Chest", "triceps": "Triceps", "front-delts": "Front delts", "abs": "Abs", "obliques": "Obliques",
                         "hip-flexors": "Hip flexors", "lats": "Lats", "biceps": "Biceps", "upper-back": "Upper back",
                         "rear-delts": "Rear delts", "side-delts": "Side delts"]
@@ -1716,8 +1716,8 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
             default: break
             }
             // CI: the watch in another language than its own (the app's, as the phone sends it).
-            if let lang = SessionStore.argument("-OpenGymWatchLang") { self.state.settings.lang = lang }
-            if let show = SessionStore.argument("-OpenGymWatchShow") {
+            if let lang = SessionStore.argument("-GymBuddyWatchLang") { self.state.settings.lang = lang }
+            if let show = SessionStore.argument("-GymBuddyWatchShow") {
                 // "all": every optional thing on, for a look at the fullest screen.
                 if show == "all" { self.state.settings.show = WatchShow(clip: true, hr: true, last: true, kcal: true, next: true, rest: "ring") }
                 if show == "plain" { self.state.settings.show = WatchShow(rest: "plain") }
@@ -1726,7 +1726,7 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
             self.loadTargets()
             if screen == "rest" || screen == "effort" { self.startRest(until: Date().addingTimeInterval(83), notify: false) }
             // CI: the rest as it stands while the phone has it paused (protocol 2, restPaused).
-            if screen == "rest", ProcessInfo.processInfo.arguments.contains("-OpenGymWatchRestPaused") {
+            if screen == "rest", ProcessInfo.processInfo.arguments.contains("-GymBuddyWatchRestPaused") {
                 self.pauseRest(left: 47)
             }
             if screen == "effort" {
@@ -1736,8 +1736,8 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
             if screen == "rest" || screen == "effort" {
                 self.health.setDemoHeartRate(128)
                 self.workoutSeenAt = Date().addingTimeInterval(-(24 * 60 + 10))
-                if let n = SessionStore.argument("-OpenGymWatchRated").flatMap(Double.init), screen == "effort" { self.lastRated = n }
-                if let n = SessionStore.argument("-OpenGymWatchUnsynced").flatMap(Int.init) { self.unsentSets = n }
+                if let n = SessionStore.argument("-GymBuddyWatchRated").flatMap(Double.init), screen == "effort" { self.lastRated = n }
+                if let n = SessionStore.argument("-GymBuddyWatchUnsynced").flatMap(Int.init) { self.unsentSets = n }
             }
             if screen == "hold" { self.startHold() }
             if screen == "offline" { self.reachable = false; self.queued = 3; self.unsentSets = 3 }
@@ -1754,10 +1754,10 @@ final class SessionStore: NSObject, ObservableObject, WCSessionDelegate, UNUserN
         }
     }
 
-    /// CI (-OpenGymWatchLong): the demo with a long workout name and a long German compound for the
+    /// CI (-GymBuddyWatchLong): the demo with a long workout name and a long German compound for the
     /// first exercise, the names that ran into the screen's corners on a 42 mm (mail, 11-12).
     static func demoLong(_ json: String) -> String {
-        guard ProcessInfo.processInfo.arguments.contains("-OpenGymWatchLong") else { return json }
+        guard ProcessInfo.processInfo.arguments.contains("-GymBuddyWatchLong") else { return json }
         return json.replacingOccurrences(of: #""name":"Push day""#, with: #""name":"Upper body: push, pull and core""#)
             .replacingOccurrences(of: #""name":"Bench Press""#, with: #""name":"Kurzhantel-Schrägbankdrücken, enger Griff""#)
             .replacingOccurrences(of: #""name":"Bulgarian Split Squat""#, with: #""name":"Bulgarian Split Squat with Dumbbells""#)

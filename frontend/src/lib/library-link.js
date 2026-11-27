@@ -1,10 +1,10 @@
 // A whole routine from the routines library (docs/ROUTINES_LIBRARY.md), "like Spotify": the page
-// https://opengym.ch/routines/<slug>/ opens the app when it is installed (the AASA components and
+// https://gymbuddy.ch/routines/<slug>/ opens the app when it is installed (the AASA components and
 // the Android intent filter claim it) and the website when it is not. The app fetches the page's
-// plan file, `<library>/plans/<slug>.opengym-plan.json` (scripts/routines/build.mjs), reads it
+// plan file, `<library>/plans/<slug>.gymbuddy-plan.json` (scripts/routines/build.mjs), reads it
 // with the same parsePlan as Plan > Import a plan file, and shows the usual import sheet.
 //
-// The library is opengym.ch's, or the one this instance points the Coach at (coach.routinesUrl,
+// The library is gymbuddy.ch's, or the one this instance points the Coach at (coach.routinesUrl,
 // lib/routine-library.js indexUrl): a link into either one is read, anything else is not ours.
 //
 // Pages of the library that are not a routine (the list, the submit form, the files under it)
@@ -40,7 +40,7 @@ const sameHost = (a, b) => a.replace(/^www\./, '') === b.replace(/^www\./, '')
  * What a link into a routines library is, or null for anything else. Never throws.
  *   { kind: 'routine', slug, pageUrl, planUrl, browserUrl }  a routine's page
  *   { kind: 'page', browserUrl }                              the list, the submit form, a file
- * `indexAddress` is the instance's index (indexUrl()); opengym.ch's library is always read.
+ * `indexAddress` is the instance's index (indexUrl()); gymbuddy.ch's library is always read.
  */
 export function libraryLinkFromUrl(raw, indexAddress = null) {
   if (typeof raw !== 'string' || raw.length > 1024) return null
@@ -67,7 +67,7 @@ export function libraryLinkFromUrl(raw, indexAddress = null) {
       kind: 'routine',
       slug,
       pageUrl: `${base}${slug}/`,
-      planUrl: `${base}plans/${slug}.opengym-plan.json`,
+      planUrl: `${base}plans/${slug}.gymbuddy-plan.json`,
       browserUrl: `${base}${slug}/index.html`
     }
   }

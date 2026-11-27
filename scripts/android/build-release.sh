@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Builds and signs the Android releases on the release machine:
-#   openGym-<version>.apk      the Standard sideloaded APK (GitHub, opengym.ch): 180 px built in
-#   openGym-Plus-<version>.apk the Plus sideloaded APK: 240 px built in (PLUS_PX)
-#   openGym-HD-<version>.apk   the HD sideloaded APK: sharper animations built in (HD_PX, 360)
-#   openGym-Offline-<version>.apk  openGym Offline: the F-Droid code without INTERNET, its own
-#                              package (ch.duartesantos.opengym.offline), 180 px built in, no updater
-#   openGym-<version>.aab      the Google Play bundle: Play updates it
+#   GYM Buddy-<version>.apk      the Standard sideloaded APK (GitHub, gymbuddy.ch): 180 px built in
+#   GYM Buddy-Plus-<version>.apk the Plus sideloaded APK: 240 px built in (PLUS_PX)
+#   GYM Buddy-HD-<version>.apk   the HD sideloaded APK: sharper animations built in (HD_PX, 360)
+#   GYM Buddy-Offline-<version>.apk  GYM Buddy Offline: the F-Droid code without INTERNET, its own
+#                              package (ch.duartesantos.gymbuddy.offline), 180 px built in, no updater
+#   GYM Buddy-<version>.aab      the Google Play bundle: Play updates it
 # Each from its own phone build (owner, v1.4.2). The APKs have no packs and update themselves,
 # each to its own kind (lib/update.js pickApk, told by VITE_APK_VARIANT); both are the same app
 # with the same key, so installing one over another keeps the data. The Play bundle carries
@@ -17,11 +17,11 @@
 # Signing uses this key too (docs/APP_STORES.md).
 #
 # Usage: scripts/android/build-release.sh <keystore> <password-file> <alias-file> [out-dir]
-#   QUALITY_ROOT  the private quality folders, default /mnt/build-fast/from-hdd/opengym-media/quality
+#   QUALITY_ROOT  the private quality folders, default /mnt/build-fast/from-hdd/gymbuddy-media/quality
 #   APK_PX        the Standard APK's built-in size, default 180;  PLAY_PX  the bundle's, default 180
 #   PLUS_PX       the Plus APK's built-in size, default 240; PLUS_PX=0 builds no Plus APK
 #   HD_PX         the HD APK's built-in size, default 360; HD_PX=0 builds no HD APK
-#   OFFLINE=0     no openGym Offline APK
+#   OFFLINE=0     no GYM Buddy Offline APK
 #   APK_ONLY=1    only the APKs, no Play bundle
 #   AAB_ONLY=1    only the Play bundle, no APKs
 #   NO_PACKS=1    a Play bundle without asset packs
@@ -33,7 +33,7 @@ set -euo pipefail
 KS=${1:?keystore}; PASS=${2:?file with the keystore password}; ALIAS=$(cat "${3:?file with the key alias}")
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 OUT=${4:-$PWD}
-QUALITY_ROOT=${QUALITY_ROOT:-/mnt/build-fast/from-hdd/opengym-media/quality}
+QUALITY_ROOT=${QUALITY_ROOT:-/mnt/build-fast/from-hdd/gymbuddy-media/quality}
 APK_PX=${APK_PX:-180}
 PLUS_PX=${PLUS_PX:-240}
 HD_PX=${HD_PX:-360}
@@ -64,15 +64,15 @@ phone_build() {
 
 # 1. The APKs: Standard (180 px built in), Plus (PLUS_PX) and HD (HD_PX), no packs.
 node "$ROOT/scripts/android/make-asset-packs.mjs" --clean
-APK_BUILT="$OUT/.openGym-$VER-sideload-unsigned.apk"   # beside the outputs: the root disk has no room
-PLUS_BUILT="$OUT/.openGym-Plus-$VER-sideload-unsigned.apk"
-HD_BUILT="$OUT/.openGym-HD-$VER-sideload-unsigned.apk"
-OFFLINE_BUILT="$OUT/.openGym-Offline-$VER-unsigned.apk"
+APK_BUILT="$OUT/.GYM Buddy-$VER-sideload-unsigned.apk"   # beside the outputs: the root disk has no room
+PLUS_BUILT="$OUT/.GYM Buddy-Plus-$VER-sideload-unsigned.apk"
+HD_BUILT="$OUT/.GYM Buddy-HD-$VER-sideload-unsigned.apk"
+OFFLINE_BUILT="$OUT/.GYM Buddy-Offline-$VER-unsigned.apk"
 if [ -z "${AAB_ONLY:-}" ]; then
 phone_build "$APK_PX" standard
 (cd android && ./gradlew --no-daemon $GRADLE_ARGS clean assembleSideloadRelease)
 cp android/app/build/outputs/apk/sideload/release/app-sideload-release-unsigned.apk "$APK_BUILT"
-# openGym Offline from the same 180 px phone build (the size F-Droid has); it never updates itself.
+# GYM Buddy Offline from the same 180 px phone build (the size F-Droid has); it never updates itself.
 if [ "$OFFLINE" != 0 ]; then
   (cd android && ./gradlew --no-daemon $GRADLE_ARGS assembleOfflineRelease)
   cp android/app/build/outputs/apk/offline/release/app-offline-release-unsigned.apk "$OFFLINE_BUILT"
@@ -99,17 +99,17 @@ sign_apk() {  # <unsigned> <name>
   (cd "$OUT" && sha256sum "$2" > "$2.sha256")
 }
 if [ -z "${AAB_ONLY:-}" ]; then
-  sign_apk "$APK_BUILT" "openGym-$VER.apk"
-  [ "$PLUS_PX" = 0 ] || sign_apk "$PLUS_BUILT" "openGym-Plus-$VER.apk"
-  [ "$HD_PX" = 0 ] || sign_apk "$HD_BUILT" "openGym-HD-$VER.apk"
-  [ "$OFFLINE" = 0 ] || sign_apk "$OFFLINE_BUILT" "openGym-Offline-$VER.apk"
-  (cd "$OUT" && cat openGym-*"$VER".apk.sha256 > SHA256SUMS)
+  sign_apk "$APK_BUILT" "GYM Buddy-$VER.apk"
+  [ "$PLUS_PX" = 0 ] || sign_apk "$PLUS_BUILT" "GYM Buddy-Plus-$VER.apk"
+  [ "$HD_PX" = 0 ] || sign_apk "$HD_BUILT" "GYM Buddy-HD-$VER.apk"
+  [ "$OFFLINE" = 0 ] || sign_apk "$OFFLINE_BUILT" "GYM Buddy-Offline-$VER.apk"
+  (cd "$OUT" && cat GYM Buddy-*"$VER".apk.sha256 > SHA256SUMS)
 fi
 
 
 if [ -n "${APK_ONLY:-}" ]; then
   rm -f "$APK_BUILT" "$PLUS_BUILT" "$HD_BUILT" "$OFFLINE_BUILT"
-  ls -la "$OUT"/openGym-*"$VER".apk
+  ls -la "$OUT"/GYM Buddy-*"$VER".apk
   exit 0
 fi
 
@@ -127,17 +127,17 @@ AAB_IN=android/app/build/outputs/bundle/playRelease/app-play-release.aab
 
 # An app bundle is signed like a jar; Play checks it with the upload key and re-signs the APKs
 # it builds from it with the app signing key.
-cp "$AAB_IN" "$OUT/openGym-$VER.aab"
+cp "$AAB_IN" "$OUT/GYM Buddy-$VER.aab"
 # Only the store password from the file: -keypass:file on the same file fails, and without it
 # jarsigner takes the store password for the key too.
 jarsigner -keystore "$KS" -storepass:file "$PASS" \
-  -sigalg SHA256withRSA -digestalg SHA-256 "$OUT/openGym-$VER.aab" "$ALIAS" >/dev/null
-jarsigner -verify "$OUT/openGym-$VER.aab" | grep -q "jar verified" || { echo "the bundle did not verify" >&2; exit 1; }
+  -sigalg SHA256withRSA -digestalg SHA-256 "$OUT/GYM Buddy-$VER.aab" "$ALIAS" >/dev/null
+jarsigner -verify "$OUT/GYM Buddy-$VER.aab" | grep -q "jar verified" || { echo "the bundle did not verify" >&2; exit 1; }
 
-ls -la "$OUT"/openGym-*"$VER".apk "$OUT/openGym-$VER.aab" 2>/dev/null || true
-if [ -n "${BUNDLETOOL:-}" ]; then java -jar "$BUNDLETOOL" validate --bundle="$OUT/openGym-$VER.aab" >/dev/null && echo "bundletool validate: OK"; fi
+ls -la "$OUT"/GYM Buddy-*"$VER".apk "$OUT/GYM Buddy-$VER.aab" 2>/dev/null || true
+if [ -n "${BUNDLETOOL:-}" ]; then java -jar "$BUNDLETOOL" validate --bundle="$OUT/GYM Buddy-$VER.aab" >/dev/null && echo "bundletool validate: OK"; fi
 # Google Play's limits: 500 MB for the base module, 1.5 GB per asset pack (the packs are split
 # below that by make-asset-packs.mjs). The base is what the bundle holds outside the packs.
-BASE=$(unzip -l "$OUT/openGym-$VER.aab" | awk '$4 != "" && $4 !~ /^anim_/ {s+=$1} END {print s}')
+BASE=$(unzip -l "$OUT/GYM Buddy-$VER.aab" | awk '$4 != "" && $4 !~ /^anim_/ {s+=$1} END {print s}')
 echo "base module: $((BASE / 1024 / 1024)) MB (Play allows 500 MB)"
 [ "$BASE" -lt $((500 * 1024 * 1024)) ] || { echo "the base module is over Play's 500 MB" >&2; exit 1; }

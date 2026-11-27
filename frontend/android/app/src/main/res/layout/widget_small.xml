@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget at 2x2 (OpenGymWidgetProvider): one thing, big. Also the 2x1 one's fallback. -->
+<!-- The widget at 2x2 (GymBuddyWidgetProvider): one thing, big. Also the 2x1 one's fallback. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"

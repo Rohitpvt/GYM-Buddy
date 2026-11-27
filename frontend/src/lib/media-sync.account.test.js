@@ -36,8 +36,8 @@ describe('a media sync bound to its account', () => {
   it('names the account on every request', async () => {
     await put(hex('a')); await put(hex('b'))
     await make(appStore({ S: twoFiles() })).syncMedia()
-    expect(api.mock.calls[0][1].headers).toEqual({ 'X-OpenGym-Account': 'A' })
-    expect(apiUpload.mock.calls.map(c => c[3])).toEqual([{ headers: { 'X-OpenGym-Account': 'A' } }, { headers: { 'X-OpenGym-Account': 'A' } }])
+    expect(api.mock.calls[0][1].headers).toEqual({ 'X-GYM Buddy-Account': 'A' })
+    expect(apiUpload.mock.calls.map(c => c[3])).toEqual([{ headers: { 'X-GYM Buddy-Account': 'A' } }, { headers: { 'X-GYM Buddy-Account': 'A' } }])
   })
 
   it('sends nothing once another account signed in while it asked what is missing', async () => {

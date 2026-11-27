@@ -29,7 +29,7 @@ import WatchConnectivity
  * Without a paired watch nothing happens: status says so and sendSnapshot is a no-op.
  *
  * A Garmin rides along (GarminLink.swift, docs/GARMIN.md): status says `garmin: true` when one with
- * the openGym app was picked in Garmin Connect, the page then adds its cut-down snapshot
+ * the gymBuddy app was picked in Garmin Connect, the page then adds its cut-down snapshot
  * (`garmin`) to each sendSnapshot, and the Garmin's events land in the same queue file. The Apple
  * Watch keeps its own snapshot; both can be there at once.
  *
@@ -77,7 +77,7 @@ public class WatchBridgePlugin: CAPPlugin, CAPBridgedPlugin {
     /* ---------- the page's calls ---------- */
 
     @objc func status(_ call: CAPPluginCall) {
-        // A Garmin with the openGym app counts as a watch for the page: it then sends snapshots.
+        // A Garmin with the gymBuddy app counts as a watch for the page: it then sends snapshots.
         let g = GarminLink.shared
         let garmin = GarminLink.onMain { g.anyInstalled() }
         guard WCSession.isSupported() else {
@@ -113,11 +113,11 @@ public class WatchBridgePlugin: CAPPlugin, CAPBridgedPlugin {
 
     /// A workout started on the phone: the watch app opens with it (Settings → Apple Watch, "Open on
     /// the watch"). HealthKit wakes the watch app with the workout's planned type (the page's
-    /// `type`, else strength training), and the watch starts its workout session (OpenGymWatchApp's
+    /// `type`, else strength training), and the watch starts its workout session (GymBuddyWatchApp's
     /// delegate). Only with a paired watch that has the app; anything else resolves { ok: false }
     /// and nothing happens.
     @objc func openOnWatch(_ call: CAPPluginCall) {
-        // A Garmin with the app shows its own "open openGym?" prompt.
+        // A Garmin with the app shows its own "open gymBuddy?" prompt.
         let garmin = GarminLink.onMain { GarminLink.shared.open() }
         guard WCSession.isSupported(), WCSession.default.activationState == .activated,
               WCSession.default.isPaired, WCSession.default.isWatchAppInstalled,
@@ -230,7 +230,7 @@ public class WatchBridgePlugin: CAPPlugin, CAPBridgedPlugin {
 
     /// The clips already on their way for each workout, by exercise.
     private var clipsSent: [String: Set<String>] = [:]
-    private let clipQueue = DispatchQueue(label: "ch.opengym.watch-clips", qos: .utility)
+    private let clipQueue = DispatchQueue(label: "ch.gymbuddy.watch-clips", qos: .utility)
 
     @objc func sendClips(_ call: CAPPluginCall) {
         guard let wid = call.getString("wid"), WCSession.isSupported() else { call.resolve(["sent": 0]); return }
@@ -348,7 +348,7 @@ final class WatchLink: NSObject, WCSessionDelegate {
     static let shared = WatchLink()
     /// The page's plugin, once it loaded: told of new events and of the link changing.
     weak var plugin: WatchBridgePlugin?
-    let queue = DispatchQueue(label: "ch.opengym.watch-events")
+    let queue = DispatchQueue(label: "ch.gymbuddy.watch-events")
 
     func start() {
         guard WCSession.isSupported() else { return }

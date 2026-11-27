@@ -1,13 +1,13 @@
 # Routines service
 
-`server.mjs` runs behind `opengym.ch/routines/api/`. It is the only moving part of the routines
+`server.mjs` runs behind `gymbuddy.ch/routines/api/`. It is the only moving part of the routines
 library; the pages themselves are static files from `node scripts/routines/build.mjs`.
 
 | Route | What it does |
 |---|---|
-| `POST api/preview` | `{ link }` or `{ plan }`: reads an openGym routine link or plan file and returns the days with exercise names, or the problems |
+| `POST api/preview` | `{ link }` or `{ plan }`: reads an GYM Buddy routine link or plan file and returns the days with exercise names, or the problems |
 | `POST api/submit` | the submit form: plan + title, description, credit, language, tags, optional cover photo (base64). Checked with `checkRoutine` (the CI validator), stored in `pending/`, sent to Telegram |
-| `POST api/copy` | `{ id }`: one "Copy to openGym" (counted once per visitor per routine per day) |
+| `POST api/copy` | `{ id }`: one "Copy to GYM Buddy" (counted once per visitor per routine per day) |
 | `GET api/stats` | `{ copies: { id: n } }`, what "Most copied" sorts by |
 | `GET api/health` | `{ ok: true }` |
 
@@ -47,8 +47,8 @@ the staging container before production polls the same bot, or give production i
 
 1. github.com → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** →
    Generate new token.
-2. Name `opengym-routines-inbox`, expiration up to a year, resource owner **DuarteSantos8**.
-3. Repository access: **Only select repositories** → `DuarteSantos8/openGym`.
+2. Name `gymbuddy-routines-inbox`, expiration up to a year, resource owner **DuarteSantos8**.
+3. Repository access: **Only select repositories** → `DuarteSantos8/GYM Buddy`.
 4. Repository permissions: **Contents: Read and write** (Metadata: Read-only is added by itself).
    Nothing else.
 5. Generate, copy, and put it on the VM without it ever showing up in a terminal log:
@@ -69,7 +69,7 @@ the staging container before production polls the same bot, or give production i
 | `CATALOGUE` | `/app/catalogue-lite.json` | written by `build.mjs --lite` |
 | `ENV_LABEL` | none | `STAGING`: marks Telegram messages and noindexes everything |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | none | moderation; without them submissions just wait in `pending/` |
-| `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `DuarteSantos8/openGym`, `routines-inbox` | see above |
+| `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | `DuarteSantos8/GYM Buddy`, `routines-inbox` | see above |
 
 ## Deploying (VM 192.168.1.159, Docker only there)
 
@@ -95,14 +95,14 @@ ssh root@192.168.1.159 'cd /opt/homelab/docker-apps && docker compose -p routine
 ```
 
 `apps/routines-staging/docker-compose.yml` (kept in the homelab repo) runs the container on the
-`homelab-proxy` network with a Traefik router for `Host(opengym.ch) && PathPrefix(<base>)`, so the
+`homelab-proxy` network with a Traefik router for `Host(gymbuddy.ch) && PathPrefix(<base>)`, so the
 live site and its nginx are never touched.
 
 ### Going live
 
 1. Merge the routines branch, build with `--base /routines/` (no `--staging`) into
-   `docker-apps/sites/opengym/dist/routines/` (targeted rsync/tar of that folder only).
-2. Add to `config/nginx/opengym.conf` (then `docker exec docker-apps-opengym-1 nginx -s reload`):
+   `docker-apps/sites/gymbuddy/dist/routines/` (targeted rsync/tar of that folder only).
+2. Add to `config/nginx/gymbuddy.conf` (then `docker exec docker-apps-gymbuddy-1 nginx -s reload`):
    ```nginx
    location /routines/ { try_files $uri $uri/ =404; }
    # The pages load ES modules (filter.mjs, qr.mjs): nginx must send them as JavaScript, or browsers refuse them.
@@ -110,7 +110,7 @@ live site and its nginx are never touched.
    location = /routines/index.json { add_header Access-Control-Allow-Origin "*" always; add_header Cache-Control "public, max-age=3600"; }
    location ^~ /routines/plans/ { add_header Content-Disposition "attachment"; }
    location ^~ /routines/media/ {
-       valid_referers none blocked server_names opengym.ch;
+       valid_referers none blocked server_names gymbuddy.ch;
        if ($invalid_referer) { return 403; }
        add_header Cross-Origin-Resource-Policy "same-origin" always;
        add_header X-Robots-Tag "noindex, noimageindex" always;
@@ -118,7 +118,7 @@ live site and its nginx are never touched.
    }
    ```
 3. Run the service as `routines` with `SITE_BASE=/routines/`, no `SITE_DIR`, no `ENV_LABEL`, and a
-   Traefik router `Host(opengym.ch) && PathPrefix(/routines/api/)` (priority above the site's).
+   Traefik router `Host(gymbuddy.ch) && PathPrefix(/routines/api/)` (priority above the site's).
    Stop the staging container first (one Telegram poller per bot).
-4. `website/robots.txt` already lists `https://opengym.ch/routines/sitemap.xml`; the site header
+4. `website/robots.txt` already lists `https://gymbuddy.ch/routines/sitemap.xml`; the site header
    gets its Routines link from the same deploy (website/*.html).

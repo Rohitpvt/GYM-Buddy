@@ -1,4 +1,4 @@
-# openGym on Wear OS
+# GYM Buddy on Wear OS
 
 A watch app for Wear OS 3 and later: Samsung Galaxy Watch 4 and newer, Pixel Watch, OnePlus Watch,
 TicWatch, Fossil Gen 6 and the rest. It is the Apple Watch app's twin: the phone stays the source
@@ -7,7 +7,7 @@ routine by itself.
 
 **Status: beta since v1.4.4.** It builds, its tests pass and it runs end to end on the Wear OS
 emulators against the phone's real sync code, but it has met few real watches yet.
-On the watch it is labelled "openGym Beta"; on Google Play it ships to the Wear OS closed-testing
+On the watch it is labelled "GYM Buddy Beta"; on Google Play it ships to the Wear OS closed-testing
 track first. Drop the label (`app_name` in `wear/wear-strings.mjs`) once testers confirm it.
 
 ## What it does
@@ -30,7 +30,7 @@ versions by @cubetes): one design on every wrist. The rules live in `WatchLogic.
     heading, "Waiting to sync 3" or "All synced", **Finish as a 1 s hold**, Discard with its own
     question. It comes up by itself after the last set. Wrist down there: back to the set.
     Each row leads with the exercise's still, as on the Apple Watch: the phone sends the running
-    workout's 180 px stills from its own app package (`/opengym/still/<exId>`, ~5 KB each, never
+    workout's 180 px stills from its own app package (`/gymbuddy/still/<exId>`, ~5 KB each, never
     fetched), greyed when done, the state on its corner, none in Always On or with the phone's
     animations off; the watch deletes them when the workout ends.
   - Set: the exercise, "Set 2 of 4" with warm-up / left / right, the superset partner, the numbers
@@ -99,7 +99,7 @@ Debug builds show any screen with a demo workout (`src/debug/assets/demo-snapsho
 and numbers only):
 
 ```bash
-adb shell am start -n ch.duartesantos.opengym.test/ch.duartesantos.opengym.wear.MainActivity --es demo rest
+adb shell am start -n ch.duartesantos.gymbuddy.test/ch.duartesantos.gymbuddy.wear.MainActivity --es demo rest
 # start, rest, overview, metrics, media, fix, hold, summary, weighin, countdown, go, idle; --es ambient 1 for Always On
 ```
 
@@ -110,9 +110,9 @@ with the same package name **and the same signing key**, so:
 
 | Phone app | Watch app |
 | --- | --- |
-| Google Play | Play Store on the watch → "Apps on your phone" → openGym |
-| The APK from opengym.ch / GitHub | `openGym-Wear-<version>.apk` of the same release (same key) |
-| F-Droid, openGym Offline | none: no Google Play services, no Wear OS link |
+| Google Play | Play Store on the watch → "Apps on your phone" → GYM Buddy |
+| The APK from gymbuddy.ch / GitHub | `GYM Buddy-Wear-<version>.apk` of the same release (same key) |
+| F-Droid, GYM Buddy Offline | none: no Google Play services, no Wear OS link |
 
 A watch with the other one looks to the phone exactly like a watch without the app. Settings →
 Wear OS watch on the phone says which of the two you need.
@@ -122,18 +122,18 @@ Sideloading the APK (Galaxy Watch 4 and newer, Pixel Watch):
 1. On the watch: Settings → About watch → Software → tap "Software version" seven times, then
    Settings → Developer options → ADB debugging on, Wireless debugging on. Note the IP and port.
 2. On a computer in the same Wi-Fi: `adb pair <ip>:<pair-port>` (the code is on the watch), then
-   `adb connect <ip>:<port>` and `adb install openGym-Wear-<version>.apk`. No computer? A
+   `adb connect <ip>:<port>` and `adb install GYM Buddy-Wear-<version>.apk`. No computer? A
    sideloading app on the phone such as Wear Installer does the same over wireless debugging.
-3. Open openGym on the phone once, then on the watch. Settings → Wear OS watch on the phone should
-   say "openGym is on your watch and in reach" and, a moment later, when it last heard from the watch.
+3. Open GYM Buddy on the phone once, then on the watch. Settings → Wear OS watch on the phone should
+   say "GYM Buddy is on your watch and in reach" and, a moment later, when it last heard from the watch.
 
 If it does not connect:
 
-- "Your watch is here, openGym isn't on it yet" although it is installed: the two apps are from
+- "Your watch is here, GYM Buddy isn't on it yet" although it is installed: the two apps are from
   different sources (different keys). Install the matching one.
-- "Not synced yet" on the watch: open openGym on the phone once. The routines come with the first snapshot.
+- "Not synced yet" on the watch: open GYM Buddy on the phone once. The routines come with the first snapshot.
 - Sets arrive only when the phone app is opened: the phone keeps the app from running in the
-  background (Samsung: Settings → Apps → openGym → Battery → Unrestricted, and take it off "Deep
+  background (Samsung: Settings → Apps → GYM Buddy → Battery → Unrestricted, and take it off "Deep
   sleeping apps"). Nothing is lost either way: the sets wait on the watch and in the Data Layer.
 - No heart rate, or no rest buzz with the screen off: allow the sensor permission the watch asks
   for at the first workout. Without it the workout service may not run in the background.
@@ -147,19 +147,19 @@ path: it only lets Android in as a platform with a watch link.
 
 | Path | Kind | Direction | Content |
 | --- | --- | --- | --- |
-| `/opengym/snapshot` | data item | phone → watch | `snapshot` (buildSnapshot's JSON, plus `streak`), `at` |
-| `/opengym/event/<id>` | data item | watch → phone | `event` (one event's JSON), `seq` (order) |
-| `/opengym/open` | message | phone → watch | a workout started on the phone: show it |
+| `/gymbuddy/snapshot` | data item | phone → watch | `snapshot` (buildSnapshot's JSON, plus `streak`), `at` |
+| `/gymbuddy/event/<id>` | data item | watch → phone | `event` (one event's JSON), `seq` (order) |
+| `/gymbuddy/open` | message | phone → watch | a workout started on the phone: show it |
 
 Events are data items, so the Data Layer keeps them while the phone is asleep or away, the way
 `transferUserInfo` does on the Apple Watch. The phone deleting an item is the watch's sign that it
-was stored (`WearListener` listens on `/opengym/event/` for exactly that); until then the watch puts
+was stored (`WearListener` listens on `/gymbuddy/event/` for exactly that); until then the watch puts
 it again, each time waiting twice as long (20 s up to 10 min, `OutboxCore.wait`), and looks after
 the link every 30 s while a workout runs. The watch also checks in (`watchStatus`, at most every six
 hours and after an update), which is what "Last heard from the watch" in the phone's Settings shows. `WatchListenerService` on the phone writes each to a
 queue file (even with the app closed), then deletes the item; the page drains the queue, applies
 each event once by its id and acknowledges it (`WatchEventQueue.java`). Capabilities:
-`opengym_phone` (phone app) and `opengym_wear` (watch app) let each side find the other.
+`gymbuddy_phone` (phone app) and `gymbuddy_wear` (watch app) let each side find the other.
 
 Without Google Play services or without the watch app, `status()` says "no watch" and the page
 sends nothing: the phone behaves as before.
@@ -175,7 +175,7 @@ session logic (`SessionCore.kt`) is a port of `ios/App/WatchCore` with its cases
 
 ```bash
 cd frontend/android
-./gradlew :wear:assembleDebug          # debug APK, ch.duartesantos.opengym.test (pairs with the phone's debug build)
+./gradlew :wear:assembleDebug          # debug APK, ch.duartesantos.gymbuddy.test (pairs with the phone's debug build)
 ./gradlew :wear:testDebugUnitTest      # SessionCore, the codec, the offline scenarios (OfflineSyncTest)
 node wear/wear-strings.mjs             # the strings, from the app's and the Apple Watch's translations
 scripts/android/build-wear.sh <keystore> <password-file> <alias-file> [out]   # release AAB + APK
@@ -220,7 +220,7 @@ The watch app goes into the phone app's listing (same package), as its own bundl
    factor → Wear OS**, and accept the Wear OS terms.
 2. Store listing → the Wear OS section: at least one Wear OS screenshot (384 × 384 or larger,
    round content on a square canvas) and, optionally, a Wear-specific description.
-3. Upload `openGym-Wear-<version>.aab` to the **Wear OS** track (closed testing first; Wear OS has
+3. Upload `GYM Buddy-Wear-<version>.aab` to the **Wear OS** track (closed testing first; Wear OS has
    its own dedicated tracks), with the same release notes.
 4. Data safety: unchanged in kind (heart rate stays on the device and goes only to the user's own
    phone app), but add "Health info: heart rate" as collected, not shared, if the review asks.

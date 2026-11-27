@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget picker's preview (opengym_widget_info.xml previewLayout, Android 12+): the 4x2
+<!-- The widget picker's preview (gymbuddy_widget_info.xml previewLayout, Android 12+): the 4x2
      widget with made-up numbers, a streak and this week, so the picker shows what it does
      instead of an empty box. Never drawn on the home screen; widget_medium.xml is the real one. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

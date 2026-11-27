@@ -14,7 +14,7 @@ const VERSION = 'v1';
 /** The 32-byte key, derived (HKDF-SHA256) so it is never the session key itself. */
 export function deriveKey(secret) {
   if (!secret || String(secret).length < 16) throw new Error('integrations: server secret missing');
-  return Buffer.from(crypto.hkdfSync('sha256', Buffer.from(String(secret)), Buffer.from('opengym-integrations'), Buffer.from('connections v1'), 32));
+  return Buffer.from(crypto.hkdfSync('sha256', Buffer.from(String(secret)), Buffer.from('gymbuddy-integrations'), Buffer.from('connections v1'), 32));
 }
 
 /** "v1.<nonce>.<tag>.<ciphertext>", all base64url. `aad` ties it to where it is stored. */
@@ -47,7 +47,7 @@ export const newId = (prefix = 'c') => prefix + '_' + crypto.randomBytes(9).toSt
 
 /**
  * The webhook signature: HMAC-SHA256 over "<timestamp>.<body>" with the webhook's secret, sent
- * as `X-OpenGym-Signature: t=<unix seconds>,v1=<hex>`. The timestamp inside the signed text lets
+ * as `X-GYM Buddy-Signature: t=<unix seconds>,v1=<hex>`. The timestamp inside the signed text lets
  * a receiver refuse a replayed delivery (docs/INTEGRATIONS.md has a checker).
  */
 export function signature(secret, body, ts = Math.floor(Date.now() / 1000)) {

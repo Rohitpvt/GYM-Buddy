@@ -85,7 +85,7 @@ test('start: PKCE S256, a state and a nonce, and a short-lived flow cookie', asy
   assert.equal(u.origin + u.pathname, h.mock.issuer + '/authorize');
   const p = u.searchParams;
   assert.equal(p.get('response_type'), 'code');
-  assert.equal(p.get('client_id'), 'opengym');
+  assert.equal(p.get('client_id'), 'gymbuddy');
   assert.equal(p.get('redirect_uri'), ORIGIN + '/api/oidc/callback');
   assert.equal(p.get('code_challenge_method'), 'S256');
   assert.match(p.get('code_challenge'), /^[A-Za-z0-9_-]{43}$/);
@@ -98,7 +98,7 @@ test('start: PKCE S256, a state and a nonce, and a short-lived flow cookie', asy
 });
 
 test('a first sign-in from the allowed group makes the profile, FIRST_USER_ADMIN makes it admin', async t => {
-  const h = await setup(t, { env: { FIRST_USER_ADMIN: '1', OIDC_ALLOWED_GROUPS: 'opengym' } });
+  const h = await setup(t, { env: { FIRST_USER_ADMIN: '1', OIDC_ALLOWED_GROUPS: 'gymbuddy' } });
   const r = await roundTrip(h);
   assert.equal(r.status, 302);
   assert.equal(landed(r).get('oidc'), 'signed-in');
@@ -115,11 +115,11 @@ test('a first sign-in from the allowed group makes the profile, FIRST_USER_ADMIN
   assert.ok(h.mock.seen.token[0].auth.startsWith('Basic '));
 
   // The second person is a member, not an admin, and signing in again finds the same profile.
-  h.mock.next = { sub: 'user-2', name: 'Bea', groups: ['opengym'] };
+  h.mock.next = { sub: 'user-2', name: 'Bea', groups: ['gymbuddy'] };
   const b = await roundTrip(h, { ip: '198.51.100.2' });
   const bm = await (await h.get('/api/me', { cookie: b.session })).json();
   assert.equal(bm.user.admin, false);
-  h.mock.next = { sub: 'user-1', name: 'Ana renamed', groups: ['opengym'] };
+  h.mock.next = { sub: 'user-1', name: 'Ana renamed', groups: ['gymbuddy'] };
   const again = await roundTrip(h);
   assert.equal((await (await h.get('/api/me', { cookie: again.session })).json()).user.id, u.id);
   assert.equal(h.db().users.length, 2);
@@ -127,14 +127,14 @@ test('a first sign-in from the allowed group makes the profile, FIRST_USER_ADMIN
 });
 
 test('not in the allowed group: no profile, and a linked profile that left the group loses its sessions', async t => {
-  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'opengym' } });
+  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'gymbuddy' } });
   h.mock.next = { sub: 'stranger', name: 'Eve', groups: ['other'] };
   const r = await roundTrip(h);
   assert.equal(landed(r).get('oidc-error'), 'group');
   assert.equal(r.session, null);
   assert.equal(h.db().users.length, 0);
 
-  h.mock.next = { sub: 'user-1', name: 'Ana', groups: ['opengym'] };
+  h.mock.next = { sub: 'user-1', name: 'Ana', groups: ['gymbuddy'] };
   const ok = await roundTrip(h);
   assert.equal((await h.get('/api/me', { cookie: ok.session })).status, 200);
   h.mock.next = { sub: 'user-1', name: 'Ana', groups: [] };
@@ -145,17 +145,17 @@ test('not in the allowed group: no profile, and a linked profile that left the g
 });
 
 test('groups from userinfo count when the ID token has none (Authelia style)', async t => {
-  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'opengym' }, mock: { userinfoGroups: true } });
+  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'gymbuddy' }, mock: { userinfoGroups: true } });
   const r = await roundTrip(h);
   assert.equal(landed(r).get('oidc'), 'signed-in');
 });
 
 test('the role map: admin and access from groups, a hand-made admin is never taken away', async t => {
-  const h = await setup(t, { env: { OIDC_ROLE_MAP: 'access=opengym, admin=ops' } });
-  h.mock.next = { sub: 'boss', name: 'Boss', groups: ['opengym', 'ops'] };
+  const h = await setup(t, { env: { OIDC_ROLE_MAP: 'access=gymbuddy, admin=ops' } });
+  h.mock.next = { sub: 'boss', name: 'Boss', groups: ['gymbuddy', 'ops'] };
   const r = await roundTrip(h);
   assert.equal((await (await h.get('/api/me', { cookie: r.session })).json()).user.admin, true);
-  h.mock.next = { sub: 'boss', name: 'Boss', groups: ['opengym'] };
+  h.mock.next = { sub: 'boss', name: 'Boss', groups: ['gymbuddy'] };
   const r2 = await roundTrip(h);
   assert.equal((await (await h.get('/api/me', { cookie: r2.session })).json()).user.admin, false, 'the claim gave it, the claim took it');
   h.mock.next = { sub: 'x', groups: ['nope'] };
@@ -222,7 +222,7 @@ test('e-mail linking is off by default, even verified', async t => {
 test('INVITE_ONLY without groups turns strangers away; with groups the group is the invite', async t => {
   const h = await setup(t, { env: { INVITE_ONLY: '1' } });
   assert.equal(landed(await roundTrip(h)).get('oidc-error'), 'invite');
-  const g = await setup(t, { env: { INVITE_ONLY: '1', OIDC_ALLOWED_GROUPS: 'opengym' } });
+  const g = await setup(t, { env: { INVITE_ONLY: '1', OIDC_ALLOWED_GROUPS: 'gymbuddy' } });
   assert.equal(landed(await roundTrip(g)).get('oidc'), 'signed-in');
 });
 
@@ -237,16 +237,16 @@ test('phone app: exact return address, and the code is worth nothing without the
   const verifier = b64u(crypto.randomBytes(40));
   const astate = b64u(crypto.randomBytes(16));
   const q = r => `?mode=app&return=${encodeURIComponent(r)}&challenge=${s256(verifier)}&astate=${astate}`;
-  for (const bad of ['opengym://oidc/../x', 'https://evil.example/cb', 'opengym://oidcx', 'evil://oidc']) {
+  for (const bad of ['gymbuddy://oidc/../x', 'https://evil.example/cb', 'gymbuddy://oidcx', 'evil://oidc']) {
     const r = await h.get('/api/oidc/start' + q(bad));
     assert.equal(r.status, 400, bad);
     assert.equal(r.headers.get('location'), null);
   }
-  const r = await roundTrip(h, { query: q('opengym://oidc') });
+  const r = await roundTrip(h, { query: q('gymbuddy://oidc') });
   assert.equal(r.status, 302);
   assert.equal(r.session, null, 'no cookie for the app');
   const back = new URL(r.location);
-  assert.equal(back.protocol + '//' + back.host, 'opengym://oidc');
+  assert.equal(back.protocol + '//' + back.host, 'gymbuddy://oidc');
   assert.equal(back.searchParams.get('astate'), astate);
   const code = back.searchParams.get('code');
   const wrong = await h.post('/api/oidc/app/redeem', { code, verifier: b64u(crypto.randomBytes(40)) }, { headers: { Origin: 'https://localhost', 'Sec-Fetch-Site': 'cross-site' } });
@@ -256,7 +256,7 @@ test('phone app: exact return address, and the code is worth nothing without the
   const late = await h.post('/api/oidc/app/redeem', { code, verifier }, { headers: { Origin: 'https://localhost', 'Sec-Fetch-Site': 'cross-site' } });
   assert.equal(late.status, 400);
 
-  const r2 = await roundTrip(h, { query: q('opengym://oidc') });
+  const r2 = await roundTrip(h, { query: q('gymbuddy://oidc') });
   const code2 = new URL(r2.location).searchParams.get('code');
   const ok = await h.post('/api/oidc/app/redeem', { code: code2, verifier }, { headers: { Origin: 'https://localhost', 'Sec-Fetch-Site': 'cross-site' } });
   assert.equal(ok.status, 200);
@@ -266,10 +266,10 @@ test('phone app: exact return address, and the code is worth nothing without the
 });
 
 test('phone app: a refusal goes back to the app with its reason and the app state', async t => {
-  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'opengym' } });
+  const h = await setup(t, { env: { OIDC_ALLOWED_GROUPS: 'gymbuddy' } });
   h.mock.next = { sub: 'x', groups: [] };
   const verifier = b64u(crypto.randomBytes(40));
-  const r = await roundTrip(h, { query: `?mode=app&return=opengym%3A%2F%2Foidc&challenge=${s256(verifier)}&astate=abcdefghijklmnop` });
+  const r = await roundTrip(h, { query: `?mode=app&return=gymbuddy%3A%2F%2Foidc&challenge=${s256(verifier)}&astate=abcdefghijklmnop` });
   const back = new URL(r.location);
   assert.equal(back.searchParams.get('error'), 'group');
   assert.equal(back.searchParams.get('astate'), 'abcdefghijklmnop');

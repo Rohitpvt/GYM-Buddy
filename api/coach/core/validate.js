@@ -307,7 +307,7 @@ export function validatePlan(data, ctx = {}) {
   return {
     ok: true,
     bundle: {
-      opengym_plan: 1,
+      gymbuddy_plan: 1,
       name: clampStr(data.name || 'Coach plan', 40),
       summary: clampText(data.summary || '', 4000),
       basedOn: clampText(data.basedOn || '', 1500),

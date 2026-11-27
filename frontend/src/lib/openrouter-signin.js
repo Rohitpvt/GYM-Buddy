@@ -5,7 +5,7 @@
 //   ?code=…; the verifier waits in sessionStorage meanwhile, and the key is filed on the server as
 //   the instance's OpenRouter key.
 //   Phone (bring your own key): the system browser session goes to openrouter.ai and comes back
-//   through https://opengym.ch/openrouter/ to opengym://openrouter, which the session catches; the
+//   through https://gymbuddy.ch/openrouter/ to gymbuddy://openrouter, which the session catches; the
 //   key goes into secure storage like a pasted one. Headless mode (a code to paste) is the
 //   fallback when the way back does not work.
 import { makePkce, authUrl, readCallback, pastedCode, exchangeCode, PHONE_CALLBACK, APP_RETURN } from '../../../api/coach/core/openrouter-oauth.js'
@@ -47,7 +47,7 @@ export async function finishWebSignIn({ save, loc = window.location, history = w
 }
 
 /**
- * Phone: one sign-in attempt, one PKCE pair. `url` goes through the opengym.ch bridge and back
+ * Phone: one sign-in attempt, one PKCE pair. `url` goes through the gymbuddy.ch bridge and back
  * into the app; `headlessUrl` has OpenRouter show the code instead. Either way the same verifier
  * redeems it, so a code copied off the bridge page or OpenRouter's own screen works when pasted.
  */
@@ -61,7 +61,7 @@ export async function phoneSession({ fetch: fetchImpl } = {}) {
   return {
     url: authUrl({ callbackUrl: PHONE_CALLBACK, challenge: p.challenge, state: p.state }),
     headlessUrl: authUrl({ challenge: p.challenge }),
-    /** The opengym://openrouter address the browser came back on. */
+    /** The gymbuddy://openrouter address the browser came back on. */
     finish: async back => {
       const cb = readCallback(back, p.state)
       if (cb.error) throw Object.assign(new Error(cb.error), { code: cb.error === 'denied' || cb.error === 'nocode' ? 'cancelled' : cb.error })

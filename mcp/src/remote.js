@@ -1,5 +1,5 @@
-/* The profile read through the api instead of the data folder (#880): with OPENGYM_URL and
-   OPENGYM_TOKEN and no OPENGYM_DATA on stdio, and always over HTTP (http.js). The MCP server then
+/* The profile read through the api instead of the data folder (#880): with GYMBUDDY_URL and
+   GYMBUDDY_TOKEN and no GYMBUDDY_DATA on stdio, and always over HTTP (http.js). The MCP server then
    needs no access to ./data, which holds every profile on the instance, and can run anywhere.
 
    A scoped token (ogt_…, Settings → API tokens) reads /api/token/*, which hands it only its
@@ -22,7 +22,7 @@ export function createRemoteProfile(cfg, { fetchImpl } = {}) {
       if (user && !fresh) return { user, scopes }
       const r = await apiFetch(cfg, paths.me, opts)
       const u = r.body?.user
-      if (!u || typeof u.id !== 'string') throw err('EAPI', `the openGym server did not say whose token this is (GET ${paths.me})`)
+      if (!u || typeof u.id !== 'string') throw err('EAPI', `the GYM Buddy server did not say whose token this is (GET ${paths.me})`)
       user = { id: u.id, name: typeof u.name === 'string' ? u.name : '' }
       scopes = r.body?.token?.scopes || null
       return { user, scopes }

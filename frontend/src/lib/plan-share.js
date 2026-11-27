@@ -1,7 +1,7 @@
 // Share a weekly plan.
 //
 // Two jobs:
-//  1. A small, self-contained file a friend can import into THEIR openGym — just the
+//  1. A small, self-contained file a friend can import into THEIR GYM Buddy — just the
 //     routines + the week schedule + the custom exercises those routines use. It never
 //     carries workouts, weigh-ins or settings, and importing MERGES (adds routines with
 //     fresh ids) so nothing the friend already has is touched.
@@ -44,7 +44,7 @@ const PLAN_UNITS = new Set(['kg', 'lb'])
 // A plan's numbers are in the unit that wrote it. Missing unit is deliberately legacy-compatible:
 // old files were read as already being in the recipient's unit, so keep their values unchanged.
 const planUnit = value => value === 'lbs' ? 'lb' : PLAN_UNITS.has(value) ? value : null
-const unitError = () => { throw new Error(t('this isn’t an openGym plan file')) }
+const unitError = () => { throw new Error(t('this isn’t an GYM Buddy plan file')) }
 
 function declaredPlanUnit(data) {
   let declared = null
@@ -286,7 +286,7 @@ export function buildPlanBundle(S, name) {
   // The plan's exercises that are shown in a weight unit of their own (#657), so a shared lb
   // machine arrives as one. The numbers stay in the file's `unit`; an older app skips the map.
   const exUnit = Object.fromEntries([...usedIds].map(id => [id, exUnitPin(S, id)]).filter(([, u]) => u))
-  return { opengym_plan: PLAN_FMT, exported: todayISO(), name: name || '', unit, week, routines, customEx,
+  return { gymbuddy_plan: PLAN_FMT, exported: todayISO(), name: name || '', unit, week, routines, customEx,
     ...(Object.keys(exUnit).length ? { exUnit } : {}),
     ...(programmes.length ? { programme_fmt: PROGRAMME_FMT, programmes } : {}) }
 }
@@ -313,11 +313,11 @@ export function buildProgrammeBundle(S, id) {
  * is trained.
  */
 export function parsePlan(raw, destinationUnit = 'kg') {
-  const notPlan = () => Object.assign(new Error(t('this isn’t an openGym plan file')), { code: 'not-plan' })
+  const notPlan = () => Object.assign(new Error(t('this isn’t an GYM Buddy plan file')), { code: 'not-plan' })
   let data = raw
   if (typeof raw === 'string') { try { data = JSON.parse(raw) } catch { throw notPlan() } }
   const destination = planUnit(destinationUnit)
-  if (!data || typeof data !== 'object' || Array.isArray(data) || !data.opengym_plan || !Array.isArray(data.routines) || !destination) {
+  if (!data || typeof data !== 'object' || Array.isArray(data) || !data.gymbuddy_plan || !Array.isArray(data.routines) || !destination) {
     throw notPlan()
   }
   const sourceUnit = declaredPlanUnit(data)

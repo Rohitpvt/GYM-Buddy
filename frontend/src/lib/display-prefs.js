@@ -21,18 +21,18 @@ export const TEXT_SIZES = { smallest: 0.82, small: 0.9, default: 1, large: 1.12,
 // sizes past 300 %; those people get Largest, and the system's own zoom for the rest.
 export const SYSTEM_MIN = 0.82
 export const SYSTEM_MAX = 1.4
-export const TEXT_SCALE_EVENT = 'opengym:text-scale'
+export const TEXT_SCALE_EVENT = 'gymbuddy:text-scale'
 
 /**
  * The phone's text size as a factor (1 = the platform's default), or 1 where nobody says (the web:
  * there the browser's own font size setting already moves the root size, which is in %).
- * Android: window.OpenGymText.scale(), live (TextScalePlugin.java). iOS: window.__ogTextScale, set
+ * Android: window.GymBuddyText.scale(), live (TextScalePlugin.java). iOS: window.__ogTextScale, set
  * before the page runs and again when Dynamic Type changes (MainViewController.swift).
  */
 export function systemTextScale(win = globalThis) {
   let k = null
   try {
-    const a = win?.OpenGymText
+    const a = win?.GymBuddyText
     if (a && typeof a.scale === 'function') k = Number(a.scale())
   } catch { /* the bridge went away */ }
   if (!(k > 0)) k = Number(win?.__ogTextScale)
@@ -48,7 +48,7 @@ export function textScaleFor(text, win = globalThis) {
 
 /** Whether the shell tells us the phone's text size (then "Default" reads "Like the phone"). */
 export function followsSystemText(win = globalThis) {
-  return typeof win?.OpenGymText?.scale === 'function' || Number(win?.__ogTextScale) > 0
+  return typeof win?.GymBuddyText?.scale === 'function' || Number(win?.__ogTextScale) > 0
 }
 const MOTIONS = ['system', 'less']
 const QUERY = /prefers-reduced-motion\s*:\s*reduce/

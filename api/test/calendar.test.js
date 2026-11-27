@@ -27,14 +27,14 @@ test('a day holds a combined weekday, an override, or nothing on a rest override
 test('the feed: all-day plan events with stable ids, escaped, folded', () => {
   const ics = buildIcs(S, { uid: 'u1', now: NOW, tz: 'UTC', name: 'Duarte' });
   assert.match(ics, /^BEGIN:VCALENDAR\r\nVERSION:2.0\r\n/);
-  assert.match(ics, /X-WR-CALNAME:openGym · Duarte\r\n/);
+  assert.match(ics, /X-WR-CALNAME:GYM Buddy · Duarte\r\n/);
   assert.ok(ics.endsWith('END:VCALENDAR\r\n'));
   for (const line of ics.split('\r\n')) assert.ok(Buffer.byteLength(line) <= 75, 'folded: ' + line);
   const ev = events(ics);
   const wed = ev.filter(e => e['DTSTART;VALUE=DATE'] === '20261104');
   assert.deepEqual(wed.map(e => e.SUMMARY), ['💪 Push\\, heavy', 'Core']);
   assert.equal(wed[0]['DTEND;VALUE=DATE'], '20261105');
-  assert.equal(wed[0].UID, 'plan-2026-11-04-a-u1@opengym');
+  assert.equal(wed[0].UID, 'plan-2026-11-04-a-u1@gymbuddy');
   assert.ok(!ev.some(e => e['DTSTART;VALUE=DATE'] === '20261106'), 'rest override');
   assert.ok(ev.some(e => e['DTSTART;VALUE=DATE'] === '20261107' && e.SUMMARY.endsWith('Push\\, heavy')));
   assert.ok(!ics.includes('✓'), 'no workouts unless asked');
@@ -45,7 +45,7 @@ test('the feed: all-day plan events with stable ids, escaped, folded', () => {
 
 test('with done: the finished workouts as timed events, and their day without its plan', () => {
   const ev = events(buildIcs({ ...S, week: { ...S.week, 1: ['c'] } }, { uid: 'u1', now: NOW, tz: 'UTC', done: true }));
-  const w = ev.find(e => e.UID === 'done-w1-u1@opengym');
+  const w = ev.find(e => e.UID === 'done-w1-u1@gymbuddy');
   assert.equal(w.DTSTART, '20261102T170000Z');
   assert.equal(w.DTEND, '20261102T180500Z');
   assert.equal(w.SUMMARY, '✓ Monday thing');

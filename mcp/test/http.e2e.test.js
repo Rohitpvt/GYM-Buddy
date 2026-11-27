@@ -70,7 +70,7 @@ describe.skipIf(!HAVE_API)('MCP over HTTP with scoped tokens', () => {
       child.once('exit', code => { clearTimeout(give); reject(new Error(`server exited (${code}):\n${log}`)) })
     })
     apiBase = `http://127.0.0.1:${port}`
-    delete process.env.OPENGYM_DATA
+    delete process.env.GYMBUDDY_DATA
     const { createMcpHandler } = await import('../src/http.js')
     const handle = createMcpHandler({ apiUrl: apiBase, allowedOrigins: ['https://gym.example.com'] })
     mcp = http.createServer((req, res) => handle(req, res))

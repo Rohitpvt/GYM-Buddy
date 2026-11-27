@@ -65,7 +65,7 @@ export class ScopeError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
 }
 
-const sha = v => crypto.createHash('sha256').update('opengym-token:' + v).digest('hex');
+const sha = v => crypto.createHash('sha256').update('gymbuddy-token:' + v).digest('hex');
 /** Two hex digests compared in constant time; false for anything malformed. */
 export function sameHash(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string' || !/^[0-9a-f]{64}$/.test(a) || !/^[0-9a-f]{64}$/.test(b)) return false;

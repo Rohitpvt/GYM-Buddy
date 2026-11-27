@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// openNutrition → openGym (gm-hooks): linking against a stand-in openNutrition, and where its numbers show.
+// openNutrition → GYM Buddy (gm-hooks): linking against a stand-in openNutrition, and where its numbers show.
 import { describe, it, expect, beforeEach } from 'vitest'
 import {
   cleanUrl, guessUrl, cleanDay, cleanSummary, cleanFasting, link, refresh, loadLink, unlink, daysIn, nutritionSummary,
@@ -48,7 +48,7 @@ const NOW = Date.parse('2026-11-04T08:00:00Z')
 beforeEach(async () => { localStorage.removeItem(NUTRITION_KEY); await unlink() })
 
 describe('sister-nutrition: reading what openNutrition says', () => {
-  it('cleans the address and guesses one from openGym\'s own', () => {
+  it('cleans the address and guesses one from GYM Buddy\'s own', () => {
     expect(cleanUrl('nutrition.example.com/')).toBe('https://nutrition.example.com')
     expect(cleanUrl('ftp://x')).toBe(null)
     expect(guessUrl('https://gym.example.com')).toBe('https://nutrition.example.com')
@@ -75,7 +75,7 @@ describe('sister-nutrition: linking', () => {
     const l = await link('nutrition.example.com', 'gym1-2345', { fetchFn: m.fetchFn, now: NOW })
     expect(l.url).toBe('https://nutrition.example.com')
     expect(m.asked[0].url).toBe('https://nutrition.example.com/api/v1/integration/pair/redeem')
-    expect(JSON.parse(m.asked[0].init.body)).toEqual({ code: 'GYM12345', app: 'opengym', scopes: ['summary:read'] })
+    expect(JSON.parse(m.asked[0].init.body)).toEqual({ code: 'GYM12345', app: 'gymbuddy', scopes: ['summary:read'] })
     expect(m.asked[1].url).toBe('https://nutrition.example.com/api/v1/integration/summary?from=2026-10-22&to=2026-11-04')
     expect(localStorage.getItem(NUTRITION_KEY)).not.toContain(m.token)
     expect(loadLink().hint).toBe(m.token.slice(-4))
@@ -156,7 +156,7 @@ describe('sister-nutrition: where it shows', () => {
   })
 })
 
-describe('sister-nutrition: openGym Offline', () => {
+describe('sister-nutrition: GYM Buddy Offline', () => {
   it('never links, reads or shows anything in the build without the network', async () => {
     const { setOfflineBuild, OFFLINE_OFF_CARDS } = await import('./build-caps.js')
     expect(OFFLINE_OFF_CARDS).toContain('opennutrition')

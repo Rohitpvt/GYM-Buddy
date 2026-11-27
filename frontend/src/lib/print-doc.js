@@ -1,9 +1,9 @@
-// The paper side of openGym: one page shell every printout shares (the weekly plan, one routine,
+// The paper side of GYM Buddy: one page shell every printout shares (the weekly plan, one routine,
 // one workout, the performance report), and the one way to send it to a printer or a PDF.
 //
 // What every printout gets from here:
-//  - the openGym logo top left, the title, a line of facts, and who it is for and when;
-//  - page numbers and opengym.ch in the bottom margin (CSS @page margin boxes: Chrome, Android's
+//  - the GYM Buddy logo top left, the title, a line of facts, and who it is for and when;
+//  - page numbers and gymbuddy.ch in the bottom margin (CSS @page margin boxes: Chrome, Android's
 //    WebView, desktop Chrome/Edge; the iOS app draws the same line natively, PrintPlugin.swift).
 //    Desktop Firefox (checked with 158) and Safari drop margin boxes, so there the line is left
 //    out on purpose: nothing else changes, and their own "Headers and footers" print option (on
@@ -43,8 +43,8 @@ export function probeMarks(probe) {
   return { s: id => mark('s', id), e: id => mark('e', id), h: id => mark('h', id) }
 }
 
-// The logo's mark (assets/logo/opengym-mark.svg): five plain rectangles in brand green, beside "open"
-// plus "Gym" in brand green, the light lockup of assets/logo/opengym-logo-light.svg.
+// The logo's mark (assets/logo/gymbuddy-mark.svg): five plain rectangles in brand green, beside "open"
+// plus "Gym" in brand green, the light lockup of assets/logo/gymbuddy-logo-light.svg.
 export const LOGO_SVG = '<svg class="logo-mark" viewBox="80 169 352 174" aria-hidden="true">'
   + '<g fill="#a3e635"><rect x="80" y="242" width="352" height="28"/><rect x="80" y="199" width="36" height="114"/>'
   + '<rect x="131" y="169" width="47" height="174"/><rect x="334" y="169" width="47" height="174"/>'
@@ -71,7 +71,7 @@ export const PRINT_CSS = `
   @page {
     size: auto;
     margin: 15mm 14mm 17mm;
-    @bottom-left { content: "opengym.ch"; font: 7.5pt/1 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #9aa0ad; }
+    @bottom-left { content: "gymbuddy.ch"; font: 7.5pt/1 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #9aa0ad; }
     @bottom-right { font: 7.5pt/1 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #9aa0ad; }
   }
   :root {
@@ -159,7 +159,7 @@ ${css}</style></head>
     ${factLine ? `<div class="facts">${factLine}</div>` : ''}
   </header>
   ${body}
-  <div class="end keep">${esc(t('Made with openGym'))} · opengym.ch${credit ? `<div class="credit" lang="en" dir="ltr">${esc(credit)}</div>` : ''}</div>
+  <div class="end keep">${esc(t('Made with GYM Buddy'))} · gymbuddy.ch${credit ? `<div class="credit" lang="en" dir="ltr">${esc(credit)}</div>` : ''}</div>
 </div></body></html>`
 }
 
@@ -176,7 +176,7 @@ export function paperFor(locale) {
 export function printOptions() {
   let locale = ''
   try { locale = navigator.language || '' } catch (e) { /* */ }
-  return { paper: paperFor(locale), footer: { left: 'opengym.ch', page: t('Page {0} of {1}') } }
+  return { paper: paperFor(locale), footer: { left: 'gymbuddy.ch', page: t('Page {0} of {1}') } }
 }
 
 // The web: a hidden iframe and the browser's own print dialog (→ Save as PDF), so we never
@@ -214,7 +214,7 @@ function printInFrame(html) {
  * suggested PDF file; Android refuses a job without one.
  */
 export function printDocument(html, name) {
-  if (MOBILE) return printHtml(html, name || 'openGym', printOptions()).catch(err => {
+  if (MOBILE) return printHtml(html, name || 'GYM Buddy', printOptions()).catch(err => {
     // A dismissed sheet stays quiet. A phone with no print service at all (#991) says so: the
     // store comes in through a dynamic import, since plain Node tests load this file too.
     if (err?.code !== 'no-service') return

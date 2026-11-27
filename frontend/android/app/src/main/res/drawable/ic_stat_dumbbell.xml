@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The logo mark (assets/logo/opengym-mark.svg) for the status bar: an alpha mask, so white. -->
+<!-- The logo mark (assets/logo/gymbuddy-mark.svg) for the status bar: an alpha mask, so white. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"

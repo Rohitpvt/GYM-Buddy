@@ -1,4 +1,4 @@
-// The submit form: reads an openGym routine link or plan file, asks the routines service what it
+// The submit form: reads an GYM Buddy routine link or plan file, asks the routines service what it
 // makes of it (the same checks CI runs), shrinks the cover photo in the browser, and sends it all
 // for review. Four steps, one on screen at a time; each field says what's wrong as you leave it,
 // and the last step shows the routine roughly as the library will. Nothing is published until a
@@ -175,7 +175,7 @@ $('plan').addEventListener('change', async () => {
   $('link').value = ''
   if (f.size > 256 * 1024) return show($('src-err'), 'That file is bigger than any plan file. Is it the right one?')
   let plan
-  try { plan = JSON.parse(await f.text()) } catch { return show($('src-err'), 'That file is not an openGym plan file (it is not JSON).') }
+  try { plan = JSON.parse(await f.text()) } catch { return show($('src-err'), 'That file is not an GYM Buddy plan file (it is not JSON).') }
   readSource({ plan })
 })
 

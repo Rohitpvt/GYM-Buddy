@@ -11,8 +11,8 @@ const read = p => readFileSync(fileURLToPath(new URL(p, import.meta.url)), 'utf8
 const views = read('../../ios/App/App/WidgetViews.swift')
 const activity = read('../../ios/App/App/WorkoutActivity.swift')
 const plugin = read('../../ios/App/App/LiveActivityPlugin.swift')
-const receiver = read('../../android/app/src/main/java/ch/duartesantos/opengym/WorkoutCardReceiver.java')
-const card = read('../../android/app/src/main/java/ch/duartesantos/opengym/WorkoutCard.java')
+const receiver = read('../../android/app/src/main/java/ch/duartesantos/gymbuddy/WorkoutCardReceiver.java')
+const card = read('../../android/app/src/main/java/ch/duartesantos/gymbuddy/WorkoutCard.java')
 const glance = read('./live-glance.js')
 const between = (src, a, b) => src.slice(src.indexOf(a), src.indexOf(b, src.indexOf(a)))
 
@@ -74,7 +74,7 @@ describe('Try it: a preview logs nothing', () => {
 
 // The slow Lock Screen (owner, 1.4.5): a tap has to show at once and stay shown.
 describe('a tap answers at once and is not drawn over', () => {
-  const javaPlugin = read('../../android/app/src/main/java/ch/duartesantos/opengym/LiveActivityPlugin.java')
+  const javaPlugin = read('../../android/app/src/main/java/ch/duartesantos/gymbuddy/LiveActivityPlugin.java')
   const tick = between(activity, 'enum LiveActivityTick', 'private static func bookRestOver')
   it('iOS: the tap is queued and its alerts are booked before the redraw, and only then is the page told', () => {
     // Queued first: the page's older state is told apart by it. The alerts with it, before the
@@ -116,7 +116,7 @@ describe('a tap answers at once and is not drawn over', () => {
   })
   it('Android: the same guard, checked and saved under the lock the buttons queue with, only for the workout the card is of', () => {
     const update = between(javaPlugin, 'public void update', 'public void end')
-    const note = read('../../android/app/src/main/java/ch/duartesantos/opengym/WorkoutNotification.java')
+    const note = read('../../android/app/src/main/java/ch/duartesantos/gymbuddy/WorkoutNotification.java')
     expect(update).toMatch(/if \(!WorkoutNotification\.saveUnlessUnseen\(ctx, attributes, state, seen\)\) \{/)
     expect(update).toMatch(/stale\.put\("stale", true\);/)
     expect(update.indexOf('saveUnlessUnseen(')).toBeLessThan(update.indexOf('WorkoutNotification.refresh('))
@@ -155,7 +155,7 @@ describe('a tap answers at once and is not drawn over', () => {
     const kinds = JSON.parse(activity.match(/static let widgetKinds = (\[[^\]]+\])/)[1])
     // The kinds whose views draw the set (LoggerView): they share one copy of it, so one left
     // behind would show a set and log the one after it.
-    const widgets = read('../../ios/App/OpenGymWidgets/OpenGymWidgets.swift')
+    const widgets = read('../../ios/App/GymBuddyWidgets/GymBuddyWidgets.swift')
     const viewsOf = src => [...src.matchAll(/\b([A-Z]\w*View)\(/g)].map(x => x[1])
     const bodyOf = (src, name) => (src.includes('struct ' + name + ': View') ? between(src, 'struct ' + name + ': View', '\n}\n') : '')
     const expected = []
@@ -203,7 +203,7 @@ describe('the timing log of the Live Activity buttons (iOS)', () => {
     expect(tick.match(/await activity\.update\(/g).length).toBe(tick.match(/tap\.willUpdate\(\)/g).length)
   })
   it('one subsystem and category to filter by, and only numbers and fixed words in a line', () => {
-    expect(log).toMatch(/Logger\(subsystem: "ch\.opengym\.app", category: "live"\)/)
+    expect(log).toMatch(/Logger\(subsystem: "ch\.gymbuddy\.app", category: "live"\)/)
     // Nothing of the workout: no id, no exercise, no state.
     expect(log).not.toMatch(/wid|exId|exName|state\./)
     // The names are literals, or the kind after it was checked against the four fixed words.

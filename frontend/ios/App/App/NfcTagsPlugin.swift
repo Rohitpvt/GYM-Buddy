@@ -5,12 +5,12 @@ import CoreNFC
 #endif
 
 /**
- * openGym's NFC stickers (lib/nfc.js, components/Nfc.jsx): writes one openGym link onto a sticker
+ * gymBuddy's NFC stickers (lib/nfc.js, components/Nfc.jsx): writes one gymBuddy link onto a sticker
  * with Core NFC's own sheet ("Hold the top of your iPhone near the sticker").
  *
  * Reading needs nothing here: an iPhone XS or newer reads NDEF stickers in the background, and the
- * https://opengym.ch/nfc link on ours comes back to the page as opengym://nfc?... (through
- * opengym.ch/nfc, or straight away once opengym.ch is an associated domain), via @capacitor/app.
+ * https://gymbuddy.ch/nfc link on ours comes back to the page as gymbuddy://nfc?... (through
+ * gymbuddy.ch/nfc, or straight away once gymbuddy.ch is an associated domain), via @capacitor/app.
  *
  * Only NDEF stickers: no card emulation, nothing reads or copies a gym's access card.
  *

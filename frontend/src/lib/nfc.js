@@ -4,7 +4,7 @@
 // NfcTagsPlugin.java with the NfcAdapter's reader mode) writes a sticker. Reading needs nothing
 // running: Android starts the app for one of our links (the NDEF_DISCOVERED filter in the
 // manifest, delivered by the plugin's `open` event), iOS reads stickers in the background and
-// the link comes back as opengym://nfc?... through @capacitor/app's appUrlOpen.
+// the link comes back as gymbuddy://nfc?... through @capacitor/app's appUrlOpen.
 // Web: Web NFC (NDEFReader), which only Chrome on Android has. It writes, and reads while the page
 // is open and the site already has the NFC permission (asked when you first write a sticker).
 // Anywhere else nfcSupport() answers false and the NFC rows stay away.

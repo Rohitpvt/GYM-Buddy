@@ -1,26 +1,26 @@
-// NFC stickers (v1.4.4): what an openGym sticker says, and what a tap on one does.
+// NFC stickers (v1.4.4): what an GYM Buddy sticker says, and what a tap on one does.
 //
 // The app writes plain NDEF URI records itself (lib/nfc.js, NfcTagsPlugin on the phones, Web NFC
 // in Chrome on Android). Two kinds:
 //
-//   https://opengym.ch/nfc?do=start            start today's workout (or open the one running)
-//   https://opengym.ch/nfc?do=checkin&card=ID  show the gym membership code (views/CheckIn.jsx)
-//   https://opengym.ch/nfc?ex=ID               a machine: jump to that exercise in the workout
+//   https://gymbuddy.ch/nfc?do=start            start today's workout (or open the one running)
+//   https://gymbuddy.ch/nfc?do=checkin&card=ID  show the gym membership code (views/CheckIn.jsx)
+//   https://gymbuddy.ch/nfc?ex=ID               a machine: jump to that exercise in the workout
 //
 // An https link and not only our own scheme, because that is what a phone reads with the app
 // closed: Android hands the tag to the app through the NDEF_DISCOVERED filter in the manifest,
 // and iOS background tag reading only routes web links (custom schemes are not supported there);
-// until opengym.ch is an associated domain of the iPhone app, the link opens opengym.ch/nfc in
-// Safari, which hands it on as opengym://nfc?... A phone without openGym lands on that page too.
-// The short opengym:// forms (opengym://checkin, opengym://exercise/ID) are read as well.
+// until gymbuddy.ch is an associated domain of the iPhone app, the link opens gymbuddy.ch/nfc in
+// Safari, which hands it on as gymbuddy://nfc?... A phone without GYM Buddy lands on that page too.
+// The short gymbuddy:// forms (gymbuddy://checkin, gymbuddy://exercise/ID) are read as well.
 //
 // Only our own stickers: nothing here reads, copies or emulates a gym's access card.
 import { effectiveRoutineIds, effectiveRoutines } from './history.js'
 import { canonicalExId } from './exercises.js'
 
-export const TAG_HOST = 'opengym.ch'
+export const TAG_HOST = 'gymbuddy.ch'
 export const TAG_PATH = '/nfc'
-export const SCHEME = 'opengym'
+export const SCHEME = 'gymbuddy'
 const ID_RE = /^[A-Za-z0-9_-]{1,64}$/
 const cleanId = v => (typeof v === 'string' && ID_RE.test(v) ? v : null)
 
@@ -51,7 +51,7 @@ const fromQuery = q => {
 }
 
 /**
- * What a link read from a sticker (or handed over by opengym.ch/nfc) asks for, or null for
+ * What a link read from a sticker (or handed over by gymbuddy.ch/nfc) asks for, or null for
  * anything that is not one of ours. Never throws.
  */
 export function parseTagUrl(raw) {
@@ -66,7 +66,7 @@ export function parseTagUrl(raw) {
     return fromQuery(u.searchParams)
   }
   if (proto !== SCHEME + ':') return null
-  // opengym://nfc?…, opengym://checkin?start=1, opengym://start, opengym://exercise/<id>
+  // gymbuddy://nfc?…, gymbuddy://checkin?start=1, gymbuddy://start, gymbuddy://exercise/<id>
   const host = (u.hostname || '').toLowerCase()
   const rest = u.pathname.replace(/^\/+/, '').replace(/\/+$/, '')
   if (host === 'nfc' && !rest) return fromQuery(u.searchParams)

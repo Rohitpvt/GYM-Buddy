@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Back to openGym</title>
-<meta name="description" content="The way back into the openGym app after signing in with OpenRouter.">
+<title>Back to GYM Buddy</title>
+<meta name="description" content="The way back into the GYM Buddy app after signing in with OpenRouter.">
 <meta name="theme-color" content="#000000">
 <!-- The phone app's "Sign in with OpenRouter" (frontend/src/lib/openrouter-signin.js) sends
      OpenRouter here as its callback, because OpenRouter returns to a web address. This page hands
-     the one-time code and the state on to opengym://openrouter, which the app's browser session
+     the one-time code and the state on to gymbuddy://openrouter, which the app's browser session
      catches. The code is useless without the verifier that only the app holds, and nothing here
      stores or sends it anywhere. -->
 <meta name="robots" content="noindex">
@@ -30,8 +30,8 @@
 <main class="orb">
   <img src="/icon-180.png" alt="" width="72" height="72">
   <h1>Signed in, heading back</h1>
-  <p>openGym should open by itself. If it doesn't, tap the button.</p>
-  <a class="btn" id="open" href="opengym://openrouter">Back to openGym</a>
+  <p>GYM Buddy should open by itself. If it doesn't, tap the button.</p>
+  <a class="btn" id="open" href="gymbuddy://openrouter">Back to GYM Buddy</a>
   <code id="code" hidden></code>
   <small id="hint" hidden>Still stuck? In the app, choose “Paste a code” and paste this.</small>
 </main>
@@ -42,7 +42,7 @@
   if (code && /^[A-Za-z0-9._~-]{8,512}$/.test(code)) out.set('code', code)
   if (state && /^[A-Za-z0-9_-]{1,64}$/.test(state)) out.set('state', state)
   if (q.get('error')) out.set('error', 'denied')
-  var link = 'opengym://openrouter' + (String(out) ? '?' + out : '')
+  var link = 'gymbuddy://openrouter' + (String(out) ? '?' + out : '')
   document.getElementById('open').href = link
   if (out.get('code')) {
     var c = document.getElementById('code'); c.textContent = out.get('code'); c.hidden = false

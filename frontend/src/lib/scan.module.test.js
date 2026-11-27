@@ -12,7 +12,7 @@ vi.mock('@capacitor-mlkit/barcode-scanning', () => ({ BarcodeScanner: {
   requestPermissions: async () => ({ camera: 'granted' }),
   isGoogleBarcodeScannerModuleAvailable: () => bs.hang ? new Promise(() => {}) : Promise.resolve({ available: bs.available }),
   installGoogleBarcodeScannerModule: () => { bs.installs++; return new Promise(() => {}) },
-  scan: async () => { bs.scans++; return { barcodes: [{ rawValue: 'https://opengym.ch/r#x', format: 'QR_CODE' }] } },
+  scan: async () => { bs.scans++; return { barcodes: [{ rawValue: 'https://gymbuddy.ch/r#x', format: 'QR_CODE' }] } },
 } }))
 
 import { scanCode, MODULE_MISSING } from './scan.js'
@@ -22,7 +22,7 @@ beforeEach(() => { bs.available = true; bs.hang = false; bs.installs = 0; bs.sca
 describe('scanCode and the Google scanner module', () => {
   it('scans right away when the module is there', async () => {
     const code = await scanCode({ moduleWaitMs: 50 })
-    expect(code.value).toBe('https://opengym.ch/r#x')
+    expect(code.value).toBe('https://gymbuddy.ch/r#x')
     expect(bs.installs).toBe(0)
   })
   it('a download that never finishes ends in MODULE_MISSING, not a promise that never settles', async () => {
@@ -33,6 +33,6 @@ describe('scanCode and the Google scanner module', () => {
   })
   it('a check that never answers counts as there: scan() decides', async () => {
     bs.hang = true
-    expect((await scanCode({ moduleWaitMs: 50 })).value).toBe('https://opengym.ch/r#x')
+    expect((await scanCode({ moduleWaitMs: 50 })).value).toBe('https://gymbuddy.ch/r#x')
   })
 })

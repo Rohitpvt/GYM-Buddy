@@ -1,23 +1,23 @@
-# Integration test: boots a NixOS VM with the openGym module (full stack: API + optional
+# Integration test: boots a NixOS VM with the GYM Buddy module (full stack: API + optional
 # module-managed nginx vhost + the exercise media shipped in the frontend package) and
 # exercises the HTTP contract end to end.
 #
-# Used through the flake's `checks.opengym-nixos-test` (runs on `nix flake check`) and the
-# conventional `nixosTests.opengym` output.
+# Used through the flake's `checks.gymbuddy-nixos-test` (runs on `nix flake check`) and the
+# conventional `nixosTests.gymbuddy` output.
 {
   pkgs,
   modules,
 }:
 
 pkgs.testers.runNixOSTest {
-  name = "opengym";
+  name = "gymbuddy";
 
   nodes.machine =
     { pkgs, ... }:
     {
       imports = modules;
 
-      services.opengym = {
+      services.gymbuddy = {
         enable = true;
         rpId = "localhost";
         origin = "http://localhost:8080";
@@ -31,7 +31,7 @@ pkgs.testers.runNixOSTest {
   testScript = ''
     start_all()
 
-    machine.wait_for_unit("opengym-api.service")
+    machine.wait_for_unit("gymbuddy-api.service")
     machine.wait_for_open_port(3000)
 
     direct = machine.succeed("curl -fsS http://127.0.0.1:3000/api/health")
@@ -50,7 +50,7 @@ pkgs.testers.runNixOSTest {
 
     # The exercise media ship inside the frontend package (catalogue/media), no download involved.
     machine.succeed("curl -fsS -o /dev/null http://localhost/exercise-media/NOTICE.md")
-    # Licensed for openGym only: another site cannot embed them.
+    # Licensed for GYM Buddy only: another site cannot embed them.
     corp = machine.succeed("curl -fsSI http://localhost/exercise-media/NOTICE.md")
     assert "cross-origin-resource-policy: same-origin" in corp.lower(), f"no CORP header: {corp}"
   '';

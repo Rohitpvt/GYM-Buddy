@@ -1,4 +1,4 @@
-# openGym on Garmin
+# GYM Buddy on Garmin
 
 A Connect IQ watch app for Garmin watches, the Apple Watch and Wear OS apps' little sibling: the
 phone stays the source of truth, the watch follows the workout the phone runs, logs sets on it and
@@ -19,8 +19,8 @@ Android app (APK and Play builds, `android/app/src/ciq`) and in the iPhone app
 behind the same `WatchBridge` plugin as the other watches, with Settings → Garmin for pairing and
 status. Both compile in CI; none of it has met a real Garmin yet. The watch app is in the
 [Connect IQ Store](https://apps.garmin.com/apps/62e66310-66de-4bdd-8e40-5d2c0d853a08) since
-November 2026; each release's `openGym.iq` goes up there by hand, together with the phone release
-(see "What the owner does" and `/root/uploads/opengym-146/garmin-store/`). It needs openGym 1.4.5
+November 2026; each release's `GYM Buddy.iq` goes up there by hand, together with the phone release
+(see "What the owner does" and `/root/uploads/gymbuddy-146/garmin-store/`). It needs GYM Buddy 1.4.5
 or later on the phone, and the F-Droid build has no Garmin link at all.
 
 ## What it does
@@ -88,7 +88,7 @@ Garmin screens are small (176 to 454 px) and many are MIP (memory-in-pixel: 64 c
 sunlight) or, on the Instinct, black and white. So, like the other watches but fitted:
 
 - **Black, one accent, numbers in boxes.** The accent is the phone's (`settings.accent` in the
-  snapshot, openGym's green until the phone says): as is on AMOLED, each channel rounded to the
+  snapshot, GYM Buddy's green until the phone says): as is on AMOLED, each channel rounded to the
   MIP palette elsewhere (`Ui.onScreen`), the ink on it black or white by its lightness. AMOLED
   watches get the other watches' grey boxes (#1c1c1e); MIP watches outlines; the Instinct builds
   (`(:mono)` in `source/Ui.mc`, picked per device in `monkey.jungle`) white outlines, and the box
@@ -170,7 +170,7 @@ booleans on its own.
 
 Events wait in the watch's outbox (`ob`) until the phone's snapshot names them in `acked` (the
 1.4.5 outbox protocol of the other watches, `Core.ackOutbox`): `transmit` reporting a message
-delivered only means Garmin Connect took it, and with openGym on the phone not running it can go
+delivered only means Garmin Connect took it, and with GYM Buddy on the phone not running it can go
 nowhere. So `obn` counts the events at the front already sent; what is not confirmed a minute later
 goes again (`Link.retry`), what was never sent after 30 s. One sent twice is applied once (the page
 keeps the ids, and names a resent one again as the newest, so the short `acked` list of a Garmin,
@@ -212,7 +212,7 @@ counts sets (`Core.waiting`): a set rated or fixed after its tick is two events 
 as JavaScript (a port of `Core.mc`'s state, outbox and `applySnapshot` and of `App.mc`'s `Link`);
 `src/lib/garmin-link.e2e.test.js` runs it against the page's real sync with the bridge modelled
 on `GarminLink.java` (the queue file, the last snapshot, hello) and switches on what goes wrong:
-the watch out of range, openGym killed on the phone, an answer lost, a restart mid-queue, a
+the watch out of range, GYM Buddy killed on the phone, an answer lost, a restart mid-queue, a
 transmit that never calls back. `src/lib/garmin-contract.test.js` reads the Monkey C, Java, Swift
 and JavaScript sources and fails when a field name, an event type, a constant, the app id, the
 store id or an Info.plist entry stops matching between them (and so keeps the model honest).
@@ -231,9 +231,9 @@ asks once before Watch goes off while one is there (it remembers the last `statu
 `localStorage` `gym_garmin_link_v1`, `readGarminLink` in lib/watch-settings.js).
 
 **Settings → Garmin (v1.4.5, `views/GarminSettings.jsx`, words in `lib/garmin-view.js`).** In the
-phone apps (module Watch): the Garmins the phone knows (connected or not, openGym on them or not),
+phone apps (module Watch): the Garmins the phone knows (connected or not, GYM Buddy on them or not),
 "Choose watches" on the iPhone (Garmin Connect opens with its list and comes back) or "Look again"
-on Android (Garmin Connect's pairing is the list), "Get openGym for Garmin" while a watch lacks the
+on Android (Garmin Connect's pairing is the list), "Get GYM Buddy for Garmin" while a watch lacks the
 app (Garmin Connect opens the Connect IQ Store page; when it cannot, the page on the web,
 `GARMIN_STORE`), and
 the two switches every watch shares: send workouts, open on the watch. In a build without the link
@@ -250,12 +250,12 @@ Every state says what to do next (`garminView`, each with a test):
 | the link did not come up | could not reach Garmin Connect | Look again (starts it over) |
 | no watch in Garmin Connect / none picked | pair yours there first / pick it | Look again / Choose watches |
 | a watch, out of reach, never heard from | not in reach, bring it close with Bluetooth on | Look again |
-| a watch in reach without openGym | get it, then open it once on the watch | Get openGym for Garmin |
-| openGym on the watch, in reach / away | sets land here / it catches up when in reach | Look again |
+| a watch in reach without GYM Buddy | get it, then open it once on the watch | Get GYM Buddy for Garmin |
+| GYM Buddy on the watch, in reach / away | sets land here / it catches up when in reach | Look again |
 
-A watch that is out of reach cannot say whether it has the app: it is never told "openGym isn't on
+A watch that is out of reach cannot say whether it has the app: it is never told "GYM Buddy isn't on
 it yet" on a guess. The watch itself, before it ever heard from the phone, says "Not synced yet.
-In openGym on your phone, open Settings, then Garmin." (opening the app alone is not enough on
+In GYM Buddy on your phone, open Settings, then Garmin." (opening the app alone is not enough on
 Android: the link only starts once that page was opened).
 
 **The native half (done in v1.4.5).**
@@ -263,7 +263,7 @@ Android: the link only starts once that page was opened).
 1. **Android** (`android/app/src/ciq/.../GarminLink.java`, pure parts in `main/.../GarminMessages.java`
    with `GarminMessagesTest`): `com.garmin.connectiq:ciq-companion-app-sdk:2.4.0` (Maven Central),
    in the `sideload` and `play` flavours only. One `GarminLink` per process. Nothing of Garmin's
-   runs until the user opens Settings → Garmin once (remembered in the `opengym-garmin` prefs; the
+   runs until the user opens Settings → Garmin once (remembered in the `gymbuddy-garmin` prefs; the
    iPhone waits for "Choose watches" the same way), and only with Garmin Connect Mobile installed
    (else `state: "no-gcm"` without touching the SDK). Then: `ConnectIQ.getInstance(ctx, WIRELESS)`, `initialize` (no SDK dialogs),
    then for each `getKnownDevices()` `registerForDeviceEvents`, `registerForAppEvents` for
@@ -274,24 +274,24 @@ Android: the link only starts once that page was opened).
    to every connected Garmin with the app; the last one goes again when a watch connects or says
    hello. `status()` adds `garmin: true` when a Garmin has the app, and counts it as paired and
    installed so the page sends at all. `openOnWatch` also asks each connected Garmin to open the app
-   (`openApplication`: "open openGym?" on the watch, Settings → Garmin "Open on the watch").
+   (`openApplication`: "open GYM Buddy?" on the watch, Settings → Garmin "Open on the watch").
    Garmin Connect Mobile delivers messages while the app's process lives (the page may sleep); with
    the process gone they are lost on the phone, which is why the watch now keeps them until `acked`.
    When Garmin Connect itself goes away (updated by the Play Store, stopped, crashed), the SDK's
    link to it ends (`onSdkShutDown`) and Garmin Connect forgets which app wanted which watch's
    messages: `revive` then brings the SDK up from scratch and `refresh` registers every watch
-   again after each `onSdkReady` (before, sets from the wrist stopped arriving until openGym was
+   again after each `onSdkReady` (before, sets from the wrist stopped arriving until GYM Buddy was
    restarted, and Settings → Garmin stood on "Checking…"). A start that does not come up within
    15 s is tried three times, then the state is `error` and "Look again" starts over
    (`GarminUse`, with JVM tests). `onApplicationNotInstalled` only counts from a connected watch,
-   the watches that have the app are remembered (`has` in the `opengym-garmin` prefs) so the page
+   the watches that have the app are remembered (`has` in the `gymbuddy-garmin` prefs) so the page
    makes the Garmin snapshot from its first send, and a snapshot lost in transfer goes once more.
 2. **iPhone** (`ios/App/App/GarminLink.swift`): the Swift package
    `github.com/garmin/connectiq-companion-app-sdk-ios` 1.8.0 (a binary `ConnectIQ.xcframework`),
    added to the App target at build time by `ios/ci/add-garmin.rb` (ios.yml runs it in all three
    jobs, so the App Store archive has it; `-ObjC` as Garmin asks). The file compiles either way:
    without the package `canImport(ConnectIQ)` is false and it answers "no Garmin" (`state: build`).
-   Info.plist: the URL scheme `opengym-ciq` (Garmin Connect returns the picked watches there;
+   Info.plist: the URL scheme `gymbuddy-ciq` (Garmin Connect returns the picked watches there;
    SceneDelegate and AppDelegate hand it to `GarminLink.handle`), `LSApplicationQueriesSchemes`
    `gcm-ciq`, the Bluetooth usage strings and the `bluetooth-central` background mode (a set from
    the wrist reaches the phone in the pocket). The SDK starts only once a Garmin was picked (it
@@ -323,16 +323,16 @@ in Garmin Connect with its duration, heart rate and calories, and counts towards
 intensity minutes and the rest of Garmin's numbers. Saved at Finish, thrown away at Discard; if the
 app is closed mid-workout, what was recorded is kept and not started again for that workout.
 
-**Double counting.** openGym on the phone can write each workout to Health Connect (Android) or
+**Double counting.** GYM Buddy on the phone can write each workout to Health Connect (Android) or
 Apple Health (iPhone), and Garmin Connect can share its activities there too (Apple Health on the
 iPhone; Health Connect on Android, depending on the Garmin Connect version and its settings). With
 both on, the hub has the same workout twice and its calories add up twice. What the user can do
 today, and what the docs and the store listing should say:
 
-- keep openGym's Health Connect / Apple Health export on and turn Garmin Connect's sharing of
+- keep GYM Buddy's Health Connect / Apple Health export on and turn Garmin Connect's sharing of
   activities off, **or**
 - keep Garmin's sharing and turn the watch's "Also save to Garmin Connect" off, **or**
-- keep Garmin's recording and turn openGym's export off (Garmin then writes the workout, openGym
+- keep Garmin's recording and turn GYM Buddy's export off (Garmin then writes the workout, GYM Buddy
   only reads its heart rate back, which v1.4.3 already does for any watch).
 
 A better fix for later, on the phone: when the Garmin bridge reports that the watch recorded a
@@ -345,15 +345,15 @@ The **Garmin Connect Developer Program** (Health API, Activity API, Training API
 Courses) is separate from Connect IQ: it is a server-to-server integration with Garmin Connect, for
 companies. It needs an application to Garmin (company name, use case, privacy policy, a server that
 receives Garmin's pushes), Garmin's approval, and a signed agreement; approved partners get consumer
-keys. What it would give openGym:
+keys. What it would give GYM Buddy:
 
-| API | What | Use for openGym |
+| API | What | Use for GYM Buddy |
 | --- | --- | --- |
 | Activity API | every activity's summary and FIT file, pushed after each sync | import runs, rides and Garmin's own strength activities (with their sets) into the log, automatically |
-| Health API | daily summaries: steps, heart rate, resting HR, sleep, stress, Body Battery, body composition (Index scale weigh-ins) | weigh-ins and resting HR into openGym without a phone hub in between |
+| Health API | daily summaries: steps, heart rate, resting HR, sleep, stress, Body Battery, body composition (Index scale weigh-ins) | weigh-ins and resting HR into GYM Buddy without a phone hub in between |
 | Training API | push workouts (including strength workouts with exercises, sets and reps) to the user's Garmin Connect calendar | today's routine shows up in Garmin's native strength activity on every Garmin, no Connect IQ app needed |
 
-It does not fit openGym's model as it is: keys are per company, not per server, so every
+It does not fit GYM Buddy's model as it is: keys are per company, not per server, so every
 self-hosted instance would need the owner's keys, or the owner would run a relay server that every
 instance talks to. That is a third-party service in the middle, the opposite of "no third-party
 account, no telemetry". If it is ever done, it should be an opt-in relay with its own privacy note.
@@ -378,21 +378,21 @@ You need the Connect IQ SDK and the device files:
    openssl pkcs8 -topk8 -inform PEM -outform DER -in developer_key.pem -out developer_key.der -nocrypt
    ```
 
-   Keep it next to the Android keystore (`/root/.config/opengym` on the release machine), never in
+   Keep it next to the Android keystore (`/root/.config/gymbuddy` on the release machine), never in
    the repository.
 3. Build and run (`SDK=…/connectiq-sdk-lin-<version>`):
 
    ```bash
    cd frontend/garmin
    node check.mjs "$SDK"                                    # quick, no device files needed
-   "$SDK/bin/monkeyc" -f monkey.jungle -d fr265 -y developer_key.der -o bin/opengym-fr265.prg -w
+   "$SDK/bin/monkeyc" -f monkey.jungle -d fr265 -y developer_key.der -o bin/gymbuddy-fr265.prg -w
    "$SDK/bin/connectiq" &                                   # the simulator (needs a display)
-   "$SDK/bin/monkeydo" bin/opengym-fr265.prg fr265
+   "$SDK/bin/monkeydo" bin/gymbuddy-fr265.prg fr265
    # unit tests (source/CoreTest.mc)
    "$SDK/bin/monkeyc" -f monkey.jungle -d fr265 -y developer_key.der -o bin/test.prg -t
    "$SDK/bin/monkeydo" bin/test.prg fr265 -t
    # the store package, every watch in manifest.xml
-   "$SDK/bin/monkeyc" -f monkey.jungle -y developer_key.der -o bin/openGym.iq -e -r -w
+   "$SDK/bin/monkeyc" -f monkey.jungle -y developer_key.der -o bin/GYM Buddy.iq -e -r -w
    ```
 
    The compiler parses with gradual type checking on: a few hundred "Cannot determine if container
@@ -470,15 +470,15 @@ Hindi, Bengali or Persian, and one Portuguese (pt).
    fr255, fr55, instinct2 and venusq2 with Garmin's own bitmap fonts.
 5. Test the phone side (done in v1.4.5) with a real Garmin: sideload the `.prg`, install the APK
    or a TestFlight build, Settings → Watches → Garmin. Borrow one or ask a Garmin owner from Discord.
-6. Publish: apps.garmin.com/developer → Upload an app → `openGym.iq`, with the store listing
+6. Publish: apps.garmin.com/developer → Upload an app → `GYM Buddy.iq`, with the store listing
    (name, description, at least one screenshot per screen shape, the icon, category Health &
    Fitness), the privacy policy URL (the app sends heart rate only to the user's own phone app),
    and "requires a companion app" pointing at the Play Store and App Store listings. Garmin reviews
    it, usually within a few days (done: approved in November 2026). The app id in `manifest.xml`
    stays the same forever.
    Its store id (62e66310-66de-4bdd-8e40-5d2c0d853a08, https://apps.garmin.com/apps/62e66310-66de-4bdd-8e40-5d2c0d853a08)
-   is in `GarminLink.STORE_ID` (Android) and `GarminLink.storeId` (iPhone), so "Get openGym for Garmin" opens its store page. The listing text and a checklist are in
-   `/root/uploads/opengym-146/garmin-store/` on the release machine.
+   is in `GarminLink.STORE_ID` (Android) and `GarminLink.storeId` (iPhone), so "Get GYM Buddy for Garmin" opens its store page. The listing text and a checklist are in
+   `/root/uploads/gymbuddy-146/garmin-store/` on the release machine.
 7. Each release after that: `monkeyc … -e` with the same key and the new `version` in
    `manifest.xml`, uploaded as a new version of the same app.
 

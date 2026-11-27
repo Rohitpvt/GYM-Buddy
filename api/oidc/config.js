@@ -7,7 +7,7 @@ const on = v => /^(1|true|yes|on)$/i.test(String(v || ''));
 const list = v => String(v || '').split(',').map(s => s.trim()).filter(Boolean);
 
 // The app comes back here and nowhere else (an exact match, no prefixes, no wildcards).
-export const APP_RETURNS = Object.freeze(['opengym://oidc']);
+export const APP_RETURNS = Object.freeze(['gymbuddy://oidc']);
 
 export function oidcConfig(env, { origin }) {
   const issuer = String(env.OIDC_ISSUER || '').trim();

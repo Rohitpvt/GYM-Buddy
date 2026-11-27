@@ -112,7 +112,7 @@ describe('paired with another server while a read from the first is on its way',
   it('the first server\'s answer stays out of the copy and out of what goes to the second', async () => {
     localStorage.clear()
     h.files.clear()
-    h.files.set('DATA/opengym-remote.json', JSON.stringify({ mode: 'local' }))
+    h.files.set('DATA/gymbuddy-remote.json', JSON.stringify({ mode: 'local' }))
     const one = serverAt(ONE, { ...clone(DEF), _ts: 100, _rev: 3, workouts: [workout('one-1', '2026-10-01')] })
     const two = serverAt(TWO, { ...clone(DEF), _ts: 200, _rev: 8, workouts: [workout('two-1', '2026-10-02')] })
     const useStore = await freshStore()

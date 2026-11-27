@@ -1,9 +1,9 @@
 // Where this copy of the app came from, which decides who installs its updates:
-//   'sideload' the APK from GitHub or opengym.ch: it checks GitHub and installs updates itself
+//   'sideload' the APK from GitHub or gymbuddy.ch: it checks GitHub and installs updates itself
 //   'play'     Google Play, which updates it (and does not allow an app to update itself)
 //   'fdroid'   F-Droid, which builds it from source and updates it. Nothing from Google Play
 //              services in it: no Wear OS link, and the check-in scanner is the browser's
-//   'offline'  openGym Offline: the F-Droid build without the INTERNET permission, its own package
+//   'offline'  GYM Buddy Offline: the F-Droid build without the INTERNET permission, its own package
 //              next to the normal app. Nobody updates it from inside; lib/build-caps.js hides
 //              everything that would need a network
 //   'appstore' the iPhone app, updated by the App Store
@@ -50,7 +50,7 @@ export async function selfUpdates() {
   return (await getChannel()) === 'sideload'
 }
 
-/** Whether the native (ML Kit) barcode scanner is in this build. The F-Droid build and openGym
+/** Whether the native (ML Kit) barcode scanner is in this build. The F-Droid build and GYM Buddy
  *  Offline leave it out (closed source) and scan with the WebView's camera, like the browser
  *  (lib/scan.js). */
 export async function nativeScanner() {

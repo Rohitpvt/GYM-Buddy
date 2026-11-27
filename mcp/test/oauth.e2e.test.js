@@ -1,7 +1,7 @@
 // The connector sign-in end to end, the way Claude and ChatGPT run it (sub-connect-146): the
 // official MCP SDK client, with no token at all, gets the 401, follows its resource_metadata
 // pointer, reads the authorization server's metadata, registers itself, sends the "browser" to
-// openGym's consent page, gets the code back and trades it, then calls a tool. Later its access
+// GYM Buddy's consent page, gets the code back and trades it, then calls a tool. Later its access
 // token goes stale and the SDK renews it with the refresh token on its own.
 //
 // One small proxy plays the web container: /mcp to the mcp handler, everything else to the real
@@ -80,7 +80,7 @@ describe.skipIf(!HAVE_API)('the connector sign-in with the official MCP client',
       child.stdout.on('data', d => { log += d; const m = /gym-api on :(\d+)/.exec(log); if (m) { clearTimeout(give); resolve(+m[1]) } })
       child.once('exit', code => { clearTimeout(give); reject(new Error(`server exited (${code}):\n${log}`)) })
     })
-    delete process.env.OPENGYM_DATA
+    delete process.env.GYMBUDDY_DATA
     const { createMcpHandler } = await import('../src/http.js')
     handle = createMcpHandler({ apiUrl: `http://127.0.0.1:${apiPort}`, allowedOrigins: [origin], publicOrigin: origin })
   }, 30000)
@@ -91,7 +91,7 @@ describe.skipIf(!HAVE_API)('the connector sign-in with the official MCP client',
     const url = new URL(origin + '/mcp')
     const first = new StreamableHTTPClientTransport(url, { authProvider: me })
     await expect(new Client({ name: 'Claude', version: '1' }).connect(first)).rejects.toThrow(UnauthorizedError)
-    // It registered itself and wants the browser at openGym's authorize address, with PKCE,
+    // It registered itself and wants the browser at GYM Buddy's authorize address, with PKCE,
     // the resource it is signing in to and offline_access for a refresh token.
     expect(me.s.client.client_id).toMatch(/^ogc_/)
     const az = me.s.authUrl

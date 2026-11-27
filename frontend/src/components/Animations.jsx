@@ -155,7 +155,7 @@ export function AnimationQualitySheet({ close }) {
   const taps = useRef(0)
   const [details, setDetails] = useState(false)
   const tapTitle = () => { taps.current += 1; if (taps.current >= 5) setDetails(true) }
-  // The APK from GitHub or opengym.ch never gets packs: only a store delivers them (the licence,
+  // The APK from GitHub or gymbuddy.ch never gets packs: only a store delivers them (the licence,
   // lib/anim-quality.js). "Not on this device yet" read there as a wait for nothing (#863).
   const [channel, setChannel] = useState(null)
   useEffect(() => { getChannel().then(setChannel, () => {}) }, [])

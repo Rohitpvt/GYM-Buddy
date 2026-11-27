@@ -8,7 +8,7 @@
             tools:ignore="ExportedReceiver"
             xmlns:tools="http://schemas.android.com/tools">
             <intent-filter>
-                <action android:name="ch.duartesantos.opengym.wear.RIG" />
+                <action android:name="ch.duartesantos.gymbuddy.wear.RIG" />
             </intent-filter>
         </receiver>
     </application>

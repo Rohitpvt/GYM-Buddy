@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // Use your subscription (sub-connect-146): the address to paste, the three assistants, the live
 // "Connected via Claude" once the connector has used its token, disconnecting, and the honest
-// screen where no assistant could reach this openGym.
+// screen where no assistant could reach this GYM Buddy.
 import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -57,7 +57,7 @@ describe('lib/assistants', () => {
     expect(reachability('https://gym.example.com/mcp')).toBe('public')
     expect(reachability('http://gym.example.com/mcp')).toBe('http')
     expect(reachability('http://192.168.1.20:8080/mcp')).toBe('local')
-    expect(reachability('https://opengym.local/mcp')).toBe('local')
+    expect(reachability('https://gymbuddy.local/mcp')).toBe('local')
     expect(reachability('http://localhost:5173/mcp')).toBe('local')
     expect(reachability('https://100.101.1.2/mcp')).toBe('local')
   })

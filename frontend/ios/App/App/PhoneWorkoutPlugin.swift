@@ -9,7 +9,7 @@ import HealthKit
  * on, a live workout on this phone, and no Apple Watch app taking that workout. The heart rate it
  * gathers goes into the same per-set fields the watch fills (set.hr / set.restHr), worked out on the
  * page from the samples' own times, and the workout is saved to Apple Health once, here, with the
- * same sync identifier the post-hoc write would use ('opengym-w-<id>'), so that one is skipped
+ * same sync identifier the post-hoc write would use ('gymbuddy-w-<id>'), so that one is skipped
  * (AppleHealthPlugin.saveSession asks PhoneWorkoutLedger).
  *
  * Taking the AirPods out only stops the readings: HealthKit keeps the session, and they come back
@@ -177,7 +177,7 @@ final class PhoneWorkoutSession: NSObject, HKWorkoutSessionDelegate, HKLiveWorko
     private var recovering = false
     private var recoverWaiters: [(String?, Date?) -> Void] = []
 
-    private static func syncId(_ wid: String) -> String { "opengym-w-\(wid)" }
+    private static func syncId(_ wid: String) -> String { "gymbuddy-w-\(wid)" }
 
     /// A session for this workout, started now; true when one runs for it afterwards. A session
     /// already running for it is kept; one left over from another workout is dropped unsaved.
@@ -244,7 +244,7 @@ final class PhoneWorkoutSession: NSObject, HKWorkoutSessionDelegate, HKLiveWorko
         session = s
         builder = b
         let sid = (b.metadata as [String: Any]?)?[HKMetadataKeySyncIdentifier] as? String
-        workoutId = sid.flatMap { $0.hasPrefix("opengym-w-") ? String($0.dropFirst("opengym-w-".count)) : nil }
+        workoutId = sid.flatMap { $0.hasPrefix("gymbuddy-w-") ? String($0.dropFirst("gymbuddy-w-".count)) : nil }
         startedAt = s.startDate ?? b.startDate ?? Date()
         readings = []
         if let q = query { store.stop(q); query = nil }
@@ -306,7 +306,7 @@ final class PhoneWorkoutSession: NSObject, HKWorkoutSessionDelegate, HKLiveWorko
         // the builder ends and saves, then the session ends. Not waited for longer than a few
         // seconds: a session that never reports it is saved all the same.
         var meta: [String: Any] = [:]
-        if let title = title, !title.isEmpty { meta["OpenGymTitle"] = title }
+        if let title = title, !title.isEmpty { meta["GymBuddyTitle"] = title }
         let finish = {
             b.endCollection(withEnd: endAt) { _, _ in
                 b.addMetadata(meta) { _, _ in

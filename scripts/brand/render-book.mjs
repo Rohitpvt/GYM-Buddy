@@ -15,6 +15,6 @@ const b = await puppeteer.launch({ executablePath: process.env.CHROME, args: ['-
 const p = await b.newPage()
 await p.goto('file://' + html, { waitUntil: 'load' })
 await p.evaluate(() => document.fonts.ready)
-await p.pdf({ path: path.join(kit, 'opengym-brand-guidelines.pdf'), preferCSSPageSize: true, printBackground: true })
+await p.pdf({ path: path.join(kit, 'gymbuddy-brand-guidelines.pdf'), preferCSSPageSize: true, printBackground: true })
 await b.close(); fs.unlinkSync(html)
-console.log('opengym-brand-guidelines.pdf written')
+console.log('gymbuddy-brand-guidelines.pdf written')

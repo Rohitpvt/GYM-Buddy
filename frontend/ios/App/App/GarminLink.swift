@@ -11,7 +11,7 @@ import ConnectIQ
  *
  * On the iPhone the SDK talks to the watch itself over Bluetooth, but only to the watches the user
  * picked in Garmin Connect Mobile: `pick()` hands over to Garmin Connect (showDeviceSelection), which
- * comes back with them through the `opengym-ciq` URL scheme (Info.plist; SceneDelegate and
+ * comes back with them through the `gymbuddy-ciq` URL scheme (Info.plist; SceneDelegate and
  * AppDelegate hand the URL here). They are kept on disk, so it is asked once.
  *
  * The SDK starts only once a Garmin was picked: it opens Bluetooth, and iOS then asks for it. An
@@ -24,7 +24,7 @@ import ConnectIQ
 final class GarminLink: NSObject {
     static let shared = GarminLink()
     /// Garmin Connect Mobile comes back to the app with the picked watches through this scheme.
-    static let urlScheme = "opengym-ciq"
+    static let urlScheme = "gymbuddy-ciq"
     /// The watch app's id (frontend/garmin/manifest.xml).
     static let appId = UUID(uuidString: "3c533c63-754d-4018-9c00-0ad529e400b9")!
     /// The app's id in the Connect IQ Store (apps.garmin.com/apps/<id>, submitted 2026-11-09; docs/GARMIN.md).
@@ -139,7 +139,7 @@ final class GarminLink: NSObject {
         #endif
     }
 
-    /// A workout started on the phone: each connected Garmin with the app asks "open openGym?".
+    /// A workout started on the phone: each connected Garmin with the app asks "open gymBuddy?".
     func open() -> Bool {
         #if canImport(ConnectIQ)
         guard started, let ciq = ConnectIQ.sharedInstance() else { return false }
@@ -154,7 +154,7 @@ final class GarminLink: NSObject {
         #endif
     }
 
-    /// The openGym page in the Connect IQ Store, once it is published there.
+    /// The gymBuddy page in the Connect IQ Store, once it is published there.
     func openStore() -> Bool {
         #if canImport(ConnectIQ)
         guard started, GarminLink.storeId != nil, let d = devices.first, let ciq = ConnectIQ.sharedInstance() else { return false }
@@ -197,7 +197,7 @@ extension GarminLink: IQDeviceEventDelegate, IQAppMessageDelegate, IQUIOverrideD
         guard !started else { return }
         started = true
         ConnectIQ.sharedInstance()?.initialize(withUrlScheme: GarminLink.urlScheme, uiOverrideDelegate: self,
-                                               stateRestorationIdentifier: "ch.opengym.app.garmin")
+                                               stateRestorationIdentifier: "ch.gymbuddy.app.garmin")
     }
 
     private func app(for d: IQDevice) -> IQApp {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// The routines service behind opengym.ch/routines/api/: takes routine submissions, sends each to
+// The routines service behind gymbuddy.ch/routines/api/: takes routine submissions, sends each to
 // Telegram for a person to approve or reject, commits approved ones to the routines-inbox branch on
-// GitHub, and counts "Copy to openGym" clicks. Plain node:http, no dependencies; the photo is
+// GitHub, and counts "Copy to GYM Buddy" clicks. Plain node:http, no dependencies; the photo is
 // re-encoded by cwebp (libwebp-tools), which also drops every bit of metadata.
 //
 // Privacy: no cookies, nothing about a visitor is written to disk. Rate limits key on a hash of
@@ -32,11 +32,11 @@ export function configFromEnv(env = process.env) {
     dataDir: env.DATA_DIR || './data',
     catalogue: env.CATALOGUE || '',
     label: env.ENV_LABEL || '',            // "STAGING" on staging: marks Telegram messages and noindexes the site
-    origin: env.PUBLIC_ORIGIN || 'https://opengym.ch',
+    origin: env.PUBLIC_ORIGIN || 'https://gymbuddy.ch',
     tgToken: env.TELEGRAM_BOT_TOKEN || '',
     tgChat: String(env.TELEGRAM_CHAT_ID || ''),
     ghToken: env.GITHUB_TOKEN || '',
-    ghRepo: env.GITHUB_REPO || 'DuarteSantos8/openGym',
+    ghRepo: env.GITHUB_REPO || 'DuarteSantos8/GYM Buddy',
     ghBranch: env.GITHUB_BRANCH || 'routines-inbox',
     ghBase: env.GITHUB_BASE || 'main',
     cwebp: env.CWEBP || 'cwebp',
@@ -152,7 +152,7 @@ const DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 /** The moderation message: everything needed to decide, in Telegram HTML, under 4096 characters. */
 export function moderationText(sub, { label = '', cat } = {}) {
   const r = sub.routine
-  const head = `${label ? `<b>[${tgEsc(label)}]</b> ` : ''}New routine for opengym.ch/routines`
+  const head = `${label ? `<b>[${tgEsc(label)}]</b> ` : ''}New routine for gymbuddy.ch/routines`
   const lines = [
     head, '',
     `<b>${tgEsc(r.title)}</b>`,
@@ -205,7 +205,7 @@ export function telegramClient(token, fetchImpl = fetch) {
 export function githubClient({ token, repo, branch, base }, fetchImpl = fetch) {
   const api = p => `https://api.github.com/repos/${repo}${p}`
   const call = async (method, p, body) => {
-    const r = await fetchImpl(api(p), { method, headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28', 'user-agent': 'opengym-routines', ...(body ? { 'content-type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(20000) })
+    const r = await fetchImpl(api(p), { method, headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28', 'user-agent': 'gymbuddy-routines', ...(body ? { 'content-type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(20000) })
     const j = r.status === 204 ? {} : await r.json().catch(() => ({}))
     return { status: r.status, j }
   }
@@ -219,7 +219,7 @@ export function githubClient({ token, repo, branch, base }, fetchImpl = fetch) {
   }
   const exists = async p => (await call('GET', `/contents/${p}?ref=${encodeURIComponent(branch)}`)).status === 200
   async function put(p, buf, message) {
-    const r = await call('PUT', `/contents/${p}`, { message, content: buf.toString('base64'), branch, committer: { name: 'openGym routines', email: 'contact@duarte-santos.ch' } })
+    const r = await call('PUT', `/contents/${p}`, { message, content: buf.toString('base64'), branch, committer: { name: 'GYM Buddy routines', email: 'contact@duarte-santos.ch' } })
     if (r.status !== 201 && r.status !== 200) throw new Error(`GitHub: can't write ${p} (${r.status} ${r.j.message || ''})`)
     return r.j.commit?.html_url
   }
@@ -244,7 +244,7 @@ export function planFromRequest(body, cat) {
   let data
   if (typeof body.link === 'string' && body.link.trim()) {
     const p = payloadFromLink(body.link)
-    if (!p) throw new Error('That is not an openGym routine link. It starts with https://opengym.ch/r#')
+    if (!p) throw new Error('That is not an GYM Buddy routine link. It starts with https://gymbuddy.ch/r#')
     data = decodePayload(p)
   } else if (body.plan && typeof body.plan === 'object') data = body.plan
   else throw new Error('Paste a routine link or pick a plan file first.')

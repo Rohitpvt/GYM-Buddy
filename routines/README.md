@@ -1,10 +1,10 @@
 # Community routines
 
-The plans on [opengym.ch/routines](https://opengym.ch/routines/), one file each. The site, the
-app's routines index (`index.json`, read by the AI Coach) and the "Copy to openGym" links are all
+The plans on [gymbuddy.ch/routines](https://gymbuddy.ch/routines/), one file each. The site, the
+app's routines index (`index.json`, read by the AI Coach) and the "Copy to GYM Buddy" links are all
 built from these files, so a routine merged here is live after the next site deploy.
 
-Most routines arrive through the [submit page](https://opengym.ch/routines/submit/): a person
+Most routines arrive through the [submit page](https://gymbuddy.ch/routines/submit/): a person
 reviews each one and approved ones land on the `routines-inbox` branch as a ready file. You can
 also open a pull request with a file yourself.
 
@@ -13,11 +13,11 @@ also open a pull request with a file yourself.
 | Folder | What's in it |
 |---|---|
 | `starter/` | The plans built into the app. Words only; the days come from `api/coach/core/starter-plans.js` (`"builtin": "<key>"`). Not in `index.json`, every app has them already |
-| `opengym/` | Classic programme shapes, written by us in our own words |
+| `gymbuddy/` | Classic programme shapes, written by us in our own words |
 | `community/` | Everyone else's. A cover photo sits next to its routine as `<name>.webp` |
 
 The file name is the page address: `community/doorway-strength.json` becomes
-`opengym.ch/routines/doorway-strength/`, and its id is `community/doorway-strength`. Names are
+`gymbuddy.ch/routines/doorway-strength/`, and its id is `community/doorway-strength`. Names are
 lowercase letters, digits and dashes, and unique across all three folders.
 
 ## A routine file

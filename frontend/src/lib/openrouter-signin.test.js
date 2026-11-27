@@ -42,19 +42,19 @@ describe('Sign in with OpenRouter, web', () => {
 })
 
 describe('Sign in with OpenRouter, phone', () => {
-  it('opens the auth page with the opengym.ch bridge as callback and trades the returned code', async () => {
+  it('opens the auth page with the gymbuddy.ch bridge as callback and trades the returned code', async () => {
     let opened = null
     const key = await phoneSignIn({
-      open: async url => { opened = new URL(url); return `opengym://openrouter?code=c9&state=${opened.searchParams.get('state')}` },
+      open: async url => { opened = new URL(url); return `gymbuddy://openrouter?code=c9&state=${opened.searchParams.get('state')}` },
       fetch: keyFetch()
     })
     expect(key).toBe('sk-or-v1-zzz')
-    expect(opened.searchParams.get('callback_url')).toBe('https://opengym.ch/openrouter/')
+    expect(opened.searchParams.get('callback_url')).toBe('https://gymbuddy.ch/openrouter/')
   })
 
   it('a way back with no code is a cancel, a wrong state is not ours', async () => {
-    await expect(phoneSignIn({ open: async () => 'opengym://openrouter', fetch: keyFetch() })).rejects.toMatchObject({ code: 'cancelled' })
-    await expect(phoneSignIn({ open: async () => 'opengym://openrouter?code=x1234567&state=no', fetch: keyFetch() })).rejects.toMatchObject({ code: 'state' })
+    await expect(phoneSignIn({ open: async () => 'gymbuddy://openrouter', fetch: keyFetch() })).rejects.toMatchObject({ code: 'cancelled' })
+    await expect(phoneSignIn({ open: async () => 'gymbuddy://openrouter?code=x1234567&state=no', fetch: keyFetch() })).rejects.toMatchObject({ code: 'state' })
   })
 
   it('headless: no callback in that address, and a pasted code buys the key with the same verifier', async () => {
@@ -63,7 +63,7 @@ describe('Sign in with OpenRouter, phone', () => {
     expect(new URL(h.headlessUrl).searchParams.get('callback_url')).toBeNull()
     expect(new URL(h.headlessUrl).searchParams.get('code_challenge')).toBe(new URL(h.url).searchParams.get('code_challenge'))
     expect(await h.redeem('  abcdefgh1234 ')).toBe('sk-or-v1-zzz')
-    expect(await h.redeem('opengym://openrouter?code=zyxwvu987654')).toBe('sk-or-v1-zzz')
+    expect(await h.redeem('gymbuddy://openrouter?code=zyxwvu987654')).toBe('sk-or-v1-zzz')
     expect(calls[0].body.code_verifier).toBe(calls[1].body.code_verifier)
     await expect(h.redeem('no')).rejects.toThrow()
   })

@@ -1,4 +1,4 @@
-// Applies the two opengym.ch templates to the hand-written pages (see ref-template.mjs):
+// Applies the two gymbuddy.ch templates to the hand-written pages (see ref-template.mjs):
 //   node scripts/site/apply-template.mjs           rewrite website/*.html in place
 //   node scripts/site/apply-template.mjs --check   fail if a page is not up to date (CI)
 // The API page is built by scripts/build-api-docs.mjs, which applies the same template itself.
@@ -10,7 +10,7 @@ import { applyRef, applyFooter } from './ref-template.mjs'
 
 const web = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'website')
 const check = process.argv.includes('--check')
-const BRAND_DL = `  <div class="ref-toc-dl"><a class="ref-btn" href="brand/kit/opengym-brand-kit.zip" download>Download the kit</a><a class="ref-more" href="brand/kit/opengym-brand-guidelines.pdf">Guidelines as PDF</a></div>\n`
+const BRAND_DL = `  <div class="ref-toc-dl"><a class="ref-btn" href="brand/kit/gymbuddy-brand-kit.zip" download>Download the kit</a><a class="ref-more" href="brand/kit/gymbuddy-brand-guidelines.pdf">Guidelines as PDF</a></div>\n`
 const PAGES = {
   'index.html': html => applyFooter(html),
   'docs.html': html => applyRef(html),

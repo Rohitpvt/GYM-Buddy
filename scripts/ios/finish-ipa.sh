@@ -25,14 +25,14 @@ PROFILE=${4:?App Store provisioning profile}
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 FRONT="$ROOT/frontend"
 VERSION=$(node -p "require('$FRONT/package.json').version")
-OUT=${5:-"$PWD/openGym-$VERSION.ipa"}
+OUT=${5:-"$PWD/GYM Buddy-$VERSION.ipa"}
 RCODESIGN=${RCODESIGN:-rcodesign}
 WORK=$(mktemp -d "${TMPDIR:-/tmp}/finish-ipa.XXXXXX")
 trap 'rm -rf "$WORK"' EXIT
 
 PUBLIC="$FRONT/ios/App/App/public"
 [ -f "$PUBLIC/index.html" ] || { echo "no phone build in $PUBLIC: run npm run build:mobile first" >&2; exit 1; }
-grep -q 'name="opengym-flavor" content="mobile"' "$PUBLIC/index.html" || { echo "$PUBLIC is not the phone build" >&2; exit 1; }
+grep -q 'name="gymbuddy-flavor" content="mobile"' "$PUBLIC/index.html" || { echo "$PUBLIC is not the phone build" >&2; exit 1; }
 # The animations only: the stills are WebP too, and counting them let a build pass whose clips were
 # never staged (APP_MEDIA_DIR without VITE_CLIP_EXT=webp copies no clip at all), so every animation
 # in the App Store app stayed a still (#962). And no MP4 the page would ask for instead.
@@ -70,7 +70,7 @@ import plistlib, sys
 p = plistlib.load(open(sys.argv[1], 'rb'))
 e = dict(p['Entitlements'])
 e['get-task-allow'] = False
-assert e['application-identifier'].endswith('.ch.opengym.app'), e['application-identifier']
+assert e['application-identifier'].endswith('.ch.gymbuddy.app'), e['application-identifier']
 # The profile carries every capability the App ID has (HealthKit for the watch and the Health
 # step); a build whose app doesn't ask for Health yet must not claim it.
 info = plistlib.load(open(sys.argv[3], 'rb'))
@@ -107,20 +107,20 @@ import plistlib, sys
 p = plistlib.load(open(sys.argv[1], 'rb'))
 e = dict(p['Entitlements'])
 e['get-task-allow'] = False
-assert e['application-identifier'].endswith('.ch.opengym.app.AnimationPacksDownloader'), e['application-identifier']
-assert 'group.ch.opengym.app' in e.get('com.apple.security.application-groups', []), 'the extension profile has no App Group'
+assert e['application-identifier'].endswith('.ch.gymbuddy.app.AnimationPacksDownloader'), e['application-identifier']
+assert 'group.ch.gymbuddy.app' in e.get('com.apple.security.application-groups', []), 'the extension profile has no App Group'
 plistlib.dump(e, open(sys.argv[2], 'wb'))
 print('extension profile:', p['Name'], '| expires', p['ExpirationDate'])
 PY
   EXT_SIGN=(--entitlements-xml-file "Extensions/AnimationPacksDownloader.appex/AnimationPacksDownloader:$WORK/ext-entitlements.plist")
 fi
 
-# The widget extension (the widgets and the workout's Live Activity, ios/App/OpenGymWidgets): its
-# own App Store profile, given as WIDGETS_PROFILE, for ch.opengym.app.widgets with the App Group.
-WIDGETS="$APP/PlugIns/OpenGymWidgets.appex"
+# The widget extension (the widgets and the workout's Live Activity, ios/App/GymBuddyWidgets): its
+# own App Store profile, given as WIDGETS_PROFILE, for ch.gymbuddy.app.widgets with the App Group.
+WIDGETS="$APP/PlugIns/GymBuddyWidgets.appex"
 WIDGETS_SIGN=()
 if [ -d "$WIDGETS" ]; then
-  [ -n "${WIDGETS_PROFILE:-}" ] || { echo "the IPA carries OpenGymWidgets.appex: set WIDGETS_PROFILE to its App Store profile" >&2; exit 1; }
+  [ -n "${WIDGETS_PROFILE:-}" ] || { echo "the IPA carries GymBuddyWidgets.appex: set WIDGETS_PROFILE to its App Store profile" >&2; exit 1; }
   cp "$WIDGETS_PROFILE" "$WIDGETS/embedded.mobileprovision"
   openssl smime -inform der -verify -noverify -in "$WIDGETS_PROFILE" -out "$WORK/widgets-profile.plist" 2>/dev/null
   python3 - "$WORK/widgets-profile.plist" "$WORK/widgets-entitlements.plist" <<'PY'
@@ -128,18 +128,18 @@ import plistlib, sys
 p = plistlib.load(open(sys.argv[1], 'rb'))
 e = dict(p['Entitlements'])
 e['get-task-allow'] = False
-assert e['application-identifier'].endswith('.ch.opengym.app.widgets'), e['application-identifier']
-assert 'group.ch.opengym.app' in e.get('com.apple.security.application-groups', []), 'the widgets profile has no App Group'
+assert e['application-identifier'].endswith('.ch.gymbuddy.app.widgets'), e['application-identifier']
+assert 'group.ch.gymbuddy.app' in e.get('com.apple.security.application-groups', []), 'the widgets profile has no App Group'
 plistlib.dump(e, open(sys.argv[2], 'wb'))
 print('widgets profile:', p['Name'], '| expires', p['ExpirationDate'])
 PY
-  WIDGETS_SIGN=(--entitlements-xml-file "PlugIns/OpenGymWidgets.appex/OpenGymWidgets:$WORK/widgets-entitlements.plist")
+  WIDGETS_SIGN=(--entitlements-xml-file "PlugIns/GymBuddyWidgets.appex/GymBuddyWidgets:$WORK/widgets-entitlements.plist")
 fi
 
-# The Apple Watch app (App.app/Watch/OpenGymWatch.app) is signed with its own App Store profile,
+# The Apple Watch app (App.app/Watch/GymBuddyWatch.app) is signed with its own App Store profile,
 # given as WATCH_PROFILE: its bundle id and its entitlements (HealthKit) come from that profile.
 WATCH_SIGN=()
-WATCH="$APP/Watch/OpenGymWatch.app"
+WATCH="$APP/Watch/GymBuddyWatch.app"
 if [ -d "$WATCH" ]; then
   [ -n "${WATCH_PROFILE:-}" ] || { echo "the IPA carries the watch app: set WATCH_PROFILE to its App Store profile" >&2; exit 1; }
   cp "$WATCH_PROFILE" "$WATCH/embedded.mobileprovision"
@@ -149,13 +149,13 @@ import plistlib, sys
 p = plistlib.load(open(sys.argv[1], 'rb'))
 e = dict(p['Entitlements'])
 e['get-task-allow'] = False
-assert e['application-identifier'].endswith('.ch.opengym.app.watchkitapp'), e['application-identifier']
+assert e['application-identifier'].endswith('.ch.gymbuddy.app.watchkitapp'), e['application-identifier']
 plistlib.dump(e, open(sys.argv[2], 'wb'))
 print('watch profile:', p['Name'], '| expires', p['ExpirationDate'])
 PY
-  WATCH_SIGN=(--entitlements-xml-file "Watch/OpenGymWatch.app/OpenGymWatch:$WORK/watch-entitlements.plist")
-  # Its complications / Smart Stack widget (OpenGymWatch.app/PlugIns), with its own profile.
-  WIDGET="$WATCH/PlugIns/OpenGymWatchWidgets.appex"
+  WATCH_SIGN=(--entitlements-xml-file "Watch/GymBuddyWatch.app/GymBuddyWatch:$WORK/watch-entitlements.plist")
+  # Its complications / Smart Stack widget (GymBuddyWatch.app/PlugIns), with its own profile.
+  WIDGET="$WATCH/PlugIns/GymBuddyWatchWidgets.appex"
   if [ -d "$WIDGET" ]; then
     [ -n "${WATCH_WIDGET_PROFILE:-}" ] || { echo "the watch app carries its widget: set WATCH_WIDGET_PROFILE to its App Store profile" >&2; exit 1; }
     cp "$WATCH_WIDGET_PROFILE" "$WIDGET/embedded.mobileprovision"
@@ -165,12 +165,12 @@ import plistlib, sys
 p = plistlib.load(open(sys.argv[1], 'rb'))
 e = dict(p['Entitlements'])
 e['get-task-allow'] = False
-assert e['application-identifier'].endswith('.ch.opengym.app.watchkitapp.widgets'), e['application-identifier']
-assert 'group.ch.opengym.app' in e.get('com.apple.security.application-groups', []), 'the widget profile has no App Group'
+assert e['application-identifier'].endswith('.ch.gymbuddy.app.watchkitapp.widgets'), e['application-identifier']
+assert 'group.ch.gymbuddy.app' in e.get('com.apple.security.application-groups', []), 'the widget profile has no App Group'
 plistlib.dump(e, open(sys.argv[2], 'wb'))
 print('watch widget profile:', p['Name'], '| expires', p['ExpirationDate'])
 PY
-    WATCH_SIGN+=(--entitlements-xml-file "Watch/OpenGymWatch.app/PlugIns/OpenGymWatchWidgets.appex/OpenGymWatchWidgets:$WORK/widget-entitlements.plist")
+    WATCH_SIGN+=(--entitlements-xml-file "Watch/GymBuddyWatch.app/PlugIns/GymBuddyWatchWidgets.appex/GymBuddyWatchWidgets:$WORK/widget-entitlements.plist")
   fi
 fi
 

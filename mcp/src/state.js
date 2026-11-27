@@ -1,4 +1,4 @@
-/* opengym-mcp state — reads ./data/state-<uid>.json + db.json (read-only). Cached with an
+/* gymbuddy-mcp state — reads ./data/state-<uid>.json + db.json (read-only). Cached with an
    fs.watch + mtime fallback so a session the api server just wrote is visible on the next
    tool call without a restart. */
 import fs from 'node:fs'
@@ -6,9 +6,9 @@ import path from 'node:path'
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { applyExerciseMerges } from '../../frontend/src/lib/exercise-merge.js'
 
-const DATA_DIR = process.env.OPENGYM_DATA || path.join(process.cwd(), 'data')
+const DATA_DIR = process.env.GYMBUDDY_DATA || path.join(process.cwd(), 'data')
 // Whether a data directory was asked for, as opposed to the ./data guess.
-const DATA_SET = !!process.env.OPENGYM_DATA
+const DATA_SET = !!process.env.GYMBUDDY_DATA
 
 // null = no state file (brand-new account); undefined = not yet loaded.
 let _state = undefined
@@ -50,13 +50,13 @@ function stateFile(uid) {
   return path.join(DATA_DIR, 'state-' + uid.replace(/[^a-zA-Z0-9_-]/g, '') + '.json')
 }
 
-// Pick the uid: OPENGYM_UID env, else the only state-* file, else the only user in db.json.
+// Pick the uid: GYMBUDDY_UID env, else the only state-* file, else the only user in db.json.
 // Throws listing the options if ambiguous. The sanitiser on stateFile() keeps a sneaky
-// '..' in OPENGYM_UID harmless.
+// '..' in GYMBUDDY_UID harmless.
 function resolveUid() {
-  const envUid = (process.env.OPENGYM_UID || '').trim()
+  const envUid = (process.env.GYMBUDDY_UID || '').trim()
   if (envUid) {
-    if (!/^[a-zA-Z0-9_-]+$/.test(envUid)) throw new Error(`OPENGYM_UID contains characters that aren't safe in a filename: ${JSON.stringify(envUid)}`)
+    if (!/^[a-zA-Z0-9_-]+$/.test(envUid)) throw new Error(`GYMBUDDY_UID contains characters that aren't safe in a filename: ${JSON.stringify(envUid)}`)
     return envUid
   }
   const files = fs.readdirSync(DATA_DIR)
@@ -66,7 +66,7 @@ function resolveUid() {
   if (files.length === 0) {
     reloadDb()
     if (_db.users.length === 1) return _db.users[0].id
-    if (_db.users.length === 0) throw new Error(`no openGym users found in ${path.join(DATA_DIR, 'db.json')} — sign in at least once on a device`)
+    if (_db.users.length === 0) throw new Error(`no GYM Buddy users found in ${path.join(DATA_DIR, 'db.json')} — sign in at least once on a device`)
     // Multiple users in db.json but no state file yet — hit when accounts exist but none has
     // signed in on a device.
     throw ambiguousUid(_db.users.map(u => u.id))
@@ -80,14 +80,14 @@ function resolveUid() {
 // change are what the model can act on; the ids and the path go to the server log on stderr,
 // where the operator is already reading the startup line.
 function ambiguousUid(ids) {
-  console.error(`[opengym-mcp] ${ids.length} openGym profiles in ${DATA_DIR}: ${ids.join(', ')} — set OPENGYM_UID to one of them`)
-  const err = new Error(`this openGym data directory holds ${ids.length} profiles — set OPENGYM_UID to the one this server should read (the ids are on the server's stderr, and in db.json under "users"[].id)`)
+  console.error(`[gymbuddy-mcp] ${ids.length} GYM Buddy profiles in ${DATA_DIR}: ${ids.join(', ')} — set GYMBUDDY_UID to one of them`)
+  const err = new Error(`this GYM Buddy data directory holds ${ids.length} profiles — set GYMBUDDY_UID to the one this server should read (the ids are on the server's stderr, and in db.json under "users"[].id)`)
   err.code = 'EINVAL'
   return err
 }
 
 /* A profile that is not on this disk (remote.js): the HTTP server, and stdio without
-   OPENGYM_DATA, read it from the api with a token. Everything below asks this first, so the tools
+   GYMBUDDY_DATA, read it from the api with a token. Everything below asks this first, so the tools
    run unchanged for whichever profile the request is for, and two requests at once never see
    each other's (AsyncLocalStorage follows each one through its awaits). */
 const profileCtx = new AsyncLocalStorage()
@@ -103,7 +103,7 @@ export const currentProfile = () => profileCtx.getStore() || null
 export function init() {
   if (profileCtx.getStore()) return
   if (_uid !== null) return
-  if (!fs.existsSync(DATA_DIR)) throw new Error(`OPENGYM_DATA dir does not exist: ${DATA_DIR}`)
+  if (!fs.existsSync(DATA_DIR)) throw new Error(`GYMBUDDY_DATA dir does not exist: ${DATA_DIR}`)
   _uid = resolveUid()
   reloadDb()
   const file = stateFile(_uid)
@@ -174,16 +174,16 @@ export function getUser() {
 
 export const dataDir = () => DATA_DIR
 
-// The profile this server is set up for, which log_workout holds a token against: OPENGYM_UID
+// The profile this server is set up for, which log_workout holds a token against: GYMBUDDY_UID
 // when it is given, whether or not its data is readable here, else the one the data directory
-// names. null only when nothing names one: no OPENGYM_UID, no OPENGYM_DATA and no ./data, the
+// names. null only when nothing names one: no GYMBUDDY_UID, no GYMBUDDY_DATA and no ./data, the
 // remote-server setup. A data directory that was asked for and cannot be read, or that holds
 // several profiles, throws: a broken mount is no licence to write to whichever profile the token is.
 export function localUid() {
   const p = profileCtx.getStore()
   if (p) return p.user.id
   if (_uid !== null) return _uid
-  const envUid = (process.env.OPENGYM_UID || '').trim()
+  const envUid = (process.env.GYMBUDDY_UID || '').trim()
   if (envUid) return envUid
   if (!DATA_SET && !fs.existsSync(DATA_DIR)) return null
   init()

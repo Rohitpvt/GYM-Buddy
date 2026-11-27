@@ -1,15 +1,15 @@
-# openGym HTTP API: hand-written OpenAPI 3.1 spec.
+# GYM Buddy HTTP API: hand-written OpenAPI 3.1 spec.
 # Source of truth: api/server.js (a single framework-free Node file). Every route the
 # server registers is documented here; if you add a route there, add it here too.
-# Browsable version: https://opengym.ch/api.html
+# Browsable version: https://gymbuddy.ch/api.html
 openapi: 3.1.0
 
 info:
-  title: openGym API
+  title: GYM Buddy API
   version: 1.4.5
-  summary: Passkey (WebAuthn) auth + per-user state storage for openGym
+  summary: Passkey (WebAuthn) auth + per-user state storage for GYM Buddy
   description: |
-    The backend of [openGym](https://opengym.ch), a free, open-source
+    The backend of [GYM Buddy](https://gymbuddy.ch), a free, open-source
     gym & body-weight tracker. A plain Node server, no framework, JSON-file storage,
     HMAC-signed session cookies.
 
@@ -135,13 +135,13 @@ info:
     name: AGPL-3.0-or-later
     identifier: AGPL-3.0-or-later
   contact:
-    name: openGym
-    url: https://gitlab.com/DuarteSantos8/opengym
+    name: GYM Buddy
+    url: https://gitlab.com/DuarteSantos8/gymbuddy
 
 servers:
   - url: /
-    description: Same origin as the openGym web app (the normal deployment)
-  - url: https://opengym.example.com
+    description: Same origin as the GYM Buddy web app (the normal deployment)
+  - url: https://gymbuddy.example.com
     description: Your self-hosted instance
 
 tags:
@@ -187,7 +187,7 @@ tags:
   - name: mcp
     description: >-
       The MCP connector's OAuth sign-in (docs/MCP_REMOTE.md), for Claude, ChatGPT and other
-      assistants that add openGym by URL. Only with `MCP=on`, otherwise 404. What it issues is an
+      assistants that add GYM Buddy by URL. Only with `MCP=on`, otherwise 404. What it issues is an
       ordinary scoped API token, made when the person approves it on the consent screen.
   - name: trainers
     description: >-
@@ -652,14 +652,14 @@ paths:
         as that profile), or `reauth` (sign in at the provider again, `prompt=login`, so the
         next change to a way in may use `provider: true` as its proof).
 
-        For `mode=app`, `return` must be exactly `opengym://oidc`, `challenge` the base64url
+        For `mode=app`, `return` must be exactly `gymbuddy://oidc`, `challenge` the base64url
         SHA-256 of a verifier only the app holds (43 characters), and `astate` the app's own
         state, which comes back unchanged. Anything else is a 400, never a redirect.
       security: []
       parameters:
         - { name: mode, in: query, schema: { type: string, enum: [web, app, link, reauth] } }
         - { name: ticket, in: query, schema: { type: string } }
-        - { name: return, in: query, schema: { type: string, enum: ['opengym://oidc'] } }
+        - { name: return, in: query, schema: { type: string, enum: ['gymbuddy://oidc'] } }
         - { name: challenge, in: query, schema: { type: string, pattern: '^[A-Za-z0-9_-]{43}$' } }
         - { name: astate, in: query, schema: { type: string, pattern: '^[A-Za-z0-9_-]{16,128}$' } }
       responses:
@@ -693,7 +693,7 @@ paths:
         Answers 302 to the app with `?oidc=signed-in|linked|confirmed` and a session cookie, or
         `?oidc-error=<code>`: `state`, `token`, `provider`, `cancelled`, `group`, `link-needed`,
         `invite`, `disabled`, `taken`, `already-linked`, `wrong-account`, `link-expired`,
-        `throttled`. In app mode, 302 to `opengym://oidc?code=…&astate=…` (or `error=`) and no
+        `throttled`. In app mode, 302 to `gymbuddy://oidc?code=…&astate=…` (or `error=`) and no
         cookie. Rate-limited per address; wrong states and tokens count toward the address pause.
       security: []
       parameters:
@@ -710,7 +710,7 @@ paths:
       operationId: oidcAppRedeem
       summary: Trade the phone app's one-time code for a Bearer token
       description: >-
-        The code from `opengym://oidc?code=…` and the verifier whose SHA-256 the app sent as
+        The code from `gymbuddy://oidc?code=…` and the verifier whose SHA-256 the app sent as
         `challenge`. One try per code, 2 minutes. Returns the same token POST /api/pair/redeem
         does. CSRF-exempt, like pair/redeem: the credential is in the body, and nothing comes
         back as a cookie.
@@ -960,7 +960,7 @@ paths:
       operationId: watchPair
       summary: A pairing code for a Zepp OS watch
       description: |
-        A signed-in device asks for a code that the Zepp app's settings page for openGym
+        A signed-in device asks for a code that the Zepp app's settings page for GYM Buddy
         redeems (`POST /api/watch/redeem`). 12 characters typed as `XXXX-XXXX-XXXX`, one per
         profile (a new one replaces the last), good for ten minutes, held only as a hash.
       responses:
@@ -981,7 +981,7 @@ paths:
       operationId: watchRedeem
       summary: Redeem a watch pairing code for a watch token
       description: |
-        Called by the openGym watch app's Side Service inside the Zepp phone app. The code is
+        Called by the GYM Buddy watch app's Side Service inside the Zepp phone app. The code is
         the credential (CSRF-exempt, throttled per address like a device link). The answer is a
         watch token (`ogw_…`) that opens `GET`/`POST /api/watch/box` and nothing else; it ends
         with "sign out everywhere", a new password, a disabled account, an unlink, or 90 days
@@ -2516,7 +2516,7 @@ paths:
         names the SHA-256 of the bytes, and the file is stored only if they hash to it.
         Idempotent: uploading a file the server already has answers 200 with `existed: true`.
 
-        Optional header `X-OpenGym-Account`: the account id the upload is meant for. When it is
+        Optional header `X-GYM Buddy-Account`: the account id the upload is meant for. When it is
         not the session's account (the browser signed in as someone else meanwhile) the upload
         is refused with 409 `account-mismatch` and nothing is stored.
 
@@ -2636,7 +2636,7 @@ paths:
         backup's into the server, and re-sends a file the sweep removed while a device still
         had it. Answered from the caller's own folder only.
 
-        Takes the same optional `X-OpenGym-Account` header as the upload: another account than
+        Takes the same optional `X-GYM Buddy-Account` header as the upload: another account than
         the session's answers 409 `account-mismatch`.
       requestBody:
         required: true
@@ -3295,7 +3295,7 @@ paths:
               required: [provider, url]
               properties:
                 provider: { type: string, example: webhook }
-                url: { type: string, maxLength: 2048, example: 'https://ha.example.com/api/webhook/opengym-7f3a' }
+                url: { type: string, maxLength: 2048, example: 'https://ha.example.com/api/webhook/gymbuddy-7f3a' }
                 label: { type: string, maxLength: 60 }
                 events: { type: array, items: { $ref: '#/components/schemas/IntegrationEvent' } }
       responses:
@@ -4557,7 +4557,7 @@ paths:
       summary: 'MCP connector: the same metadata under its OpenID Connect discovery name'
       description: >-
         The MCP spec's clients look here after RFC 8414; under `BASE_PATH` this is the address below
-        the prefix (`<BASE_PATH>/.well-known/openid-configuration`). openGym issues no ID tokens.
+        the prefix (`<BASE_PATH>/.well-known/openid-configuration`). GYM Buddy issues no ID tokens.
       responses:
         '200': { description: 'As `/.well-known/oauth-authorization-server`.' }
   /.well-known/oauth-protected-resource:
@@ -4582,7 +4582,7 @@ paths:
       summary: 'MCP connector: register an OAuth client (RFC 7591)'
       description: >-
         Only with `MCP=on`. Public clients (no secret), redirect URIs https or loopback only.
-        Used by Claude and ChatGPT when they add openGym as a custom connector (docs/MCP_REMOTE.md).
+        Used by Claude and ChatGPT when they add GYM Buddy as a custom connector (docs/MCP_REMOTE.md).
       responses:
         '201': { description: 'The client: `client_id`, `redirect_uris`, `token_endpoint_auth_method: none`.' }
         '400': { description: 'Bad redirect URIs.' }
@@ -7048,7 +7048,7 @@ components:
           type: object
           description: A whole plan, from a `create` job (routines, week and any custom exercises).
           properties:
-            opengym_plan: { type: integer, const: 1 }
+            gymbuddy_plan: { type: integer, const: 1 }
             name: { type: string, maxLength: 40 }
             summary: { type: string }
             basedOn: { type: string }

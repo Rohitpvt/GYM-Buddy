@@ -48,13 +48,13 @@ export async function nativePlatform() {
   }
 }
 
-const FILE = 'opengym-state.json'
+const FILE = 'gymbuddy-state.json'
 
 // Written whole to a second file first and then moved over the first, so a write cut short (the
 // app killed mid-write, the battery gone) never leaves a half file where the last good copy was.
 // A move that did not finish leaves the new copy under FILE_NEW: whichever of the two parses and
 // is the later one (`_ts`) is the copy.
-const FILE_NEW = 'opengym-state.next.json'
+const FILE_NEW = 'gymbuddy-state.next.json'
 
 export async function nativeLoad() {
   try {
@@ -85,10 +85,10 @@ export async function nativeSave(state) {
 }
 
 // "Connect to my server" mode (lib/remote.js): which of local-only / a paired remote account this
-// device chose, kept in its own file — never inside opengym-state.json, since that file's content
+// device chose, kept in its own file — never inside gymbuddy-state.json, since that file's content
 // is exactly what pushState() PUTs to a server, and a device's own connection secret must never
 // travel as if it were training data.
-const REMOTE_FILE = 'opengym-remote.json'
+const REMOTE_FILE = 'gymbuddy-remote.json'
 
 // Small JSON files in the app's private data directory, for device facts that must not ride
 // in S (which syncs and exports): the pairing, and how the Coach runs on this phone.
@@ -371,7 +371,7 @@ export async function printHtml(html, name, { paper = 'a4', footer } = {}) {
   await Print.printHtml({ html, name, paper, ...(footer ? { footer } : {}) })
 }
 
-// "Auto-backup on changes" (Settings): a dated snapshot dropped into Documents/openGym/ —
+// "Auto-backup on changes" (Settings): a dated snapshot dropped into Documents/GYM Buddy/ —
 // visible in Files (iOS) / a file manager (Android), unlike the private mirror nativeSave keeps
 // — so whatever the user points at that folder (a sync app, a manual copy) always has something
 // recent. One file per day; later triggers the same day just overwrite it.
@@ -382,11 +382,11 @@ export async function printHtml(html, name, { paper = 'a4', footer } = {}) {
 // The root is never pruned: a manual export saved there carries the same name, and nothing
 // tells it apart from an old automatic copy, so those stay for the person to clear (Import
 // backup still reads either kind).
-export const AUTO_BACKUP_DIR = 'openGym'
+export const AUTO_BACKUP_DIR = 'GYM Buddy'
 export const AUTO_BACKUP_KEEP = 14
 // Only the exact names writeAutoBackup gives its files are ever pruned; anything else someone
 // keeps in the folder is theirs.
-const AUTO_BACKUP_NAME = /^opengym-backup-\d{4}-\d{2}-\d{2}(-[2-9])?\.json$/
+const AUTO_BACKUP_NAME = /^gymbuddy-backup-\d{4}-\d{2}-\d{2}(-[2-9])?\.json$/
 
 // Android's scoped storage lets an install write over, list and delete only the files it wrote
 // itself. After a reinstall, or with the test build beside the real one, today's name can belong
@@ -413,7 +413,7 @@ export async function writeAutoBackup(state) {
   // day then went without a copy, silently, while the newest file there was another install's.
   let name = null
   for (const suffix of ['', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']) {
-    const n = `opengym-backup-${day}${suffix}.json`
+    const n = `gymbuddy-backup-${day}${suffix}.json`
     try { await write(n); name = n; break } catch (e) { /* owned by another install, or the disk said no: the next name */ }
   }
   if (!name) return   // best effort — the private mirror in Directory.Data still has the data
@@ -445,9 +445,9 @@ async function pruneAutoBackups({ Filesystem, Directory }, written) {
    and never in S: S syncs and exports, and a content:// address means nothing anywhere else.
 
    { uri, label }       the chosen folder, and its name as the picker showed it
-   { lost, lostLabel }  the folder stopped accepting copies; they go to Documents/openGym again
-   {}                   the default, Documents/openGym */
-export const BACKUP_FOLDER_FILE = 'opengym-backup-folder.json'
+   { lost, lostLabel }  the folder stopped accepting copies; they go to Documents/GYM Buddy again
+   {}                   the default, Documents/GYM Buddy */
+export const BACKUP_FOLDER_FILE = 'gymbuddy-backup-folder.json'
 
 // The plugin proxy lives here and is never handed through a promise: a Capacitor plugin proxy
 // answers every property, `then` included, so a promise resolving to it never settles (#42/#58).
@@ -493,7 +493,7 @@ export async function chooseBackupFolder() {
   return next
 }
 
-/** Back to Documents/openGym; also how the warning about a lost folder is put away. */
+/** Back to Documents/GYM Buddy; also how the warning about a lost folder is put away. */
 export async function resetBackupFolder() {
   const before = await backupFolder()
   if (before.uri) await releaseFolder(before.uri)
@@ -510,7 +510,7 @@ async function releaseFolder(uri) {
 async function writeToChosenFolder(state, day) {
   const folder = await backupFolder()
   if (!folder.uri) return false
-  const name = `opengym-backup-${day}.json`
+  const name = `gymbuddy-backup-${day}.json`
   try {
     await loadFolderPlugin()
     const { ok } = await folderPlugin.check({ uri: folder.uri })

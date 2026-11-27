@@ -213,7 +213,7 @@ export default function MyTrainerPage() {
     onConfirm: () => leaveGym(gym.id).then(() => { toast(t('You left {0}', gym.name)); load() }).catch(e => toast(sharingError(e))),
   })
   const download = () => sharingExport().then(r => {
-    const json = JSON.stringify(r, null, 2), name = 'opengym-sharing.json'
+    const json = JSON.stringify(r, null, 2), name = 'gymbuddy-sharing.json'
     if (MOBILE) return shareExport(json, name)
     const a = document.createElement('a')
     a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }))

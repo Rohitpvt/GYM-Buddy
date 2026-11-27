@@ -1,4 +1,4 @@
-// The HTML of opengym.ch/routines: the list, one page per routine, the submit page. Plain
+// The HTML of gymbuddy.ch/routines: the list, one page per routine, the submit page. Plain
 // template strings, every value through esc(). build.mjs writes the files; this only returns text.
 import { FOOTER as SITE_FOOTER } from '../site/ref-template.mjs'
 import {
@@ -19,7 +19,7 @@ export const KIT_LABELS = { ...KIT_NAMES, bodyweight: 'No equipment' }
 export const FOCUS_LABELS = { ...GROUP_NAMES, balanced: 'Balanced' }
 export const LEN_LABELS = { 30: 'Up to 30 min', 45: 'Up to 45 min', 60: 'Up to an hour', 61: 'Over an hour' }
 
-export const MEDIA_NOTICE = 'Exercise pictures © Aliaksandr Makatserchyk, Gym visual, gymvisual.com. Media licensed for use in openGym only; see'
+export const MEDIA_NOTICE = 'Exercise pictures © Aliaksandr Makatserchyk, Gym visual, gymvisual.com. Media licensed for use in GYM Buddy only; see'
 
 /** The exercise name a routine in `lang` shows: the catalogue's translation, else English. */
 export const nameIn = (id, lang, cat, names) => (lang !== 'en' && names[id]?.[lang]) || cap(cat.get(id)?.n || id)
@@ -42,7 +42,7 @@ const ICON = {
 /* ------------------------------- the shell ------------------------------- */
 
 export function page(ctx, { title, description, canonical, body, script, robots, jsonld = [], ogImage, ogType = 'website', lang = 'en', current = '', bodyClass = '' }) {
-  const img = ogImage || 'https://opengym.ch/img/social.jpg'
+  const img = ogImage || 'https://gymbuddy.ch/img/social.jpg'
   return `<!DOCTYPE html>
 <html lang="${esc(lang)}">
 <head>
@@ -55,7 +55,7 @@ export function page(ctx, { title, description, canonical, body, script, robots,
 <meta name="robots" content="${ctx.noindex ? 'noindex,nofollow' : robots || 'index,follow,max-image-preview:large'}">
 <link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="${ogType}">
-<meta property="og:site_name" content="openGym">
+<meta property="og:site_name" content="GYM Buddy">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonical)}">
@@ -78,7 +78,7 @@ ${ctx.staging ? '<div class="rt-staging" role="note">Staging preview. Submission
 <main id="main">
 ${body}
 </main>
-<aside class="wrap rt-notice"><p>Routine texts are their authors', shared under the licence named on each page. ${esc(MEDIA_NOTICE)} <a href="${ctx.base}media/NOTICE.md">NOTICE.md</a>. <a href="${ctx.base}">All routines</a> · <a href="${ctx.base}submit/">Share yours</a> · <a href="https://github.com/DuarteSantos8/openGym/tree/main/routines" rel="noopener">Routines on GitHub</a></p></aside>
+<aside class="wrap rt-notice"><p>Routine texts are their authors', shared under the licence named on each page. ${esc(MEDIA_NOTICE)} <a href="${ctx.base}media/NOTICE.md">NOTICE.md</a>. <a href="${ctx.base}">All routines</a> · <a href="${ctx.base}submit/">Share yours</a> · <a href="https://github.com/DuarteSantos8/GYM Buddy/tree/main/routines" rel="noopener">Routines on GitHub</a></p></aside>
 ${SITE_FOOTER}
 <script src="/site.js?v=${ctx.siteV}" defer></script>
 ${script ? `<script type="module" src="${ctx.base}assets/${script}?v=${ctx.v}"></script>` : ''}
@@ -156,18 +156,18 @@ export function listPage(ctx, routines) {
 <header class="wrap rt-hero">
   <div class="rt-hero-text">
     <h1>Routines worth stealing</h1>
-    <p class="lead">Free training plans from openGym and the people who use it. Find one that fits your week and your kit, copy it into the app, or share the plan you swear by.</p>
+    <p class="lead">Free training plans from GYM Buddy and the people who use it. Find one that fits your week and your kit, copy it into the app, or share the plan you swear by.</p>
     <div class="actions">
       <a class="btn" href="#browse">Browse ${n} routines</a>
       <a class="btn ghost" href="${ctx.base}submit/">Share yours</a>
     </div>
   </div>
   <aside class="rt-hero-how" aria-labelledby="how-h">
-    <h2 id="how-h">Getting one into openGym</h2>
+    <h2 id="how-h">Getting one into GYM Buddy</h2>
     <ul>
-      <li>${ICON.phone}<div><b>On your phone</b><span>Open a routine, tap a day, and openGym adds it beside your own.</span></div></li>
+      <li>${ICON.phone}<div><b>On your phone</b><span>Open a routine, tap a day, and GYM Buddy adds it beside your own.</span></div></li>
       <li>${ICON.file}<div><b>The whole week</b><span>Download the plan file and import it under Plan, Import plan.</span></div></li>
-      <li>${ICON.qr}<div><b>On a computer</b><span>Every routine has a QR code. Scan it with your phone camera or in openGym and carry on there.</span></div></li>
+      <li>${ICON.qr}<div><b>On a computer</b><span>Every routine has a QR code. Scan it with your phone camera or in GYM Buddy and carry on there.</span></div></li>
     </ul>
   </aside>
 </header>
@@ -229,7 +229,7 @@ ${cards}
       </ul>
       <div class="rt-empty" id="empty" hidden>
         <h3>Nothing fits all of that</h3>
-        <p>Loosen a filter or two, or try fewer words. Still nothing? Then the routine you want doesn't exist yet. Build it in openGym and <a href="${ctx.base}submit/">share it</a>, someone else is looking for it too.</p>
+        <p>Loosen a filter or two, or try fewer words. Still nothing? Then the routine you want doesn't exist yet. Build it in GYM Buddy and <a href="${ctx.base}submit/">share it</a>, someone else is looking for it too.</p>
         <button type="button" class="btn ghost" id="eclear">Clear all filters</button>
       </div>
     </section>
@@ -237,22 +237,22 @@ ${cards}
 </div>
 
 <section class="wrap rt-how" aria-labelledby="how2-h">
-  <h2 id="how2-h">Getting one into openGym</h2>
+  <h2 id="how2-h">Getting one into GYM Buddy</h2>
   <div class="rt-how-cols">
-    <div><h3>On your phone</h3><p>Open a routine and tap a day. openGym opens and adds it next to your own routines. Nothing you already have is touched.</p></div>
+    <div><h3>On your phone</h3><p>Open a routine and tap a day. GYM Buddy opens and adds it next to your own routines. Nothing you already have is touched.</p></div>
     <div><h3>The whole week</h3><p>Grab the plan file instead and import it in the app under Plan, Import plan. It brings every day and, if you want, the weekdays too.</p></div>
-    <div><h3>On a computer</h3><p>Every routine has a QR code. Scan it with your phone camera or in openGym and carry on there.</p></div>
+    <div><h3>On a computer</h3><p>Every routine has a QR code. Scan it with your phone camera or in GYM Buddy and carry on there.</p></div>
   </div>
 </section>
 <script type="application/json" id="rt-data">${jsonForScript({ api: ctx.api, base: ctx.base, routines: data })}</script>`
   return page(ctx, {
-    title: 'Workout routines: free plans to copy into openGym',
-    description: 'Free workout routines for the gym, home, a pull-up bar or a hotel room. Filter by goal, days a week, equipment and level, and copy any plan into openGym.',
+    title: 'Workout routines: free plans to copy into GYM Buddy',
+    description: 'Free workout routines for the gym, home, a pull-up bar or a hotel room. Filter by goal, days a week, equipment and level, and copy any plan into GYM Buddy.',
     canonical: ctx.url(''),
     body, script: 'list.js', current: 'routines', bodyClass: 'rt-list',
     jsonld: [{
-      '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'openGym routines', url: ctx.url(''),
-      description: 'Free workout routines to copy into openGym.',
+      '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'GYM Buddy routines', url: ctx.url(''),
+      description: 'Free workout routines to copy into GYM Buddy.',
       mainEntity: { '@type': 'ItemList', numberOfItems: routines.length, itemListElement: routines.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: ctx.url(r.slug + '/'), name: r.title })) }
     }]
   })
@@ -317,11 +317,11 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
           </span>
         </li>`).join('')}
       </ol>
-      ${links[i] ? `<a class="rt-addday" href="${esc(links[i])}" data-copy="day">${ICON.phone}<span>Add <span lang="${esc(lang)}">${esc(s.name)}</span> to openGym</span></a>` : ''}
+      ${links[i] ? `<a class="rt-addday" href="${esc(links[i])}" data-copy="day">${ICON.phone}<span>Add <span lang="${esc(lang)}">${esc(s.name)}</span> to GYM Buddy</span></a>` : ''}
     </section>`).join('')
   const about = r.about ? r.about.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('') : ''
   const author = r.author.url ? `<a href="${esc(r.author.url)}" rel="noopener nofollow ugc">${esc(r.author.name)}</a>` : esc(r.author.name)
-  const fileName = `${r.slug}.opengym-plan.json`
+  const fileName = `${r.slug}.gymbuddy-plan.json`
   const tabs = many ? `<div class="rt-tabs" role="tablist" aria-label="Sessions" hidden>${r.sessions.map((s, i) => `<button type="button" role="tab" id="tab-${i + 1}" aria-controls="day-${i + 1}" aria-selected="${i === 0}" data-tab="${i}" lang="${esc(lang)}">${esc(s.name)}</button>`).join('')}</div>` : ''
   const body = `
 <div class="wrap rt-top"><a class="rt-back" href="${ctx.base}">All routines</a></div>
@@ -345,7 +345,7 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
   ${r.cover ? `<figure class="rt-cover"><img src="${ctx.base}covers/${esc(r.coverFile)}" alt="${esc(r.coverAlt)}" width="${r.coverW}" height="${r.coverH}" fetchpriority="high"></figure>` : ''}
 
   <aside class="rt-copy" id="copy" aria-labelledby="copy-h">
-    <h2 id="copy-h">Copy to openGym</h2>
+    <h2 id="copy-h">Copy to GYM Buddy</h2>
     <p class="rt-copy-sub">Free, no account. Pick whichever suits you.</p>
     <div class="way">
       <h3>The whole week</h3>
@@ -355,7 +355,7 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
     ${links.some(Boolean) ? `<div class="way">
       <h3>${many ? 'One day at a time' : 'Straight into the app'}</h3>
       <div class="rt-daylinks">${r.sessions.map((s, i) => (links[i] ? `<a class="dl" href="${esc(links[i])}" data-copy="day" lang="${esc(lang)}">${esc(s.name)}</a>` : '')).join('')}</div>
-      <p class="rt-hint">On your phone, openGym opens and adds the day. No app yet? You land on the download.</p>
+      <p class="rt-hint">On your phone, GYM Buddy opens and adds the day. No app yet? You land on the download.</p>
     </div>` : ''}
     <div class="way rt-qr" id="qr" hidden>
       <h3>On a computer</h3>
@@ -366,7 +366,7 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
           ${r.sessions.map((s, i) => (links[i] ? `<button type="button" role="tab" aria-selected="false" data-qr="${esc(links[i])}" lang="${esc(lang)}">${esc(s.name)}</button>` : '')).join('')}
         </div>
         <div class="rt-qrcard"><canvas id="qrc" width="200" height="200" role="img" aria-label="QR code"></canvas></div>
-        <p class="rt-hint">Scan with your phone camera or in openGym. Got the app? It opens right there, ready to add.</p>
+        <p class="rt-hint">Scan with your phone camera or in GYM Buddy. Got the app? It opens right there, ready to add.</p>
       </div>
     </div>
     <p class="rt-pop" data-pop role="status" hidden></p>
@@ -402,9 +402,9 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
     <ul class="rt-relgrid">${related.map(x => `<li><a href="${ctx.base}${esc(x.slug)}/"><span class="t" lang="${esc(x.language)}">${esc(x.title)}</span><span class="b">by ${esc(x.author.name)}</span><span class="m">${x.days} ${x.days === 1 ? 'day' : 'days'}, ${x.duration} min, ${esc(LEVEL_NAMES[x.level].toLowerCase())}</span></a></li>`).join('')}</ul>
   </section>` : ''}
 
-  <p class="rt-credit">Routine by ${author}, ${licenceLink(r.license)}. Added ${esc(r.added)}. <a href="https://github.com/DuarteSantos8/openGym/blob/main/${esc(r.file)}" rel="noopener">See the file</a> or <a href="https://github.com/DuarteSantos8/openGym/issues/new?title=${encodeURIComponent('Routine: ' + r.title)}&labels=routines" rel="noopener">report a problem</a>.</p>
+  <p class="rt-credit">Routine by ${author}, ${licenceLink(r.license)}. Added ${esc(r.added)}. <a href="https://github.com/DuarteSantos8/GYM Buddy/blob/main/${esc(r.file)}" rel="noopener">See the file</a> or <a href="https://github.com/DuarteSantos8/GYM Buddy/issues/new?title=${encodeURIComponent('Routine: ' + r.title)}&labels=routines" rel="noopener">report a problem</a>.</p>
 </article>
-<div class="rt-sticky" id="sticky"><a class="btn" href="#copy">Copy to openGym</a></div>`
+<div class="rt-sticky" id="sticky"><a class="btn" href="#copy">Copy to GYM Buddy</a></div>`
 
   const ld = {
     '@context': 'https://schema.org', '@type': 'ExercisePlan', name: r.title, description: r.description, url: pageUrl,
@@ -414,16 +414,16 @@ export function routinePage(ctx, r, { cat, names, links, related = [] }) {
     exerciseType: SPLIT_NAMES[r.split], workload: `${f.weekSets} sets per week`,
     ...(r.cover ? { image: ctx.abs(`covers/${r.coverFile}`) } : {}),
     keywords: [GOAL_NAMES[r.goal], LEVEL_NAMES[r.level], ...r.tags].join(', '),
-    isPartOf: { '@type': 'CollectionPage', name: 'openGym routines', url: ctx.url('') }
+    isPartOf: { '@type': 'CollectionPage', name: 'GYM Buddy routines', url: ctx.url('') }
   }
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'openGym', item: 'https://opengym.ch/' },
+    { '@type': 'ListItem', position: 1, name: 'GYM Buddy', item: 'https://gymbuddy.ch/' },
     { '@type': 'ListItem', position: 2, name: 'Routines', item: ctx.url('') },
     { '@type': 'ListItem', position: 3, name: r.title, item: pageUrl }
   ] }
   return page(ctx, {
-    title: `${r.title} by ${r.author.name}: free ${r.days}-day routine | openGym`,
-    description: `${r.description} ${r.days} days a week, ${r.duration} minutes, ${LEVEL_NAMES[r.level].toLowerCase()}. Copy it into openGym for free.`.slice(0, 300),
+    title: `${r.title} by ${r.author.name}: free ${r.days}-day routine | GYM Buddy`,
+    description: `${r.description} ${r.days} days a week, ${r.duration} minutes, ${LEVEL_NAMES[r.level].toLowerCase()}. Copy it into GYM Buddy for free.`.slice(0, 300),
     canonical: pageUrl, body, script: 'routine.js', jsonld: [ld, crumbs], ogType: 'article',
     ogImage: r.cover ? ctx.abs(`covers/${r.coverFile}`) : undefined, current: 'routines', bodyClass: 'rt-one'
   })
@@ -465,10 +465,10 @@ export function submitPage(ctx, langs) {
   <form id="sub" class="rt-form" novalidate data-api="${esc(ctx.api)}" data-base="${esc(ctx.base)}">
     <section class="rt-step" data-step="0" aria-labelledby="s1">
       <h2 id="s1">Your routine</h2>
-      <p class="rt-hint" id="src-hint">In openGym, open a routine and tap Share, Share with a friend, then Copy link. For a whole week with several days, use Plan, Export plan and pick the file here.</p>
+      <p class="rt-hint" id="src-hint">In GYM Buddy, open a routine and tap Share, Share with a friend, then Copy link. For a whole week with several days, use Plan, Export plan and pick the file here.</p>
       <div class="rt-src">
         <div class="rt-field"><label for="link">Paste the link</label>
-          <textarea id="link" name="link" rows="2" spellcheck="false" autocomplete="off" placeholder="https://opengym.ch/r#1.d.…" aria-describedby="src-hint"></textarea></div>
+          <textarea id="link" name="link" rows="2" spellcheck="false" autocomplete="off" placeholder="https://gymbuddy.ch/r#1.d.…" aria-describedby="src-hint"></textarea></div>
         <span class="rt-or" aria-hidden="true">or</span>
         <div class="rt-field rt-file"><label for="plan">Pick a plan file</label>
           <input id="plan" name="plan" type="file" accept=".json,application/json"></div>
@@ -512,7 +512,7 @@ export function submitPage(ctx, langs) {
       <h2 id="s4">Check and send</h2>
       <p class="rt-hint">This is roughly how it will look in the library. Something off? Go back and fix it.</p>
       <div class="rt-final" id="final"></div>
-      <label class="rt-check"><input type="checkbox" name="consent" id="consent" required aria-describedby="e-consent"> <span>I made this routine and the photo, and I'm happy for both to be published here and in the openGym repository under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>, with my name as the credit.</span></label>
+      <label class="rt-check"><input type="checkbox" name="consent" id="consent" required aria-describedby="e-consent"> <span>I made this routine and the photo, and I'm happy for both to be published here and in the GYM Buddy repository under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>, with my name as the credit.</span></label>
       <p class="ferr" id="e-consent" hidden></p>
       <p class="rt-err" id="send-err" role="alert" hidden></p>
       <div class="rt-nav"><button class="btn ghost" type="button" data-back>Back</button><button class="btn" type="submit" id="send">Send for review</button></div>
@@ -525,8 +525,8 @@ export function submitPage(ctx, langs) {
   </div>
 </div>`
   return page(ctx, {
-    title: 'Share your workout routine | openGym',
-    description: 'Share a training plan you built in openGym. Paste the link or upload the plan file, add a few words, and it goes into the free routines library after a quick review.',
+    title: 'Share your workout routine | GYM Buddy',
+    description: 'Share a training plan you built in GYM Buddy. Paste the link or upload the plan file, add a few words, and it goes into the free routines library after a quick review.',
     canonical: ctx.url('submit/'), body, script: 'submit.js', current: 'routines', bodyClass: 'rt-sub'
   })
 }

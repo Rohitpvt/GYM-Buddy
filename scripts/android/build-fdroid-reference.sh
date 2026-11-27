@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Builds and signs openGym-FDroid-<version>.apk, the reference APK for F-Droid's reproducible
-# build (fdroiddata: metadata/ch.duartesantos.opengym.yml, "Binaries" + AllowedAPKSigningKeys).
+# Builds and signs GYM Buddy-FDroid-<version>.apk, the reference APK for F-Droid's reproducible
+# build (fdroiddata: metadata/ch.duartesantos.gymbuddy.yml, "Binaries" + AllowedAPKSigningKeys).
 # F-Droid builds the fdroid flavour from the tag, copies our signature onto its own unsigned APK
 # and ships it only if that verifies, so the APK it ships is signed with our key and installs
 # over the GitHub APK and back (same applicationId, same key).
@@ -40,7 +40,7 @@ if [ -n "${FDROID_UNSIGNED:-}" ]; then
 fi
 BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
 mkdir -p "$OUT"
-NAME="openGym-FDroid-$VER.apk"
+NAME="GYM Buddy-FDroid-$VER.apk"
 "$BT/apksigner" sign --alignment-preserved --v1-signing-enabled false \
   --ks "$KS" --ks-pass "file:$PASS" --ks-key-alias "$ALIAS" --out "$OUT/$NAME" "$UNSIGNED"
 rm -f "$OUT/$NAME.idsig"

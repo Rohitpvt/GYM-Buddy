@@ -37,7 +37,7 @@ function stubApi(doc, script = {}) {
   })
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => {
     s.server = server
-    s.env = { OPENGYM_URL: `http://127.0.0.1:${server.address().port}`, OPENGYM_TOKEN: TOKEN }
+    s.env = { GYMBUDDY_URL: `http://127.0.0.1:${server.address().port}`, GYMBUDDY_TOKEN: TOKEN }
     resolve(s)
   }))
 }
@@ -137,7 +137,7 @@ describe('log_workout writes through the server', () => {
   })
 
   test('a rejected token says what to do, and never repeats the token or the renewed one', async () => {
-    const err = await call(CURLS, { ...api.env, OPENGYM_TOKEN: 'wrong' }).catch(e => e)
+    const err = await call(CURLS, { ...api.env, GYMBUDDY_TOKEN: 'wrong' }).catch(e => e)
     expect(err.code).toBe('EAUTH')
     expect(err.message).toMatch(/pair again/i)
     expect(err.message).not.toContain('wrong')
@@ -148,7 +148,7 @@ describe('log_workout writes through the server', () => {
   test('a server error and an unreachable server are errors with the status, not a silent no-op', async () => {
     api.script.put = [send => send(500, { error: 'disk full' })]
     await expect(call(CURLS)).rejects.toMatchObject({ code: 'EAPI', message: expect.stringContaining('500: disk full') })
-    await expect(call(CURLS, { ...api.env, OPENGYM_URL: 'http://127.0.0.1:1' })).rejects.toMatchObject({ code: 'EAPI' })
+    await expect(call(CURLS, { ...api.env, GYMBUDDY_URL: 'http://127.0.0.1:1' })).rejects.toMatchObject({ code: 'EAPI' })
   })
 
   test('a profile with nothing synced yet is told to sign in once, not given a document of one workout', async () => {
@@ -212,7 +212,7 @@ describe('found in review', () => {
       res.writeHead(500); res.end()
     })
     await new Promise(r => odd.listen(0, '127.0.0.1', r))
-    const err = await call(CURLS, { OPENGYM_URL: `http://127.0.0.1:${odd.address().port}`, OPENGYM_TOKEN: TOKEN }).catch(e => e)
+    const err = await call(CURLS, { GYMBUDDY_URL: `http://127.0.0.1:${odd.address().port}`, GYMBUDDY_TOKEN: TOKEN }).catch(e => e)
     odd.close()
     expect(err).toMatchObject({ code: 'EAPI', message: expect.stringContaining('/api/me') })
   })
@@ -223,7 +223,7 @@ describe('found in review', () => {
   })
 
   test('a token pasted with a line break is refused without being repeated, before any request', async () => {
-    const err = await call(CURLS, { ...api.env, OPENGYM_TOKEN: 'abc.def\nsecret-tail' }).catch(e => e)
+    const err = await call(CURLS, { ...api.env, GYMBUDDY_TOKEN: 'abc.def\nsecret-tail' }).catch(e => e)
     expect(err.code).toBe('ENOCONFIG')
     expect(err.message).not.toContain('secret-tail')
     expect(api.auth).toHaveLength(0)
@@ -236,18 +236,18 @@ describe('found in review', () => {
     const to = `http://127.0.0.1:${elsewhere.address().port}`
     const redirecting = http.createServer((req, res) => { res.writeHead(307, { location: to + req.url }); res.end() })
     await new Promise(r => redirecting.listen(0, '127.0.0.1', r))
-    const err = await call(CURLS, { OPENGYM_URL: `http://127.0.0.1:${redirecting.address().port}`, OPENGYM_TOKEN: TOKEN }).catch(e => e)
+    const err = await call(CURLS, { GYMBUDDY_URL: `http://127.0.0.1:${redirecting.address().port}`, GYMBUDDY_TOKEN: TOKEN }).catch(e => e)
     redirecting.close(); elsewhere.close()
     expect(err).toMatchObject({ code: 'EAPI', message: expect.stringContaining('redirects (307)') })
     expect(followed).toBe(0)
   })
 
-  test('an OPENGYM_UID that names another profile than the token is refused even when its data is not readable here', async () => {
+  test('an GYMBUDDY_UID that names another profile than the token is refused even when its data is not readable here', async () => {
     api = await stubApi(DOC(), { uid: 'someone-else' })
-    process.env.OPENGYM_UID = 'expected-profile'
+    process.env.GYMBUDDY_UID = 'expected-profile'
     try {
       await expect(call(CURLS)).rejects.toMatchObject({ code: 'EPROFILE' })
-    } finally { delete process.env.OPENGYM_UID }
+    } finally { delete process.env.GYMBUDDY_UID }
     expect(api.puts).toHaveLength(0)
   })
 })
@@ -296,7 +296,7 @@ describe('limits and the trail a write leaves', () => {
 
 describe('configuration', () => {
   test('missing config is ENOCONFIG naming both variables', async () => {
-    await expect(logWorkout.handler(CURLS, { env: {} })).rejects.toMatchObject({ code: 'ENOCONFIG', message: expect.stringContaining('OPENGYM_TOKEN') })
+    await expect(logWorkout.handler(CURLS, { env: {} })).rejects.toMatchObject({ code: 'ENOCONFIG', message: expect.stringContaining('GYMBUDDY_TOKEN') })
   })
 
   test('https, or http only to this machine: the token is a full sign-in', () => {
@@ -308,7 +308,7 @@ describe('configuration', () => {
     expect(() => apiBase('http://gym.lan:8080')).toThrow(/https/)
     expect(() => apiBase('http://192.168.1.5')).toThrow(/https/)
     expect(() => apiBase('not a url')).toThrow(/not a URL/)
-    expect(() => apiConfig({ OPENGYM_URL: 'http://gym.lan', OPENGYM_TOKEN: 'x' })).toThrow(/https/)
+    expect(() => apiConfig({ GYMBUDDY_URL: 'http://gym.lan', GYMBUDDY_TOKEN: 'x' })).toThrow(/https/)
   })
 })
 

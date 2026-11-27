@@ -4,10 +4,10 @@ import Photos
 
 /**
  * Saves a picture the app drew (the share card after a workout, a progress comparison) straight
- * into Photos. Add-only access: openGym can put pictures in, never read the library.
+ * into Photos. Add-only access: gymBuddy can put pictures in, never read the library.
  *
  *   const SaveImage = registerPlugin('SaveImage')
- *   await SaveImage.save({ path: 'file:///…/Caches/opengym-workout.png' })   // { saved: true }
+ *   await SaveImage.save({ path: 'file:///…/Caches/gymbuddy-workout.png' })   // { saved: true }
  * Rejects with code "denied" when the person said no, so the page can point to Settings.
  */
 @objc(SaveImagePlugin)

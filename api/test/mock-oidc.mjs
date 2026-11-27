@@ -18,14 +18,14 @@ export function signJwt(claims, { key, kid = 'k1', alg = 'RS256' } = {}) {
   return data + '.' + b64u(sig);
 }
 
-export async function startMockOidc({ clientId = 'opengym', clientSecret = 's3cret', userinfoGroups = false, endSession = true } = {}) {
+export async function startMockOidc({ clientId = 'gymbuddy', clientSecret = 's3cret', userinfoGroups = false, endSession = true } = {}) {
   const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
   const rogue = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 }).privateKey;
   const codes = new Map();
   const tokens = new Map();
   const m = {
     issuer: '', clientId, clientSecret, key: privateKey, rogue,
-    next: { sub: 'user-1', name: 'Ana', email: 'ana@example.com', email_verified: true, groups: ['opengym'] },
+    next: { sub: 'user-1', name: 'Ana', email: 'ana@example.com', email_verified: true, groups: ['gymbuddy'] },
     tamper: {},
     seen: { authorize: [], token: [] },
     jwk: { ...publicKey.export({ format: 'jwk' }), kid: 'k1', use: 'sig', alg: 'RS256' }
