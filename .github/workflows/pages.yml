@@ -1,13 +1,9 @@
-# Publishes the browser-only demo to GitHub Pages: https://duartesantos8.github.io/GYM Buddy/
-#
-# Dormant from 2026-08-19 to 2026-09-10 while the GitHub account was suspended; live again since.
-# The same build (same command, Vite's base is './') is also served from the project's own site at
-# https://gymbuddy.ch/demo/, so the demo has two addresses with identical content.
+# Publishes the browser-only app to GitHub Pages: https://rohitpvt.github.io/GYM-Buddy/
 #
 # Pages serves static files only, so this build has no backend — VITE_DEMO=1 makes the app
 # boot straight into guest mode with a seeded example history (see frontend/src/lib/demo.js).
 # The exercise stills and animations (180 px) come from catalogue/media and are staged next to
-# the build by scripts/catalogue/stage-media.mjs, so the demo serves them from its own origin.
+# the build by scripts/catalogue/stage-media.mjs, so the app serves them from its own origin.
 name: Deploy demo to GitHub Pages
 
 on:
