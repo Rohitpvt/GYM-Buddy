@@ -1406,7 +1406,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <Row icon="shield" iconTint="var(--red)" title={t('Sign out everywhere')} subtitle={t('Ends this profile’s sessions on all your devices.')} danger onClick={signOutEverywhere} />
           <AccountIdRow id={user.id} />
         </> : webauthnOK() ? <>
-          {oidcOn(config) && <Row icon="shield" iconTint="var(--acc)" title={t('Sign in with {0}', oidcLabel(config))} accessory="chevron" onClick={startWebSignIn} />}
+          {oidcOn(config) && <Row icon="shield" iconTint="var(--acc)" title={t('Sign in with {0}', oidcLabel(config))} accessory="chevron" onClick={() => startWebSignIn()} />}
           <Row icon="plusCircle" iconTint="var(--acc)" title={t('Create passkey profile')} subtitle={t('Keeps your data safe and separate per person.')} accessory="chevron" onClick={registerHere} />
           <Row icon="fingerprint" iconTint="var(--blue)" title={t('Sign in with passkey')} accessory="chevron" onClick={passkeySignIn} />
           {/* The Login screen offers both of these; a guest who skipped it had no way to either from here. */}
@@ -1415,7 +1415,7 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <Row icon="qr" iconTint="var(--blue)" title={t('Use a code from your other device')} accessory="chevron" onClick={openDeviceLinkRedeem} />
           <KeptChangesRows />
         </> : pwOn ? <>
-          {oidcOn(config) && <Row icon="shield" iconTint="var(--acc)" title={t('Sign in with {0}', oidcLabel(config))} accessory="chevron" onClick={startWebSignIn} />}
+          {oidcOn(config) && <Row icon="shield" iconTint="var(--acc)" title={t('Sign in with {0}', oidcLabel(config))} accessory="chevron" onClick={() => startWebSignIn()} />}
           {/* No passkeys in this browser (plain http on a LAN address, say): a password is the way in. */}
           <Row icon="plusCircle" iconTint="var(--acc)" title={t('Create new profile')} subtitle={t('Keeps your data safe and separate per person.')} accessory="chevron" onClick={openPasswordRegister} />
           <Row icon="key" iconTint="var(--orange)" title={t('Sign in with password')} accessory="chevron" onClick={() => openPasswordSignIn()} />
