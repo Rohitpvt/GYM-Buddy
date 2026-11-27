@@ -2,9 +2,9 @@
 
 <p>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/hero-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/readme/hero-light.png">
-  <img src="assets/readme/hero-dark.png" alt="GYM Buddy: the gym tracker you host yourself" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/hero-gymbuddy-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/readme/hero-gymbuddy-light.png">
+  <img src="assets/readme/hero-gymbuddy-dark.png" alt="GYM Buddy: the gym tracker you host yourself" width="100%">
 </picture>
 </p>
 
